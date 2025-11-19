@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+:root {
+    font-family: 'Montserrat', sans-serif;
+    --button-color: #0d6efd;
+
+    scrollbar-color: #284c81 #f1f1f1;
+    scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #284c81;
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #7e9ece;
+}
