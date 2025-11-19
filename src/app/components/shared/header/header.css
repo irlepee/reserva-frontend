@@ -1,14 +1,16 @@
 nav {
-    font-family: 'Montserrat';
+    font-family: 'Manrope', 'Montserrat', sans-serif;
     display: flex;
-    gap: 1rem;
     align-items: center;
+    gap: 1rem;
     padding: 0.5rem 12vw;
 }
 
 h1 {
     font-size: 2rem;
     font-weight: 500;
+    padding: 0;
+    margin: 0;
 }
 
 a {
@@ -34,4 +36,8 @@ a {
 .userbutton {
     border-radius: 200px;
     border: 0px;
+}
+
+#logo {
+    width: 3rem;
 }

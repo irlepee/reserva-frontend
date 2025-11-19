@@ -1,11 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
+
 :root {
     font-family: 'Montserrat', sans-serif;
     --button-color: #0d6efd;
+    --background-color-clear: #edf0f5;
 
     scrollbar-color: #284c81 #f1f1f1;
     scrollbar-width: thin;
+}
+
+html, body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
 }
 
 ::-webkit-scrollbar {

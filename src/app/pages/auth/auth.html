@@ -1,1 +1,113 @@
-<p>auth works!</p>
+<main>
+
+    <div class="login-container" *ngIf="activeTab === 'login'">
+        <h2>Bienvenido de nuevo</h2>
+        <p>Inicia sesión en tu cuenta</p>
+
+        <div class="auth-buttons">
+            <button (click)="switchTab('login')">Iniciar sesión</button><button
+                (click)="switchTab('register')">Registro</button>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem;">
+            <div class="form-floating">
+                <input type="text" class="form-control" id="email" placeholder="ejemplo@email.com" required>
+                <label for="email">Email o nombre de usuario</label>
+            </div>
+
+            <div class="form-floating">
+                <input type="password" class="form-control" id="password" placeholder="ejemplo@email.com" required>
+                <label for="email">Contraseña</label>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; margin-bottom: 2rem;">
+            <div class="form-check">
+                <input type="checkbox" id="remember" class="form-check-input">
+                <label for="remember" class="form-check-label">Recuérdame</label>
+            </div>
+
+            <div class="password-forgot">
+                <button>¿Olvidaste tu contraseña?</button>
+            </div>
+        </div>
+
+        <button id="login"> Iniciar sesión </button>
+
+        <div class="signup-link">
+            <p>¿Aún no tienes cuenta?</p><button>Regístrate</button>
+        </div>
+    </div>
+
+
+    <div class="register-container" *ngIf="activeTab === 'register'">
+        <h2>Registro</h2>
+        <p>Ingresa tus datos para crear tu cuenta</p>
+
+        <div class="auth-buttons">
+            <button (click)="switchTab('login')">Iniciar sesión</button><button
+                (click)="switchTab('register')">Registro</button>
+        </div>
+
+        <div>
+            <p>Datos generales</p>
+            <div class="form-floating">
+                <input type="text" class="form-control" id="name" placeholder="Pito Gabriel" required>
+                <label for="name">Ingresa tu(s) nombre(s)</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" class="form-control" id="lastname" placeholder="Pérez López" required>
+                <label for="lastname">Ingresa tu(s) apellido(s)</label>
+            </div>
+
+            <p>Datos para iniciar sesión</p>
+            <div class="form-floating">
+                <input type="email" class="form-control" id="email" placeholder="ejemplo@email.com" required>
+                <label for="email">Ingresa tu correo electrónico</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" class="form-control" id="username" placeholder="PitoPerez" required>
+                <label for="username">Ingresa tu nombre de usuario</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="password" placeholder="Password" required>
+                <label for="lastname">Ingresa la contraseña</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="password" placeholder="Password" required>
+                <label for="lastname">Vuelve a ingresar la contraseña</label>
+            </div>
+
+            <p>Datos de ubicación (para recomendarte sitios cerca)</p>
+
+            <div class="combobox-container">
+                <div id="entidad" class="mb-3">
+                    <input class="form-control" list="opciones" id="combo" placeholder="Entidad" required>
+                    <datalist id="opciones">
+                        <option value="Sinaloa">
+                    </datalist>
+                </div>
+
+                <div id="municipio" class="mb-3">
+                    <select class="form-select" id="opciones">
+                        <option selected>Municipio</option>
+                        <option value="op1">Opción 1</option>
+                    </select>
+                </div>
+
+                <div id="localidad" class="mb-3">
+                    <select class="form-select" id="opciones">
+                        <option selected>Localidad</option>
+                        <option value="op1">Opción 1</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="signup-button">Registrarme</button>
+
+        </div>
+    </div>
+
+
+
+</main>
