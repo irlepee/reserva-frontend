@@ -1,5 +1,124 @@
-.sidebar {
-    width: 250px;
-    min-height: 100vh;
-    border-right: 1px solid #ddd;
+aside {
+    font-family: 'Roboto', 'Manrope', 'Montserrat', sans-serif;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    min-height: 100dvh;
+    padding: 0.5rem;
+}
+
+aside i {
+    color: #333333
+}
+
+/* ------------------------ */
+
+.user-notification-section {
+    display: flex;
+    padding: 1rem;
+    align-items: center;
+}
+
+.user-section {
+    display: flex;
+    font-size: 1.2rem;
+    background-color: transparent;
+    border: none;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-section p {
+    color: #333333;
+    font-weight: 500;
+    margin: 0;
+}
+
+.notification-button {
+    background-color: transparent;
+    border: none;
+    margin-left: auto;
+}
+
+/* ------------------------ */
+
+.logo-name-section {
+    display: flex;
+    gap: 2rem;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    align-items: center;
+}
+
+h1 {
+    color: #333333;
+    font-size: 2rem;
+    font-weight: 600;
+    padding: 0;
+    margin: 0;
+}
+
+#logo {
+    width: 3.5rem;
+}
+
+/* ------------------------ */
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    gap: 1rem;
+    padding: 1rem;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    display: flex;
+    gap: 1rem;
+    border-radius: 15px;
+}
+
+.sidebar-menu i {
+    color: #666666
+}
+
+.sidebar-menu li button {
+    display: flex;
+    font-size: 1.2rem;
+    font-weight: 500;
+    background-color: transparent;
+    border: none;
+    gap: 1.5rem;
+    border-radius: 15px;
+    width: 100%;
+    padding: 0.5rem 0.5rem 0.5rem 0.7rem;
+}
+
+.sidebar-menu li button a {
+    color: #666666;
+    text-decoration: none;
+}
+
+.sidebar-menu li button:hover {
+    background-color: var(--button-color);
+    color: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-menu li button:hover a, .sidebar-menu li button:hover i {
+    color: white;
+}
+
+/* ------------------------ */
+
+.configurator-section {
+    margin-top: auto;
+    padding: 1rem;
+}
+
+.configurator-section button {
+    width: 100%;
+    background-color: transparent;
+    border: none;
 }

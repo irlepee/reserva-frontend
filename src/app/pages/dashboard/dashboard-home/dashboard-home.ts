@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { Sidebar } from '../../../components/shared/sidebar/sidebar';
 
 @Component({
   selector: 'app-dashboard-home',
-  imports: [],
+  imports: [Sidebar],
   templateUrl: './dashboard-home.html',
   styleUrl: './dashboard-home.css',
 })
