@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Footer } from '../../components/shared/footer/footer';
-import { Header } from '../../components/shared/header/header';
+import { Footer } from '../../shared/components/footer/footer';
+import { Header } from '../../shared/components/header/header';
 
 @Component({
   selector: 'app-auth',

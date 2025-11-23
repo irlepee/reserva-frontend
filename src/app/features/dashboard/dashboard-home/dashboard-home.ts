@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Sidebar } from '../../../components/shared/sidebar/sidebar';
+import { Sidebar } from '../../../shared/components/sidebar/sidebar';
 
 @Component({
   selector: 'app-dashboard-home',
