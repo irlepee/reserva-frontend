@@ -14,4 +14,8 @@ export class AuthService {
       localStorage.setItem('token', resp.token);
     });
   }
+
+  register(data: any): Promise<any> {
+    return this.http.post(`${this.apiUrl}/auth/register`, data).toPromise();
+  }
 }

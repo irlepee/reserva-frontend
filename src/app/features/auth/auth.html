@@ -10,17 +10,25 @@
                 (click)="switchTab('register')">Registro</button>
         </div>
 
-        <form (ngSubmit)="onLogin()">
+        <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)">
 
-            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem;">
-                <div class="form-floating">
-                    <input [(ngModel)]="identifier" name="identifier" type="text" class="form-control" id="email" placeholder="ejemplo@email.com" required>
-                    <label for="email">Email o nombre de usuario</label>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="identifier" placeholder="Email o usuario" name="identifier"
+                    [(ngModel)]="identifier" required #identifierInput="ngModel"
+                    [ngClass]="{'is-invalid': identifierInput.invalid && identifierInput.touched}">
+                <label for="identifier">Email o nombre de usuario</label>
+                <div class="invalid-feedback">
+                    Por favor ingresa tu correo o nombre de usuario
                 </div>
+            </div>
 
-                <div class="form-floating">
-                    <input [(ngModel)]="password" name="password" type="password" class="form-control" id="password" placeholder="ejemplo@email.com" required>
-                    <label for="password">Contraseña</label>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password" placeholder="Contraseña" name="password"
+                    [(ngModel)]="password" required #passwordInput="ngModel"
+                    [ngClass]="{'is-invalid': passwordInput.invalid && passwordInput.touched}">
+                <label for="password">Contraseña</label>
+                <div class="invalid-feedback">
+                    Por favor ingresa tu contraseña
                 </div>
             </div>
 
@@ -55,60 +63,137 @@
         </div>
 
         <div>
-            <p>Datos generales</p>
-            <div class="form-floating">
-                <input type="text" class="form-control" id="name" placeholder="Pito Gabriel" required>
-                <label for="name">Ingresa tu(s) nombre(s)</label>
-            </div>
-            <div class="form-floating">
-                <input type="text" class="form-control" id="lastname" placeholder="Pérez López" required>
-                <label for="lastname">Ingresa tu(s) apellido(s)</label>
-            </div>
+            <form #registerForm="ngForm" (ngSubmit)="onRegister(registerForm)" novalidate>
 
-            <p>Datos para iniciar sesión</p>
-            <div class="form-floating">
-                <input type="email" class="form-control" id="email" placeholder="ejemplo@email.com" required>
-                <label for="email">Ingresa tu correo electrónico</label>
-            </div>
-            <div class="form-floating">
-                <input type="text" class="form-control" id="username" placeholder="PitoPerez" required>
-                <label for="username">Ingresa tu nombre de usuario</label>
-            </div>
-            <div class="form-floating">
-                <input type="password" class="form-control" id="password" placeholder="Password" required>
-                <label for="lastname">Ingresa la contraseña</label>
-            </div>
-            <div class="form-floating">
-                <input type="password" class="form-control" id="password" placeholder="Password" required>
-                <label for="lastname">Vuelve a ingresar la contraseña</label>
-            </div>
-
-            <p>Datos de ubicación (para recomendarte sitios cerca)</p>
-
-            <div class="combobox-container">
-                <div id="entidad" class="mb-3">
-                    <input class="form-control" list="opciones" id="combo" placeholder="Entidad" required>
-                    <datalist id="opciones">
-                        <option value="Sinaloa">
-                    </datalist>
+                <p>Datos generales</p>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="name" placeholder="Pito Gabriel" required
+                        [(ngModel)]="name" #nameInput="ngModel"
+                        [ngClass]="{'is-invalid': nameInput.invalid && nameInput.touched}">
+                    <label for="name">Ingresa tu(s) nombre(s)</label>
+                    <div class="invalid-feedback">Por favor ingresa tus nombres</div>
                 </div>
 
-                <div id="municipio" class="mb-3">
-                    <select class="form-select" id="opciones">
-                        <option selected>Municipio</option>
-                        <option value="op1">Opción 1</option>
-                    </select>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="lastname" placeholder="Pérez López" required
+                        [(ngModel)]="lastname" #lastnameInput="ngModel"
+                        [ngClass]="{'is-invalid': lastnameInput.invalid && lastnameInput.touched}">
+                    <label for="lastname">Ingresa tu(s) apellido(s)</label>
+                    <div class="invalid-feedback">Por favor ingresa tus apellidos</div>
                 </div>
 
-                <div id="localidad" class="mb-3">
-                    <select class="form-select" id="opciones">
-                        <option selected>Localidad</option>
-                        <option value="op1">Opción 1</option>
-                    </select>
-                </div>
-            </div>
+                <div class="age-gender-section">
+                    <!-- Edad -->
+                    <div class="form-floating mb-3 ageField">
+                        <input type="number" class="form-control" name="age" placeholder="Edad" required
+                            [(ngModel)]="age" #ageInput="ngModel"
+                            [ngClass]="{'is-invalid': ageInput.invalid && ageInput.touched}">
+                        <label for="age">Edad</label>
+                        <div class="invalid-feedback">
+                            Por favor ingresa tu edad
+                        </div>
+                    </div>
 
-            <button id="signup-button">Registrarme</button>
+                    <!-- Género -->
+                    <div class="form-floating mb-3 genderField">
+                        <select class="form-select" name="gender" [(ngModel)]="gender" required #genderInput="ngModel"
+                            [ngClass]="{'is-invalid': genderInput.invalid && genderInput.touched}">
+                            <option value="" disabled selected>Selecciona</option>
+                            <option value="M">M</option>
+                            <option value="F">F</option>
+                        </select>
+                        <label for="gender">Género</label>
+                        <div class="invalid-feedback">
+                            Por favor selecciona tu género
+                        </div>
+                    </div>
+                </div>
+
+
+                <p>Datos para iniciar sesión</p>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" name="email" placeholder="ejemplo@email.com" required email
+                        [(ngModel)]="email" #emailInput="ngModel"
+                        [ngClass]="{'is-invalid': emailInput.invalid && emailInput.touched}">
+                    <label for="email">Ingresa tu correo electrónico</label>
+                    <div class="invalid-feedback">
+                        Ingresa un correo válido
+                    </div>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="username" placeholder="PitoPerez" required
+                        [(ngModel)]="username" #usernameInput="ngModel"
+                        [ngClass]="{'is-invalid': usernameInput.invalid && usernameInput.touched}">
+                    <label for="username">Ingresa tu nombre de usuario</label>
+                    <div class="invalid-feedback">Por favor ingresa un nombre de usuario</div>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" name="passwordRegister" placeholder="Password" required
+                        minlength="6" [(ngModel)]="passwordRegister" #passwordInput="ngModel"
+                        [ngClass]="{'is-invalid': passwordInput.invalid && passwordInput.touched}">
+                    <label for="passwordRegister">Ingresa la contraseña</label>
+                    <div class="invalid-feedback">
+                        La contraseña debe tener al menos 6 caracteres
+                    </div>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" name="password2Register" placeholder="Password" required
+                        [(ngModel)]="password2Register" #password2RegisterInput="ngModel"
+                        [ngClass]="{'is-invalid': password2RegisterInput.invalid && password2RegisterInput.touched}">
+                    <label for="password2Register">Vuelve a ingresar la contraseña</label>
+                    <div class="invalid-feedback">Por favor confirma la contraseña</div>
+                </div>
+
+                <p>Datos de ubicación (para recomendarte sitios cerca)</p>
+                <div class="combobox-container">
+                    <div class="autocomplete mb-3">
+                        <input type="text" [(ngModel)]="entidad" name="entidad" (input)="filtrarEntidad()" required
+                            #entidadInput="ngModel"
+                            [ngClass]="{'is-invalid': entidadInput.invalid && entidadInput.touched}"
+                            class="form-control" placeholder="Entidad">
+                        <ul *ngIf="filtradosEntidad.length > 0" class="list-group opciones">
+                            <li *ngFor="let e of filtradosEntidad" class="list-group-item uppercase"
+                                (click)="seleccionarEntidad(e)">
+                                {{ e.name.toUpperCase() }}
+                            </li>
+                        </ul>
+                        <div class="invalid-feedback">Por favor selecciona una entidad</div>
+                    </div>
+
+                    <div class="autocomplete mb-3">
+                        <input type="text" [(ngModel)]="municipio" name="municipio" (input)="filtrarMunicipio()"
+                            required #municipioInput="ngModel"
+                            [ngClass]="{'is-invalid': municipioInput.invalid && municipioInput.touched}"
+                            class="form-control" placeholder="Municipio">
+                        <ul *ngIf="filtradosMunicipio.length > 0" class="list-group opciones">
+                            <li *ngFor="let m of filtradosMunicipio" class="list-group-item"
+                                (click)="seleccionarMunicipio(m)">
+                                {{ m.name }}
+                            </li>
+                        </ul>
+                        <div class="invalid-feedback">Por favor selecciona un municipio</div>
+                    </div>
+
+                    <div class="autocomplete mb-3">
+                        <input type="text" [(ngModel)]="localidad" name="localidad" (input)="filtrarLocalidad()"
+                            required #localidadInput="ngModel"
+                            [ngClass]="{'is-invalid': localidadInput.invalid && localidadInput.touched}"
+                            class="form-control" placeholder="Localidad">
+                        <ul *ngIf="filtradosLocalidad.length > 0" class="list-group opciones">
+                            <li *ngFor="let l of filtradosLocalidad" class="list-group-item"
+                                (click)="seleccionarLocalidad(l)">
+                                {{ l.name }}
+                            </li>
+                        </ul>
+                        <div class="invalid-feedback">Por favor selecciona una localidad</div>
+                    </div>
+                </div>
+
+                <button type="submit" id="signup-button" class="btn btn-primary">Registrarme</button>
+            </form>
 
         </div>
     </div>
