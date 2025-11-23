@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Footer } from '../../components/shared/footer/footer';
+import { Header } from '../../components/shared/header/header';
 
 @Component({
   selector: 'app-auth',
-  imports: [CommonModule],
+  imports: [CommonModule, Footer, Header],
   templateUrl: './auth.html',
   styleUrl: './auth.css',
 })

@@ -4,7 +4,7 @@ main {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     justify-content: center;
     align-items: center;
-    min-height: 90vh;
+    min-height: 100dvh;
     padding: 3rem;
 }
 
