@@ -5,6 +5,7 @@ import { AuthService } from '../../core/services/authService';
 import { HttpClientModule } from '@angular/common/http';
 import { LocationsService } from '../../core/services/locations-service';
 import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { Entidad } from '../../shared/interfaces/entidad';
 import { Municipio } from '../../shared/interfaces/municipio';
@@ -41,21 +42,25 @@ export class Auth {
 
   constructor(
     private authenticator: AuthService,
-    private ubicacionService: LocationsService
+    private ubicacionService: LocationsService,
+    private router: Router
   ) { }
 
   async onLogin(form: any) {
     if (form.invalid) {
-      form.control.markAllAsTouched(); // Esto marca todos los campos como “touched”
-      return; // no sigue hasta que todos sean válidos
+      form.control.markAllAsTouched();
+      return;
     }
 
     try {
-      const result = await this.authenticator.login({
+      const result: any = await this.authenticator.login({
         identifier: this.identifier,
         password: this.password
       });
-      console.log(result);
+
+      localStorage.setItem('token', result.token);
+
+      this.router.navigate(['/dashboard']);
     } catch (error) {
       console.error(error);
     }

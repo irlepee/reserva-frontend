@@ -9,10 +9,8 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(data: { identifier: string; password: string }) {
-    return this.http.post(`${this.apiUrl}/auth/login`, data).subscribe((resp: any) => {
-      localStorage.setItem('token', resp.token);
-    });
+  login(data: { identifier: string; password: string }): Promise<any> {
+    return this.http.post(`${this.apiUrl}/auth/login`, data).toPromise();
   }
 
   register(data: any): Promise<any> {
