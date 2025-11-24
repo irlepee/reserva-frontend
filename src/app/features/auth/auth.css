@@ -1,11 +1,9 @@
-main {
-    font-family: 'Manrope', 'Montserrat', sans-serif;
-    display: flex;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    justify-content: center;
-    align-items: center;
-    min-height: 100dvh;
-    padding: 3rem;
+.divmain {
+  font-family: 'Manrope', 'Montserrat', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
 }
 
 /* Animación de entrada */
@@ -14,6 +12,7 @@ main {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -21,54 +20,54 @@ main {
 }
 
 .login-container {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--background-color-clear);
-    border-radius: 15px;
-    text-align: center;
-    padding: 2rem;
-    animation: fadeIn 0.4s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-color-clear);
+  border-radius: 15px;
+  text-align: center;
+  padding: 2rem;
+  animation: fadeIn 0.4s ease-in-out;
 }
 
 .register-container {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--background-color-clear);
-    border-radius: 15px;
-    text-align: center;
-    padding: 2rem;
-    animation: fadeIn 0.4s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-color-clear);
+  border-radius: 15px;
+  text-align: center;
+  padding: 2rem;
+  animation: fadeIn 0.4s ease-in-out;
 }
 
 .login-container h2 {
-    font-size: 2.4rem;
+  font-size: 2.4rem;
 }
 
 .login-container p {
-    font-size: 1.2rem;
+  font-size: 1.2rem;
 }
 
 .auth-buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    border-bottom: 1px solid #dadada;
-    margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid #dadada;
+  margin-bottom: 1rem;
 }
 
 .auth-buttons button {
-    color: var(--button-color);
-    background-color: #00000000;
-    border-bottom: 1px solid var(--button-color);
-    border-radius: 0;
+  color: var(--button-color);
+  background-color: #00000000;
+  border-bottom: 1px solid var(--button-color);
+  border-radius: 0;
 }
 
 button {
-    color: white;
-    background-color: var(--button-color);
-    border: none;
-    border-radius: 10px;
+  color: white;
+  background-color: var(--button-color);
+  border: none;
+  border-radius: 10px;
 }
 
 .password-forgot {
@@ -76,44 +75,45 @@ button {
 }
 
 .password-forgot button {
-    background: none;
-    border: none;
-    color: var(--button-color);
-    cursor: pointer;
-    padding: 0;
+  background: none;
+  border: none;
+  color: var(--button-color);
+  cursor: pointer;
+  padding: 0;
 }
 
 #login {
-    font-size: 1.3rem;
-    width: 100%;
+  font-size: 1.3rem;
+  width: 100%;
 }
 
 .signup-link {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
 }
 
 .signup-link p {
-    margin: 0;
+  margin: 0;
 }
 
 .signup-link button {
-    font-size: 1.2rem;
-    background: none;
-    border: none;
-    color: var(--button-color);
-    cursor: pointer;
-    padding: 0;
+  font-size: 1.2rem;
+  background: none;
+  border: none;
+  color: var(--button-color);
+  cursor: pointer;
+  padding: 0;
 }
 
 /* =============================== */
 
 .register-container {
-    background-color: var(--background-color-clear);
-    animation: fadeIn 0.4s ease-in-out;
+  width: 40rem;
+  background-color: var(--background-color-clear);
+  animation: fadeIn 0.4s ease-in-out;
 }
 
 input[type=number]::-webkit-outer-spin-button,
@@ -133,7 +133,8 @@ input[type=number] {
   padding: 0rem 8rem;
 }
 
-.ageField, .genderField {
+.ageField,
+.genderField {
   width: 100%;
 }
 
@@ -144,10 +145,10 @@ input[type=number] {
 }
 
 #signup-button {
-    font-size: 1.3rem;
-    margin-top: 1rem;
-    padding: 0.3rem 0.5rem;
-    width: 100%;
+  font-size: 1.3rem;
+  margin-top: 1rem;
+  padding: 0.3rem 0.5rem;
+  width: 100%;
 }
 
 .autocomplete {
@@ -166,4 +167,12 @@ input[type=number] {
 .list-group-item:hover {
   background-color: var(--button-color);
   color: white;
+}
+
+.inputsauth {
+  border-radius: 20px;
+}
+
+.locationinput {
+  height: 3rem;
 }

@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
-import { Footer } from '../../shared/components/footer/footer';
-import { Header } from '../../shared/components/header/header';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../core/services/authService';
 import { HttpClientModule } from '@angular/common/http';
 import { LocationsService } from '../../core/services/locations-service';
+import { RouterModule } from '@angular/router';
 
 import { Entidad } from '../../shared/interfaces/entidad';
 import { Municipio } from '../../shared/interfaces/municipio';
@@ -14,12 +13,18 @@ import { Localidad } from '../../shared/interfaces/localidad';
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, FormsModule, Footer, Header, HttpClientModule],
+  imports: [RouterModule, CommonModule, FormsModule, HttpClientModule],
   templateUrl: './auth.html',
   styleUrl: './auth.css',
 })
 
 export class Auth {
+
+  @Output() close = new EventEmitter<void>();
+
+  onClose() {
+    this.close.emit();
+  }
 
   // ---------------------Tabs---------------------
 
@@ -30,8 +35,6 @@ export class Auth {
   }
 
   // ---------------------Login---------------------
-
-
 
   identifier = "";
   password = "";

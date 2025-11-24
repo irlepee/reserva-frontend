@@ -9,8 +9,12 @@
     <a routerLink="">Contacto</a>
 
     <div class="buttonsdiv">
-      <button class="loginbutton" routerLink="/login">Iniciar sesión</button>
+      <button class="loginbutton" (click)="openLogin()">Iniciar sesión</button>
       <button class="userbutton">ALE</button>
+    </div>
+
+    <div class="modal-backdrop" *ngIf="showLogin">
+      <app-auth></app-auth>
     </div>
 
   </nav>
