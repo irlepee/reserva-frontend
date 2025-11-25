@@ -1,5 +1,11 @@
-main {
+.main-container {
     display: flex;
     background-color: var(--background-color-clear);
     min-height: 100dvh;
+}
+
+.dashboard-content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: var(--background-color-clear);
 }
