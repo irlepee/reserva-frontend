@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
-import { Sidebar } from '../../../shared/components/sidebar/sidebar';
-import { CommonModule } from '@angular/common';
 import { DashhomeDataService } from '../../../core/services/dashhome-data-service';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-home',
-  imports: [Sidebar, CommonModule],
-  templateUrl: './home.html',
-  styleUrl: './home.css',
+  selector: 'app-dash-home',
+  imports: [CommonModule],
+  templateUrl: './dash-home.html',
+  styleUrl: './dash-home.css',
 })
-export class Home {
+export class DashHome {
   constructor(private dashDataService: DashhomeDataService) { }
 
   topSites: any = null;

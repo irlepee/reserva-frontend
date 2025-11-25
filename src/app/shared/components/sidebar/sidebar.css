@@ -79,36 +79,38 @@ h1 {
     border-radius: 15px;
 }
 
-.sidebar-menu i {
-    color: #666666
-}
-
-.sidebar-menu li button {
+/* El enlace ahora ocupa todo el espacio del "botón" */
+.sidebar-menu li a {
     display: flex;
+    align-items: center;
     font-size: 1.2rem;
     font-weight: 500;
     background-color: transparent;
-    border: none;
+    color: #666666;
+    text-decoration: none;
     gap: 1.5rem;
     border-radius: 15px;
     width: 100%;
     padding: 0.5rem 0.5rem 0.5rem 0.7rem;
 }
 
-.sidebar-menu li button a {
+/* Los íconos dentro del link */
+.sidebar-menu li a i {
     color: #666666;
-    text-decoration: none;
 }
 
-.sidebar-menu li button:hover {
+/* Hover para el enlace completo */
+.sidebar-menu li a:hover {
     background-color: var(--button-color);
     color: white;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
-.sidebar-menu li button:hover a, .sidebar-menu li button:hover i {
+/* Hover para ícono dentro del link */
+.sidebar-menu li a:hover i {
     color: white;
 }
+
 
 /* ------------------------ */
 
