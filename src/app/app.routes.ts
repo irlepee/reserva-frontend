@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 import { Home } from './features/home/home';
-import { DashboardHome } from './features/dashboard/dashboard-home/dashboard-home';
 import { Auth } from './features/auth/auth';
+import { DashboardLayout } from './shared/layout/dashboard-layout/dashboard-layout';
 
 export const routes: Routes = [
     { path: '', component:Home },
     { path: 'login', component:Auth},
-    { path: 'dashboard', component:DashboardHome},
+    { path: 'dashboard', component:DashboardLayout},
     { path: '***', redirectTo: ''}
 ];

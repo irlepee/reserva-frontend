@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './groups.css',
 })
 export class Groups {
-
+  
 }

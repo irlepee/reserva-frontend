@@ -1,0 +1,29 @@
+<section class="dashboard-content">
+
+    <!-- Card: Sitios semanales -->
+    <div class="card top-sites-week" *ngIf="topSites?.weekly">
+        <h2>Sitios más reservados (Semanal)</h2>
+
+        <div *ngFor="let site of topSites.weekly">
+            <p>{{ site.name }} – {{ site.count }} reservas</p>
+        </div>
+    </div>
+
+    <!-- Card: Sitios mensuales -->
+    <div class="card top-sites-month" *ngIf="topSites?.monthly">
+        <h2>Sitios más reservados (Mensual)</h2>
+
+        <div *ngFor="let site of topSites.monthly">
+            <p>{{ site.name }} – {{ site.count }} reservas</p>
+        </div>
+    </div>
+
+    <!-- Cards por cada reserva -->
+    <div class="reservas-list">
+        <div class="card reserva-item" *ngFor="let r of myReservas">
+            <h3>Reserva #{{ r.id }}</h3>
+            <p>Recurso: {{ r.Resource?.name }}</p>
+            <p>Estado: {{ r.status }}</p>
+        </div>
+    </div>
+</section>

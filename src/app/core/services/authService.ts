@@ -16,4 +16,12 @@ export class AuthService {
   register(data: any): Promise<any> {
     return this.http.post(`${this.apiUrl}/auth/register`, data).toPromise();
   }
+
+  getUser(): Promise<any> {
+  const token = localStorage.getItem('token');
+
+  return this.http.get(`${this.apiUrl}/auth`, {
+    headers: { Authorization: `Bearer ${token}` }
+  }).toPromise();
+}
 }
