@@ -27,7 +27,7 @@ export class Header {
   user: any = null;
 
   ngOnInit() {
-    this.authService.getUser()
+    this.authService.fetchCurrentUser()
       .then(user => {
         this.user = user;
       })

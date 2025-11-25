@@ -1,29 +1,63 @@
-<section class="dashboard-content">
+<div class="main-container">
 
-    <!-- Card: Sitios semanales -->
-    <div class="card top-sites-week" *ngIf="topSites?.weekly">
-        <h2>Sitios más reservados (Semanal)</h2>
+    <h2>Hola, {{ user?.name }}!</h2>
 
-        <div *ngFor="let site of topSites.weekly">
-            <p>{{ site.name }} – {{ site.count }} reservas</p>
+    <div class="content-container">
+        <div class="topSites-Container">
+            <span>Sitios más visitados</span>
+            <div class="topSites">
+                <button class="monthly-Site" *ngIf="topSites?.month">
+                    <div>
+                        <p>Biblioteca UAS</p>
+                        <h3>Más popular</h3>
+                    </div>
+                </button>
+
+                <button class="weekly-Site" *ngIf="topSites?.week">
+                    <div>
+                        <p>Torre académica UAS</p>
+                        <h3>En tendencia</h3>
+                    </div>
+                </button>
+            </div>
         </div>
+
+
+        <!-- --- Lista de Reservas --- -->
+        <div class="reservas-Container">
+            <span>Sitios más visitados</span>
+            <div class="reservas" *ngFor="let reserva of reservas">
+                <div>
+                    <h5 class="card-title">Reserva #{{ reserva.id }}</h5>
+                    <p class="card-text mb-1"><strong>Recurso ID:</strong> {{ reserva.id_resource }}</p>
+                    <p class="card-text mb-1"><strong>Owner ID:</strong> {{ reserva.id_owner }}</p>
+                    <p class="card-text mb-1"><strong>Estado:</strong> {{ reserva.status }}</p>
+                    <p class="card-text mb-1">
+                        <strong>Inicio:</strong> {{ reserva.start_date | date:'short' }}
+                    </p>
+                    <p class="card-text mb-1">
+                        <strong>Fin:</strong> {{ reserva.end_date | date:'short' }}
+                    </p>
+                    <small class="text-muted mt-2">Creado: {{ reserva.created_at | date:'mediumDate' }}</small>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="ia">
+            <div class="iaItem">
+                Recomendaciones de IA
+            </div>
+
+            <div class="iaItem">
+                Recomendaciones de IA
+            </div>
+
+            <div class="iaItem">
+                Recomendaciones de IA
+            </div>
+        </div>
+
     </div>
 
-    <!-- Card: Sitios mensuales -->
-    <div class="card top-sites-month" *ngIf="topSites?.monthly">
-        <h2>Sitios más reservados (Mensual)</h2>
-
-        <div *ngFor="let site of topSites.monthly">
-            <p>{{ site.name }} – {{ site.count }} reservas</p>
-        </div>
-    </div>
-
-    <!-- Cards por cada reserva -->
-    <div class="reservas-list">
-        <div class="card reserva-item" *ngFor="let r of myReservas">
-            <h3>Reserva #{{ r.id }}</h3>
-            <p>Recurso: {{ r.Resource?.name }}</p>
-            <p>Estado: {{ r.status }}</p>
-        </div>
-    </div>
-</section>
+</div>
