@@ -1,17 +1,76 @@
-<div class="container mt-4">
-  <div class="row g-3">
-    <div class="col-sm-6 col-md-4" *ngFor="let grupo of groups">
-      <div class="card shadow-sm h-100">
-        <div class="card-body d-flex flex-column justify-content-between">
-          <div>
-            <h5 class="card-title">{{ grupo.name }}</h5>
-            <p class="card-text mb-1"><strong>ID:</strong> {{ grupo.id }}</p>
-            <p class="card-text mb-1"><strong>Owner:</strong> {{ grupo.id_owner }}</p>
-            <p class="card-text mb-1"><strong>Color:</strong> {{ grupo.color }}</p>
+<div class="app-container">
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="page-header">
+      <h1>Mis grupos</h1>
+      <button class="create-btn">
+        Crear grupo
+      </button>
+    </header>
+
+    <div class="content-sections">
+      <!-- Grupos Creados -->
+      <section class="section">
+        <h2 class="section-title">Grupos creados</h2>
+        <div class="groups-list">
+          <div class="group-card">
+            <div class="group-icon blue">
+              <span class="material-symbols-outlined">groups</span>
+            </div>
+            <div class="group-info">
+              <p class="group-name">Automatas Software</p>
+              <p class="group-members">4 miembros</p>
+            </div>
           </div>
-          <small class="text-muted mt-2">Creado: {{ grupo.date_created | date:'mediumDate' }}</small>
+
+          <div class="group-card">
+            <div class="group-icon red">
+              <span class="material-symbols-outlined">groups</span>
+            </div>
+            <div class="group-info">
+              <p class="group-name">Cholos</p>
+              <p class="group-members">6 miembros</p>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <!-- Grupos a los que perteneces -->
+      <section class="section">
+        <h2 class="section-title">Grupos a los que perteneces</h2>
+        <div class="groups-list">
+          <div class="group-card">
+            <div class="group-icon green">
+              <span class="material-symbols-outlined">groups</span>
+            </div>
+            <div class="group-info">
+              <p class="group-name">Desarrollo de aplicaciones web 2</p>
+              <p class="group-members">40 miembros</p>
+            </div>
+          </div>
+
+          <div class="group-card">
+            <div class="group-icon blue">
+              <span class="material-symbols-outlined">groups</span>
+            </div>
+            <div class="group-info">
+              <p class="group-name">Calculadora FINDRISC</p>
+              <p class="group-members">2 miembros</p>
+            </div>
+          </div>
+
+          <div class="group-card">
+            <div class="group-icon lime">
+              <span class="material-symbols-outlined">groups</span>
+            </div>
+            <div class="group-info">
+              <p class="group-name">Software de Sistemas</p>
+              <p class="group-members">40 miembros</p>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
-  </div>
+  </main>
 </div>

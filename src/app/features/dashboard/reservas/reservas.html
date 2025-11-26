@@ -1,23 +1,25 @@
-<div class="container mt-4">
-  <div class="row g-3">
-    <div class="col-sm-6 col-md-4" *ngFor="let reserva of reservas">
-      <div class="card shadow-sm h-100">
-        <div class="card-body d-flex flex-column justify-content-between">
-          <div>
-            <h5 class="card-title">Reserva #{{ reserva.id }}</h5>
-            <p class="card-text mb-1"><strong>Recurso ID:</strong> {{ reserva.id_resource }}</p>
-            <p class="card-text mb-1"><strong>Owner ID:</strong> {{ reserva.id_owner }}</p>
-            <p class="card-text mb-1"><strong>Estado:</strong> {{ reserva.status }}</p>
-            <p class="card-text mb-1">
-              <strong>Inicio:</strong> {{ reserva.start_date | date:'short' }}
-            </p>
-            <p class="card-text mb-1">
-              <strong>Fin:</strong> {{ reserva.end_date | date:'short' }}
-            </p>
-          </div>
-          <small class="text-muted mt-2">Creado: {{ reserva.created_at | date:'mediumDate' }}</small>
+<div class="main-container">
+  <div class="top-section">
+    <div class="name-section">Mis reservas</div>
+    <button class="new-reserva-button">+ Reservar</button>
+  </div>
+
+  <div class="historial-section">
+    <button class="view-historial-button">Historial</button>
+  </div>
+
+  <div class="reservas-section">
+    <div *ngFor="let reserva of reservas">
+      <div class="reserva-item">
+        <img class="reserva-img" src="/images/fondo1.png" alt="">
+        <div>
+          <h3>Sitio: {{ reserva.id_resource }}</h3>
+          <p>Fecha inicio: {{ reserva.start_date | date:'hh:mm a' }}</p>
+          <p>Fecha fin: {{ reserva.end_date | date:'hh:mm a' }}</p>
+          <p>{{ reserva.id }}</p>
         </div>
       </div>
     </div>
   </div>
+
 </div>

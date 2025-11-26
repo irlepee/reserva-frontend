@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Sidebar } from '../../components/sidebar/sidebar';
-import { RouterOutlet } from '@angular/router';
-import { AuthService } from '../../../core/services/authService';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -10,5 +9,9 @@ import { AuthService } from '../../../core/services/authService';
   styleUrl: './dashboard-layout.css',
 })
 export class DashboardLayout {
+  constructor(public router: Router) { }
 
+  ngOnInit() {
+    this.router.navigate(['dashboard/home']);
+  }
 }

@@ -10,9 +10,6 @@
 
     <div class="buttonsdiv">
       <button class="loginbutton" (click)="openLogin()">Iniciar sesión</button>
-      <div *ngIf="user">
-        {{ user.name }}
-      </div>
     </div>
 
     <div class="modal-backdrop" *ngIf="showLogin">
