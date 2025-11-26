@@ -1,37 +1,40 @@
 <div class="main-container">
+    <div class="header">
+        <h2>Hola, {{ user?.name || 'Irlepe' }}!</h2>
+        <div class="search-container">
+            <input type="text" placeholder="Busca un lugar..." class="search-input">
+            <div class="notification-icon">
+                <span class="notification-badge">1</span>
+                🔔
+            </div>
+        </div>
+    </div>
 
-    <h2>Hola, {{ user?.name }}!</h2>
-
-    <div class="content-container">
-        <div class="topSites-Container">
-            <span>Sitios más visitados</span>
-            <div class="topSites">
-                <button class="monthly-Site" *ngIf="topSites?.month">
-                    <div>
-                        <p>Biblioteca UAS</p>
-                        <h3>Más popular</h3>
+    <div class="content-grid">
+        <!-- Sitios más visitados -->
+        <div class="section top-sites-section">
+            <h3 class="section-title">Sitios más visitados</h3>
+            <div class="top-sites-grid">
+                <button class="site-card site-card-blue" *ngIf="topSites?.month">
+                    <div class="site-card-content">
+                        <h4>Biblioteca TEC</h4>
+                        <div class="site-badge">⭐ Más popular</div>
                     </div>
                 </button>
-
-                <button class="weekly-Site" *ngIf="topSites?.week">
-                    <div>
-                        <p>Torre académica UAS</p>
-                        <h3>En tendencia</h3>
+                <button class="site-card site-card-pink" *ngIf="topSites?.week">
+                    <div class="site-card-content">
+                        <h4>Torre académica UAS</h4>
+                        <div class="site-badge">🔥 En tendencia</div>
                     </div>
                 </button>
             </div>
         </div>
 
-
-        <!-- --- Lista de Reservas --- -->
-        <div class="reservas-Container">
-            <span>Sitios más visitados</span>
+        <!-- Reservas para hoy -->
+        <div class="reservas-section">
             <div class="reservas" *ngFor="let reserva of reservas">
                 <div>
-                    <h5 class="card-title">Reserva #{{ reserva.id }}</h5>
                     <p class="card-text mb-1"><strong>Recurso ID:</strong> {{ reserva.id_resource }}</p>
-                    <p class="card-text mb-1"><strong>Owner ID:</strong> {{ reserva.id_owner }}</p>
-                    <p class="card-text mb-1"><strong>Estado:</strong> {{ reserva.status }}</p>
                     <p class="card-text mb-1">
                         <strong>Inicio:</strong> {{ reserva.start_date | date:'short' }}
                     </p>
@@ -43,21 +46,64 @@
             </div>
         </div>
 
-
-        <div class="ia">
-            <div class="iaItem">
-                Recomendaciones de IA
-            </div>
-
-            <div class="iaItem">
-                Recomendaciones de IA
-            </div>
-
-            <div class="iaItem">
-                Recomendaciones de IA
+        <!-- Recomendaciones IA -->
+        <div class="section recommendations-section">
+            <h3 class="section-title">Recomendaciones de Reservas (IA)</h3>
+            <div class="recommendations-grid">
+                <div class="recommendation-card">
+                    <div class="recommendation-icon">📚</div>
+                    <div class="recommendation-content">
+                        <h5>Biblioteca TEC</h5>
+                        <p class="recommendation-detail">Sala de estudio 3B</p>
+                        <p class="recommendation-time">Mañana, 10:00 - 11:30</p>
+                    </div>
+                </div>
+                <div class="recommendation-card">
+                    <div class="recommendation-icon">🏀</div>
+                    <div class="recommendation-content">
+                        <h5>Centro Comunitario</h5>
+                        <p class="recommendation-detail">Cancha de basket</p>
+                        <p class="recommendation-time">Viernes, 18:00 - 19:00</p>
+                    </div>
+                </div>
+                <div class="recommendation-card">
+                    <div class="recommendation-icon">🏥</div>
+                    <div class="recommendation-content">
+                        <h5>Facultad de Medicina</h5>
+                        <p class="recommendation-detail">Proyector Aula 5</p>
+                        <p class="recommendation-time">Sábado, 09:00 - 10:00</p>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- Próximos Eventos -->
+        <div class="section events-section">
+            <h3 class="section-title">Próximos Eventos</h3>
+            <div class="events-list">
+                <div class="event-item">
+                    <div class="event-date">
+                        <span class="event-month">JUL</span>
+                        <span class="event-day">28</span>
+                    </div>
+                    <div class="event-info">
+                        <h5>Feria del Libro</h5>
+                        <p>Biblioteca TEC</p>
+                        <p class="event-time">10:00 - 18:00</p>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">
+                        <span class="event-month">AGO</span>
+                        <span class="event-day">05</span>
+                    </div>
+                    <div class="event-info">
+                        <h5>Torneo de Baloncesto</h5>
+                        <p>Centro Comunitario</p>
+                        <p class="event-time">Desde las 9:00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
 </div>
