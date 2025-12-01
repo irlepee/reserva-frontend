@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common';
 import { GroupFilter } from "../../../../shared/components/filters/group-filter/group-filter";
 import { AuthService } from '../../../../core/services/authService';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-dash-group',
-  imports: [CommonModule, GroupFilter, FormsModule],
+  imports: [CommonModule, GroupFilter, FormsModule, RouterLink],
   templateUrl: './dash-group.html',
   styleUrl: './dash-group.css',
 })
@@ -74,4 +75,6 @@ export class DashGroup {
       );
     }
   }
+
+
 }
