@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
+import { ReservaService } from '../../../../core/services/reserva-service';
 import { CommonModule } from '@angular/common';
-import { ReservaService } from '../../../core/services/reserva-service';
 
 @Component({
-  selector: 'app-reservas',
+  selector: 'app-dash-reservas',
   imports: [CommonModule],
-  templateUrl: './reservas.html',
-  styleUrl: './reservas.css',
+  templateUrl: './dash-reservas.html',
+  styleUrl: './dash-reservas.css',
 })
-export class Reservas {
+export class DashReservas {
   constructor(private reservaService: ReservaService) { }
 
   reservas: any[] = [];
