@@ -1,0 +1,12 @@
+<div class="panel">
+  <div class="buttons-panel">
+    <button [class.selected]="selectedFilter === 'all'" (click)="selectFilter('all')">Todos los grupos</button>
+    <button [class.selected]="selectedFilter === 'created'" (click)="selectFilter('created')">Grupos creados por mi</button>
+    <button [class.selected]="selectedFilter === 'others'" (click)="selectFilter('others')">Grupos creados por otros</button>
+  </div>
+
+  <div>
+    <p>Por número de miembros</p><button (click)="ordenarAsc()"><i class="bi bi-caret-up-fill"></i></button><button
+      (click)="ordenarDesc()"><i class="bi bi-caret-down-fill"></i></button>
+  </div>
+</div>

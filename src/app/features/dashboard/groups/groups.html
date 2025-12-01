@@ -1,76 +1,33 @@
-<div class="app-container">
+<div class="main-container">
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <header class="page-header">
-      <h1>Mis grupos</h1>
-      <button class="create-btn">
-        Crear grupo
-      </button>
-    </header>
+  <div class="top-section">
+    <h2>Mis grupos</h2>
+    <button>+ Crear grupo</button>
+  </div>
 
-    <div class="content-sections">
-      <!-- Grupos Creados -->
-      <section class="section">
-        <h2 class="section-title">Grupos creados</h2>
-        <div class="groups-list">
-          <div class="group-card">
-            <div class="group-icon blue">
-              <span class="material-symbols-outlined">groups</span>
-            </div>
-            <div class="group-info">
-              <p class="group-name">Automatas Software</p>
-              <p class="group-members">4 miembros</p>
-            </div>
-          </div>
-
-          <div class="group-card">
-            <div class="group-icon red">
-              <span class="material-symbols-outlined">groups</span>
-            </div>
-            <div class="group-info">
-              <p class="group-name">Cholos</p>
-              <p class="group-members">6 miembros</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Grupos a los que perteneces -->
-      <section class="section">
-        <h2 class="section-title">Grupos a los que perteneces</h2>
-        <div class="groups-list">
-          <div class="group-card">
-            <div class="group-icon green">
-              <span class="material-symbols-outlined">groups</span>
-            </div>
-            <div class="group-info">
-              <p class="group-name">Desarrollo de aplicaciones web 2</p>
-              <p class="group-members">40 miembros</p>
-            </div>
-          </div>
-
-          <div class="group-card">
-            <div class="group-icon blue">
-              <span class="material-symbols-outlined">groups</span>
-            </div>
-            <div class="group-info">
-              <p class="group-name">Calculadora FINDRISC</p>
-              <p class="group-members">2 miembros</p>
-            </div>
-          </div>
-
-          <div class="group-card">
-            <div class="group-icon lime">
-              <span class="material-symbols-outlined">groups</span>
-            </div>
-            <div class="group-info">
-              <p class="group-name">Software de Sistemas</p>
-              <p class="group-members">40 miembros</p>
-            </div>
-          </div>
-        </div>
-      </section>
+  <div class="filter-section">
+    <input class="search-input" type="text" placeholder="Buscar grupo..." [(ngModel)]="search"
+      (input)="filtrarPorNombre()" />
+    <div class="filter-button-container">
+      <button class="filter-button" (click)="toggleFiltros()">Filtrar</button><app-group-filter *ngIf="mostrarFiltros"
+        (cerrar)="mostrarFiltros = false" (filtroSeleccionado)="aplicarFiltro($event)">
+      </app-group-filter>
     </div>
-  </main>
+  </div>
+
+  <div class="groups-section">
+
+    <div class="groups" *ngFor="let group of groups">
+      <div class="icon">
+        <i class="bi bi-people-fill"></i>
+      </div>
+      <div>
+        <h3>{{ group.name }}</h3>
+        <p>10 miembros</p>
+      </div>
+      <div class="groups-detail">></div>
+    </div>
+
+  </div>
+
 </div>
