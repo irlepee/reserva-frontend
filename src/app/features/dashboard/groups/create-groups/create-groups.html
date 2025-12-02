@@ -47,7 +47,7 @@
                 <div class="invited-member" *ngFor="let member of invitedMembers; let i = index">
                     <div class="member-info">
                         <i class="bi bi-person-circle"></i>
-                        <span>{{ member }}</span>
+                        <span>{{ member.identifier }}</span>
                     </div>
                     <button type="button" class="btn-remove" (click)="quitarMiembro(i)" title="Remover">
                         <i class="bi bi-x-circle"></i>

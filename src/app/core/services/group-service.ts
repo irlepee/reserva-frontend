@@ -13,8 +13,6 @@ export class GroupService {
     return this.http.get<any[]>(`${this.api}/groups`).toPromise().then(r => r ?? []);
   }
 
-  // TODO: Implementar en el backend
-  // Debe devolver los detalles completos del grupo (nombre, descripción, color, etc.)
   getGroupById(groupId: string): Promise<any> {
     return this.http.get<any>(`${this.api}/groups/${groupId}`).toPromise().then(r => r ?? {});
   }
@@ -27,8 +25,6 @@ export class GroupService {
     }).toPromise().then(r => r ?? {});
   }
 
-  // TODO: Implementar en el backend
-  // Debe actualizar el grupo con los nuevos datos
   updateGroup(groupId: string, groupName: string, groupDescription: string, groupColor: number): Promise<any> {
     return this.http.put<any>(`${this.api}/groups/${groupId}`, { 
       name: groupName, 
@@ -37,16 +33,37 @@ export class GroupService {
     }).toPromise().then(r => r ?? {});
   }
 
-  checkIfuserExists(identifier: string): Promise<boolean> {
-    return this.http.post<boolean>(`${this.api}/groups/exists`, { identifier })
+  checkIfuserExists(identifier: string): Promise<string> {
+    return this.http.post<any>(`${this.api}/groups/exists`, { identifier })
       .toPromise()
-      .then(r => r ?? false);
+      .then(response => {
+        // Si devuelve directamente un número (el ID)
+        if (typeof response === 'number') {
+          return response.toString();
+        }
+        // Si devuelve un string (el ID)
+        if (typeof response === 'string') {
+          return response;
+        }
+        // Si el backend devuelve un objeto con el ID
+        if (response && response.id) {
+          return response.id.toString();
+        }
+        throw new Error('Usuario no encontrado');
+      })
+      .catch(() => {
+        throw new Error('Usuario no encontrado');
+      });
   }
 
   // TODO: Implementar en el backend
   // Debe devolver los miembros del grupo
   getGroupMembers(groupId: string): Promise<any[]> {
     return this.http.get<any[]>(`${this.api}/groups/${groupId}/members`).toPromise().then(r => r ?? []);
+  }
+  
+  getInvitations(): Promise<any[]> {
+    return this.http.get<any[]>(`${this.api}/groups/invitations`).toPromise().then(r => r ?? []);
   }
 }
 

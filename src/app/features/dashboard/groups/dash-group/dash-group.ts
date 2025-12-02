@@ -21,10 +21,6 @@ export class DashGroup {
   user: any;
   search: string = '';
 
-  toggleFiltros() {
-    this.mostrarFiltros = !this.mostrarFiltros;
-  }
-
   ngOnInit() {
     this.groupService.getGroups()
       .then(data => {
@@ -40,6 +36,13 @@ export class DashGroup {
       })
       .catch(err => {
         this.user = null;
+      });
+    this.groupService.getInvitations()
+      .then(invitations => {
+        console.log('Invitaciones recibidas:', invitations);
+      })
+      .catch(err => {
+        console.error('Error al obtener invitaciones:', err);
       });
   }
 
@@ -73,5 +76,8 @@ export class DashGroup {
     }
   }
 
+  toggleFiltros() {
+    this.mostrarFiltros = !this.mostrarFiltros;
+  }
 
 }
