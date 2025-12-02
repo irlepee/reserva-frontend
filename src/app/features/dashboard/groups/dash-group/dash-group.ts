@@ -5,10 +5,11 @@ import { GroupFilter } from "../../../../shared/components/filters/group-filter/
 import { AuthService } from '../../../../core/services/authService';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from "@angular/router";
+import { Invitations } from '../../../../shared/components/invitations/invitations';
 
 @Component({
   selector: 'app-dash-group',
-  imports: [CommonModule, GroupFilter, FormsModule, RouterLink],
+  imports: [CommonModule, GroupFilter, FormsModule, RouterLink, Invitations],
   templateUrl: './dash-group.html',
   styleUrl: './dash-group.css',
 })
@@ -20,6 +21,8 @@ export class DashGroup {
   mostrarFiltros = false;
   user: any;
   search: string = '';
+
+  // CARGA GRUPOS, USUARIO E INVITACIONES
 
   ngOnInit() {
     this.groupService.getGroups()
@@ -37,16 +40,15 @@ export class DashGroup {
       .catch(err => {
         this.user = null;
       });
-    this.groupService.getInvitations()
-      .then(invitations => {
-        console.log('Invitaciones recibidas:', invitations);
-      })
-      .catch(err => {
-        console.error('Error al obtener invitaciones:', err);
-      });
   }
 
+  // FILTROS
+
   filtroActual: string = '';
+
+  toggleFiltros() {
+    this.mostrarFiltros = !this.mostrarFiltros;
+  }
 
   aplicarFiltro(filtro: string) {
     this.filtroActual = filtro;
@@ -63,7 +65,6 @@ export class DashGroup {
         (group: any) => group.id_owner !== this.user.id
       );
     }
-
   }
 
   filtrarPorNombre() {
@@ -76,8 +77,13 @@ export class DashGroup {
     }
   }
 
-  toggleFiltros() {
-    this.mostrarFiltros = !this.mostrarFiltros;
+  // INVITATIONS
+
+  invitations: any[] = [];
+  mostrarInvitaciones = false;
+
+  toggleInvitations() {
+    this.mostrarInvitaciones = !this.mostrarInvitaciones;
   }
 
 }

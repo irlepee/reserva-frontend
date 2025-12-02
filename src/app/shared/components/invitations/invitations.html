@@ -1,0 +1,52 @@
+<div class="modal-overlay" (click)="cerrarModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Invitación de Grupo</h2>
+      <button class="close-button" (click)="cerrarModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="cargando" class="loading">
+        <p>Cargando invitaciones...</p>
+      </div>
+
+      <div *ngIf="error" class="error">
+        <p>{{ error }}</p>
+      </div>
+
+      <div *ngIf="mensaje" [ngClass]="'mensaje-' + mensaje.tipo" class="mensaje">
+        <p>{{ mensaje.texto }}</p>
+      </div>
+
+      <div *ngIf="!cargando && !error && invitations.length === 0" class="no-invitations">
+        <p>No tienes invitaciones pendientes</p>
+      </div>
+
+      <div *ngIf="!cargando && !error && invitations.length > 0" class="invitations-list">
+        <div *ngFor="let invitation of invitations" class="invitation-item">
+          <div class="invitation-info">
+            <h3>{{ invitation.name || 'Grupo sin nombre' }}</h3>
+            <p class="description" *ngIf="invitation.description">{{ invitation.description }}</p>
+            <div class="group-details">
+              <p><strong>ID del grupo:</strong> {{ invitation.id }}</p>
+              <p><strong>Propietario ID:</strong> {{ invitation.id_owner }}</p>
+              <p><strong>Color:</strong> {{ invitation.color }}</p>
+              <p class="date"><strong>Creado:</strong> {{ invitation.date_created | date: 'short' }}</p>
+            </div>
+          </div>
+          <div class="invitation-actions">
+            <button class="accept-btn" (click)="aceptarInvitacion(invitation)" [disabled]="procesando[invitation.id]">
+              <i class="bi bi-check-lg"></i> {{ procesando[invitation.id] ? 'Procesando...' : 'Aceptar' }}
+            </button>
+            <button class="reject-btn" (click)="rechazarInvitacion(invitation)" [disabled]="procesando[invitation.id]">
+              <i class="bi bi-x-lg"></i> {{ procesando[invitation.id] ? 'Procesando...' : 'Rechazar' }}
+            </button>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>

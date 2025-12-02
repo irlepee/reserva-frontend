@@ -18,18 +18,18 @@ export class GroupService {
   }
 
   createGroup(groupName: string, groupDescription: string, groupColor: number): Promise<any> {
-    return this.http.post<any>(`${this.api}/groups`, { 
-      name: groupName, 
-      description: groupDescription, 
-      color: groupColor 
+    return this.http.post<any>(`${this.api}/groups`, {
+      name: groupName,
+      description: groupDescription,
+      color: groupColor
     }).toPromise().then(r => r ?? {});
   }
 
   updateGroup(groupId: string, groupName: string, groupDescription: string, groupColor: number): Promise<any> {
-    return this.http.put<any>(`${this.api}/groups/${groupId}`, { 
-      name: groupName, 
-      description: groupDescription, 
-      color: groupColor 
+    return this.http.put<any>(`${this.api}/groups/${groupId}`, {
+      name: groupName,
+      description: groupDescription,
+      color: groupColor
     }).toPromise().then(r => r ?? {});
   }
 
@@ -56,14 +56,24 @@ export class GroupService {
       });
   }
 
-  // TODO: Implementar en el backend
-  // Debe devolver los miembros del grupo
   getGroupMembers(groupId: string): Promise<any[]> {
     return this.http.get<any[]>(`${this.api}/groups/${groupId}/members`).toPromise().then(r => r ?? []);
   }
-  
+
   getInvitations(): Promise<any[]> {
     return this.http.get<any[]>(`${this.api}/groups/invitations`).toPromise().then(r => r ?? []);
+  }
+
+  acceptInvitation(groupId: string): Promise<any> {
+    return this.http.post<any>(`${this.api}/groups/accept`, { groupId })
+      .toPromise()
+      .then(r => r ?? {});
+  }
+
+  rejectInvitation(groupId: string): Promise<any> {
+    return this.http.post<any>(`${this.api}/groups/reject`, { groupId })
+      .toPromise()
+      .then(r => r ?? {});
   }
 }
 

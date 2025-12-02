@@ -2,6 +2,7 @@
 
   <div class="top-section">
     <h2>Mis grupos</h2>
+    <button class="invitations-button" (click)="toggleInvitations()"><i class="bi bi-bell-fill"></i></button>
     <button routerLink="create">+ Crear grupo</button>
   </div>
 
@@ -32,5 +33,7 @@
     </div>
 
   </div>
+
+  <app-invitations *ngIf="mostrarInvitaciones" (cerrar)="mostrarInvitaciones = false"></app-invitations>
 
 </div>
