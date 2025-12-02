@@ -30,19 +30,16 @@ export class DashGroup {
       .then(data => {
         this.groups = data;
         this.originalGroups = data;
-        console.log(data);
       })
       .catch(err => {
-        console.log(err);
         this.groups = [];
       });
     this.authService.fetchCurrentUser()
       .then(userData => {
         this.user = userData;
-        console.log('Usuario actual:', this.user);
       })
       .catch(err => {
-        console.log('Error al obtener el usuario actual:', err);
+        this.user = null;
       });
   }
 

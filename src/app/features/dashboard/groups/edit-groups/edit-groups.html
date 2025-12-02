@@ -1,10 +1,10 @@
 <div class="main-container">
     <div class="top-section">
-        <h2>Crear nuevo grupo</h2>
-        <p>Completa los detalles para configurar tu nuevo grupo</p>
+        <h2>Editar grupo</h2>
+        <p>Completa los detalles para configurar tu grupo</p>
     </div>
 
-    <form (ngSubmit)="crearGrupo()">
+    <form *ngIf="!isLoading" (ngSubmit)="actualizarGrupo()">
         <p>Nombre del grupo</p>
         <div class="form-floating mb-3">
             <input type="text" class="form-control" id="groupName" placeholder="Nombre del grupo" [(ngModel)]="groupName" name="groupName" required>
@@ -56,9 +56,21 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Crear grupo</button>
-        <p class="confirmP">Se enviarán las invitaciones al crear el grupo</p>
+        <!-- Sección de miembros (será implementada por el usuario) -->
+        <div class="members-section">
+            <p><strong>Miembros del grupo</strong></p>
+            <div class="members-list">
+                <!-- TODO: Implementar lista de miembros actuales -->
+                <p class="placeholder">Los miembros se cargarán aquí</p>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Actualizar grupo</button>
+        <p class="confirmP">Se actualizará la información del grupo</p>
     </form>
 
+    <div *ngIf="isLoading" class="loading">
+        <p>Cargando grupo...</p>
+    </div>
 
 </div>

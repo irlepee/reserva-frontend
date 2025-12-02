@@ -10,6 +10,7 @@ import { DashReservas } from './features/dashboard/reservas/dash-reservas/dash-r
 import { Sites } from './features/dashboard/sites/sites';
 import { DashSites } from './features/dashboard/sites/dash-sites/dash-sites';
 import { CreateGroups } from './features/dashboard/groups/create-groups/create-groups';
+import { EditGroups } from './features/dashboard/groups/edit-groups/edit-groups';
 import { CreateSites } from './features/dashboard/sites/create-sites/create-sites';
 import { HistoryReservas } from './features/dashboard/reservas/history-reservas/history-reservas';
 
@@ -29,7 +30,8 @@ export const routes: Routes = [
             { path: 'groups', component:Groups,
                 children: [
                     { path: '', component:DashGroup },
-                    { path: 'create', component:CreateGroups}
+                    { path: 'create', component:CreateGroups},
+                    { path: 'edit/:id', component:EditGroups}
                 ]
             },
             { path: 'sites', component:Sites,
