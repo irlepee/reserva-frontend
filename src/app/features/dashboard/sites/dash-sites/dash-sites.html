@@ -22,7 +22,7 @@
 
     <div class="sites-grid">
       <div class="site-card" *ngFor="let site of sites"
-        [style.backgroundImage]="'url(' + (site.images?.[0] || '/images/placeholder-site.jpg') + ')'"
+        [style.backgroundImage]="'url(' + getImageUrl(site.images) + ')'"
         title="{{ site.name }}">
         <div class="site-overlay">
           <div class="site-info">

@@ -68,11 +68,11 @@
 
           <!-- Preview Images -->
           <div class="image-preview-grid">
-            <div *ngFor="let image of uploadedImages; let i = index" class="image-preview-item">
+            <div *ngFor="let image of imagePreview; let i = index" class="image-preview-item">
               <img [src]="image" alt="preview">
               <button type="button" class="remove-btn" (click)="removeImage(i)">✕</button>
             </div>
-            <div *ngIf="uploadedImages.length < 3" class="image-preview-item image-placeholder" (click)="fileInput.click()">
+            <div *ngIf="imagePreview.length < 3" class="image-preview-item image-placeholder" (click)="fileInput.click()">
               <span>+</span>
             </div>
           </div>

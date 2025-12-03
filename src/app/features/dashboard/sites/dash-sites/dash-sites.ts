@@ -13,6 +13,7 @@ export class DashSites {
   constructor(private siteService: SiteService) { }
 
   sites: any[] = [];
+  apiUrl = 'http://localhost:3000';
 
   ngOnInit() {
     this.siteService.getSites()
@@ -24,5 +25,21 @@ export class DashSites {
         this.sites = [];
         console.error('Error fetching sites:', error);
       });
+  }
+
+  getImageUrl(images: any): string {
+    if (!images || images.length === 0) {
+      return '/images/placeholder-site.jpg';
+    }
+    
+    const firstImage = images[0];
+    
+    // Si ya es una URL completa
+    if (firstImage.startsWith('http')) {
+      return firstImage;
+    }
+    
+    // Si es un nombre de archivo, construir la URL
+    return `${this.apiUrl}${firstImage}`;
   }
 }

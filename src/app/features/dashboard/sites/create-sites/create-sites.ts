@@ -19,7 +19,8 @@ export class CreateSites implements OnInit {
 
   siteName: string = '';
   description: string = '';
-  uploadedImages: string[] = [];
+  uploadedImages: File[] = [];
+  imagePreview: string[] = [];
   isDragging: boolean = false;
 
   // Autocomplete data
@@ -153,10 +154,12 @@ export class CreateSites implements OnInit {
     
     imageFiles.forEach(file => {
       if (this.uploadedImages.length < 3) {
+        this.uploadedImages = [...this.uploadedImages, file];
+        
         const reader = new FileReader();
         reader.onload = (e) => {
           if (e.target?.result) {
-            this.uploadedImages = [...this.uploadedImages, e.target.result as string];
+            this.imagePreview = [...this.imagePreview, e.target.result as string];
           }
         };
         reader.readAsDataURL(file);
@@ -166,6 +169,7 @@ export class CreateSites implements OnInit {
 
   removeImage(index: number): void {
     this.uploadedImages = this.uploadedImages.filter((_, i) => i !== index);
+    this.imagePreview = this.imagePreview.filter((_, i) => i !== index);
   }
 
   cancelCreate() {
@@ -178,16 +182,19 @@ export class CreateSites implements OnInit {
       alert('El nombre del sitio es obligatorio.');
       return;
     }
-    const siteData = {
-      name: this.siteName,
-      description: this.description,
-      entidadId: this.entidadId,
-      municipioId: this.municipioId,
-      localidadId: this.localidadId,
-      images: this.uploadedImages
-    };
 
-    this.siteService.createSite(siteData)
+    const formData = new FormData();
+    formData.append('name', this.siteName);
+    formData.append('description', this.description);
+    formData.append('entidadId', this.entidadId?.toString() || '');
+    formData.append('municipioId', this.municipioId?.toString() || '');
+    formData.append('localidadId', this.localidadId?.toString() || '');
+    
+    this.uploadedImages.forEach((file) => {
+      formData.append('images', file, file.name);
+    });
+
+    this.siteService.createSite(formData)
       .then(() => {
         alert('Sitio creado exitosamente.');
         this.router.navigate(['/dashboard/sites']);
@@ -196,4 +203,4 @@ export class CreateSites implements OnInit {
         alert('Hubo un error al crear el sitio. Por favor, intenta nuevamente.');
       });
   }
-}
+} 
