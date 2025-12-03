@@ -32,7 +32,6 @@ export class Invitations implements OnInit {
         this.invitations = Array.isArray(data) ? data : [];
       })
       .catch(err => {
-        console.error('Error al obtener invitaciones:', err);
         this.error = 'Error al cargar las invitaciones';
         this.invitations = [];
       })
@@ -56,7 +55,6 @@ export class Invitations implements OnInit {
         this.procesando[invitation.id] = false;
       })
       .catch(err => {
-        console.error('Error al aceptar la invitación:', err);
         this.mostrarMensaje('Error al aceptar la invitación', 'error');
         this.procesando[invitation.id] = false;
       });
@@ -73,7 +71,6 @@ export class Invitations implements OnInit {
         this.procesando[invitation.id] = false;
       })
       .catch(err => {
-        console.error('Error al rechazar la invitación:', err);
         this.mostrarMensaje('Error al rechazar la invitación', 'error');
         this.procesando[invitation.id] = false;
       });

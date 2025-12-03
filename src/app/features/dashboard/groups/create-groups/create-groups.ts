@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GroupService } from '../../../../core/services/group-service';
 import { AuthService } from '../../../../core/services/authService';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-groups',
@@ -11,7 +12,7 @@ import { AuthService } from '../../../../core/services/authService';
   styleUrl: './create-groups.css',
 })
 export class CreateGroups {
-  constructor(private groupService: GroupService, private authService: AuthService) { }
+  constructor(private groupService: GroupService, private authService: AuthService, private router: Router) { }
 
   groupName: string = '';
   groupDescription: string = '';
@@ -47,14 +48,33 @@ export class CreateGroups {
 
     this.groupService
       .createGroup(this.groupName, this.groupDescription, this.selectedColor)
-      .then(() => {
-        alert('Grupo creado con exito');
+      .then((groupData) => {
+        // Extraer el ID del grupo creado
+        const groupId = groupData?.id;
+
+        alert('Grupo creado con éxito');
         this.groupName = '';
         this.groupDescription = '';
-        this.invitedMembers = [];
         this.selectedColor = 0;
+
+        // Ahora invitar a los usuarios si hay alguno
+        if (this.invitedMembers.length > 0) {
+          const userIds = this.invitedMembers.map(member => parseInt(member.id));
+          
+          this.groupService.inviteUser(groupId.toString(), userIds)
+            .then(() => {
+              console.log('Invitaciones enviadas correctamente');
+              this.invitedMembers = [];
+            })
+            .catch((error) => {
+              console.error('Error al enviar invitaciones:', error);
+              alert('Error al enviar invitaciones');
+            });
+        }
+        this.router.navigate(['/dashboard/groups']);
       })
       .catch((error) => {
+        console.error('Error al crear el grupo:', error);
         alert('Error al crear el grupo');
       });
   }

@@ -1,76 +1,87 @@
 <div class="main-container">
-    <div class="top-section">
-        <h2>Editar grupo</h2>
-        <p>Completa los detalles para configurar tu grupo</p>
+  <div class="top-section">
+    <h2>Editar grupo</h2>
+    <p>Completa los detalles para configurar tu grupo</p>
+  </div>
+
+  <form *ngIf="!isLoading" (ngSubmit)="actualizarGrupo()">
+    <!-- Nombre del grupo -->
+    <div class="form-group">
+      <label for="groupName">Nombre del grupo</label>
+      <input type="text" id="groupName" [(ngModel)]="groupName" name="groupName" placeholder="Nombre del grupo" required>
     </div>
 
-    <form *ngIf="!isLoading" (ngSubmit)="actualizarGrupo()">
-        <p>Nombre del grupo</p>
-        <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="groupName" placeholder="Nombre del grupo" [(ngModel)]="groupName" name="groupName" required>
-            <label for="groupName">Nombre del grupo</label>
-        </div>
-
-        <p>Descripción del grupo (Opcional)</p>
-        <div class="form-floating mb-3">
-            <textarea class="form-control" id="groupDescription" placeholder="Descripción del grupo" [(ngModel)]="groupDescription" name="groupDescription"
-                style="height: 100px;" required></textarea>
-            <label for="groupDescription">Descripción del grupo</label>
-        </div>
-
-        <div class="color-selector-section">
-            <p>Selecciona un color para el grupo</p>
-            <div class="color-options">
-                <div *ngFor="let color of colors" class="color-option" [class.selected]="selectedColor === color.id" (click)="selectedColor = color.id">
-                    <div class="color-circle" [style.backgroundColor]="color.hex"></div>
-                    <span>{{ color.name }}</span>
-                    <i class="bi bi-check-circle-fill" *ngIf="selectedColor === color.id"></i>
-                </div>
-            </div>
-        </div>
-
-        <div class="invite-section">
-            <p>Invitar miembros al grupo</p>
-            <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="inviteEmail" placeholder="Correo electrónico" [(ngModel)]="identifier" name="inviteEmail">
-                <label for="inviteEmail">Ingresa el nombre de usuario o el correo electrónico de la persona a invitar</label>
-            </div>
-            <button type="button" class="btn btn-secondary mb-3" (click)="agregarMiembro()" [disabled]="isLoadingInvite">
-              {{ isLoadingInvite ? 'Agregando...' : 'Agregar miembro' }}
-            </button>
-        </div>
-
-        <!-- Lista de miembros invitados -->
-        <div class="invited-members-section" *ngIf="invitedMembers.length > 0">
-            <p><strong>Miembros invitados ({{ invitedMembers.length }})</strong></p>
-            <div class="invited-members-list">
-                <div class="invited-member" *ngFor="let member of invitedMembers; let i = index">
-                    <div class="member-info">
-                        <i class="bi bi-person-circle"></i>
-                        <span>{{ member }}</span>
-                    </div>
-                    <button type="button" class="btn-remove" (click)="quitarMiembro(i)" title="Remover">
-                        <i class="bi bi-x-circle"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sección de miembros (será implementada por el usuario) -->
-        <div class="members-section">
-            <p><strong>Miembros del grupo</strong></p>
-            <div class="members-list">
-                <!-- TODO: Implementar lista de miembros actuales -->
-                <p class="placeholder">Los miembros se cargarán aquí</p>
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Actualizar grupo</button>
-        <p class="confirmP">Se actualizará la información del grupo</p>
-    </form>
-
-    <div *ngIf="isLoading" class="loading">
-        <p>Cargando grupo...</p>
+    <!-- Descripción del grupo -->
+    <div class="form-group">
+      <label for="groupDescription">Descripción del grupo (Opcional)</label>
+      <textarea id="groupDescription" [(ngModel)]="groupDescription" name="groupDescription" placeholder="Descripción del grupo"></textarea>
     </div>
 
+    <!-- Selector de colores -->
+    <div class="form-group">
+      <label>Selecciona un color para el grupo</label>
+      <div class="color-options">
+        <div *ngFor="let color of colors" class="color-option" [class.selected]="selectedColor === color.id" (click)="selectedColor = color.id">
+          <div class="color-circle" [style.backgroundColor]="color.hex"></div>
+          <span>{{ color.name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de invitar miembros -->
+    <div class="form-group">
+      <label for="identifier">Invitar miembros al grupo</label>
+      <div class="invite-input-group">
+        <input type="text" id="identifier" [(ngModel)]="identifier" name="identifier" placeholder="Usuario o correo electrónico">
+        <button type="button" class="btn-add-member" (click)="agregarMiembro()" [disabled]="isLoadingInvite">
+          {{ isLoadingInvite ? 'Agregando...' : 'Agregar' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Lista de miembros a invitar (recién agregados) -->
+    <div class="section" *ngIf="invitedMembers.length > 0">
+      <h3>Miembros a invitar ({{ invitedMembers.length }})</h3>
+      <div class="member-list">
+        <div class="member-row" *ngFor="let member of invitedMembers; let i = index">
+          <div class="member-info">
+            <span class="member-icon">👤</span>
+            <span class="member-name">{{ member.identifier }}</span>
+          </div>
+          <button type="button" class="btn-remove" (click)="quitarMiembro(i)">Remover</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de miembros actuales del grupo -->
+    <div class="section">
+      <h3>Integrantes del grupo ({{ members.length || 0 }})</h3>
+      <div class="member-list">
+        <div *ngIf="members.length === 0" class="placeholder">
+          Todavía no hay integrantes
+        </div>
+        <div class="member-row" *ngFor="let member of members">
+          <div class="member-info">
+            <span class="member-icon">👤</span>
+            <div class="member-details">
+              <span class="member-name">{{ member.user.username || 'Usuario desconocido' }}</span>
+              <span class="member-email" *ngIf="member.user.email">{{ member.user.email }}</span>
+            </div>
+          </div>
+          <div class="member-role" *ngIf="isAdmin(member)">
+            Administrador
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">Actualizar grupo</button>
+    </div>
+  </form>
+
+  <div *ngIf="isLoading" class="loading">
+    <p>Cargando grupo...</p>
+  </div>
 </div>

@@ -64,6 +64,12 @@ export class GroupService {
     return this.http.get<any[]>(`${this.api}/groups/invitations`).toPromise().then(r => r ?? []);
   }
 
+  inviteUser(groupId: string, users: number[]): Promise<any> {
+    return this.http.post<any>(`${this.api}/groups/${groupId}/invite`, { users })
+      .toPromise()
+      .then(r => r ?? {});
+  }
+
   acceptInvitation(groupId: string): Promise<any> {
     return this.http.post<any>(`${this.api}/groups/accept`, { groupId })
       .toPromise()
