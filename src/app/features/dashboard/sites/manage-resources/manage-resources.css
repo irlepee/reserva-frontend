@@ -212,31 +212,6 @@
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
   padding: 1.5rem;
-  animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-  }
-  to {
-    opacity: 1;
-    max-height: 1000px;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 1;
-    max-height: 1000px;
-  }
-  to {
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-  }
 }
 
 .resource-card {
@@ -250,30 +225,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   position: relative;
   overflow: hidden;
-}
-
-.resource-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #0066cc, #0052a3);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s ease;
-}
-
-.resource-card:hover {
-  transform: translateY(-4px);
-  border-color: #0066cc;
-  box-shadow: 0 12px 24px rgba(0, 102, 204, 0.15);
-  background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
-}
-
-.resource-card:hover::before {
-  transform: scaleX(1);
 }
 
 .resource-info {

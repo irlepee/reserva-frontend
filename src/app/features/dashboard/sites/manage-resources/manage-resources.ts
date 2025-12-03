@@ -177,13 +177,52 @@ export class ManageResources implements OnInit {
   }
 
   deleteResource(resource: any) {
-    // Aquí irá la lógica para eliminar con confirmación
+    const confirmDelete = confirm(`¿Estás seguro de que deseas eliminar el recurso "${resource.name}"? Esta acción no se puede deshacer.`);
+    
+    if (!confirmDelete) {
+      return;
+    }
+
+    if (!this.siteId) {
+      alert('Error: No se encontró el sitio');
+      return;
+    }
+
+    this.resourcesService.deleteResource(this.siteId, resource.id)
+      .then((response: any) => {
+        alert('Recurso eliminado exitosamente');
+        // Recargar recursos para actualizar la lista
+        this.loadResources();
+        // Si era el recurso que estabas editando, limpiar formulario
+        if (this.selectedResource?.id === resource.id) {
+          this.clearForm();
+        }
+      })
+      .catch((error: any) => {
+        console.error('Error deleting resource:', error);
+        alert('Error al eliminar el recurso: ' + (error?.error?.message || 'Error desconocido'));
+      });
   }
 
   getResourcesWithCount(): any[] {
-    // Retornar solo los tipos que tienen recursos
-    return this.resourceTypes.filter(type => 
-      this.resourcesByType[type.name] && this.resourcesByType[type.name].length > 0
+    // Retornar solo los tipos que tienen recursos y que coinciden con el filtro
+    return this.resourceTypes.filter(type => {
+      const filteredResources = this.getFilteredResources(type.name);
+      return filteredResources && filteredResources.length > 0;
+    });
+  }
+
+  getFilteredResources(typeName: string): any[] {
+    // Obtener recursos del tipo y filtrar por searchTerm
+    const resources = this.resourcesByType[typeName] || [];
+    
+    if (!this.searchTerm.trim()) {
+      return resources;
+    }
+
+    const searchLower = this.searchTerm.toLowerCase();
+    return resources.filter((resource: any) =>
+      resource.name.toLowerCase().includes(searchLower)
     );
   }
 

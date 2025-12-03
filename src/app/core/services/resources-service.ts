@@ -36,4 +36,11 @@ export class ResourcesService {
             .toPromise()
             .then(r => r ?? {});
     }
+
+    deleteResource(siteId: number, resourceId: number): Promise<any> {
+        return this.http
+            .delete<any>(`${this.api}/sites/${siteId}/resources/${resourceId}`)
+            .toPromise()
+            .then(r => r ?? {});
+    }
 }

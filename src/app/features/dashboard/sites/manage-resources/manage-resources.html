@@ -69,7 +69,7 @@
       </div>
 
       <div class="resources-grid" *ngIf="expandedTypes[type.name]">
-        <div class="resource-card" *ngFor="let resource of resourcesByType[type.name]">
+        <div class="resource-card" *ngFor="let resource of getFilteredResources(type.name)">
           <div class="resource-info">
             <h4>{{ resource.name }}</h4>
             <p class="resource-detail">Capacidad: {{ resource.capacity || 'N/A' }}</p>
@@ -85,7 +85,8 @@
     </div>
 
     <div class="no-resources-message" *ngIf="getResourcesWithCount().length === 0">
-      <p>No hay recursos creados aún. ¡Crea el primero!</p>
+      <p *ngIf="searchTerm">No hay recursos que coincidan con tu búsqueda.</p>
+      <p *ngIf="!searchTerm">No hay recursos creados aún. ¡Crea el primero!</p>
     </div>
   </div>
 </div>
