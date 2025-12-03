@@ -22,6 +22,7 @@ export class EditGroups {
   groupId: string = '';
   groupName: string = '';
   groupDescription: string = '';
+  groupOwner: any = null;
   identifier: string = '';
   invitedMembers: any[] = []; // Array de objetos { id, identifier }
   members: any[] = []; // Miembros actuales del grupo
@@ -59,6 +60,7 @@ export class EditGroups {
         this.groupName = group.name;
         this.groupDescription = group.description;
         this.selectedColor = group.color;
+        this.groupOwner = group.id_owner;
         
         // Cargar miembros del grupo
         return this.groupService.getGroupMembers(this.groupId);
@@ -66,6 +68,20 @@ export class EditGroups {
       .then((members) => {
         console.log('Miembros del grupo cargados:', members);
         this.members = members || [];
+        
+        // Obtener información del administrador del grupo
+        return this.groupService.getGroupAdmin(this.groupId);
+      })
+      .then((adminData) => {
+        console.log('Información del administrador:', adminData);
+        
+        // Agregar el administrador al inicio de la lista de integrantes
+        if (adminData) {
+          this.members.unshift({
+            user: adminData
+          });
+        }
+        
         this.isLoading = false;
       })
       .catch((error) => {
@@ -134,6 +150,11 @@ export class EditGroups {
     this.invitedMembers.splice(index, 1);
   }
 
+  isAdmin(member: any): boolean {
+    // El administrador es el primero de la lista (el que agregamos al inicio)
+    return this.members.length > 0 && member === this.members[0];
+  }
+
   actualizarGrupo() {
     if (!this.groupName.trim()) {
       alert('Por favor ingresa un nombre para el grupo');
@@ -165,10 +186,5 @@ export class EditGroups {
         console.error('Error:', error);
         alert('Error al actualizar el grupo o enviar invitaciones');
       });
-  }
-
-  isAdmin(member: any): boolean {
-    // Verificar si el usuario actual es el propietario del grupo (primer miembro)
-    return this.currentUser && this.members.length > 0 && this.currentUser.id === this.members[0]?.user?.id;
   }
 }

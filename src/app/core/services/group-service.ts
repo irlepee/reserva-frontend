@@ -81,5 +81,11 @@ export class GroupService {
       .toPromise()
       .then(r => r ?? {});
   }
+
+  getGroupAdmin(groupId: string): Promise<any> {
+    return this.http.get<any>(`${this.api}/groups/${groupId}/admin`)
+      .toPromise()
+      .then(r => r ?? {});
+  }
 }
 
