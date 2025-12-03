@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ResourcesService } from '../../../../core/services/resources-service';
 
 @Component({
   selector: 'app-manage-resources',
@@ -12,7 +13,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class ManageResources implements OnInit {
   constructor(
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private resourcesService: ResourcesService
   ) { }
 
   siteId?: number;
@@ -23,7 +25,7 @@ export class ManageResources implements OnInit {
   capacity: string = '';
 
   // Resource types
-  resourceTypes: string[] = ['Computadora', 'Cubiculo', 'Aula', 'Sala de Reuniones', 'Otro'];
+  resourceTypes: string[] = [];
 
   // Resources grouped by type
   resourcesByType: { [key: string]: any[] } = {};
@@ -38,6 +40,7 @@ export class ManageResources implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.siteId = params['id'];
+      this.loadCategories();
       this.loadResources();
     });
 
@@ -45,6 +48,21 @@ export class ManageResources implements OnInit {
     this.resourceTypes.forEach(type => {
       this.expandedTypes[type] = true;
     });
+  }
+
+  loadCategories() {
+    this.resourcesService.getCategories()
+      .then((categories: any[]) => {
+        this.resourceTypes = categories.map((c: any) => c.name);
+        
+        // Reinicializar tipos expandidos
+        this.resourceTypes.forEach(type => {
+          this.expandedTypes[type] = true;
+        });
+      })
+      .catch((error: any) => {
+        console.error('Error loading categories:', error);
+      });
   }
 
   loadResources() {
