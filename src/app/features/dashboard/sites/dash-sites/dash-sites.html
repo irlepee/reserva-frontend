@@ -11,17 +11,17 @@
 
   <div class="search-bar">
     <i class="bi bi-search"></i>
-    <input type="text" placeholder="Buscar por nombre o ubicación...">
+    <input type="text" placeholder="Buscar por nombre o ubicación..." [(ngModel)]="search" (input)="filtrarPorNombre()">
   </div>
 
   <div class="sites-section">
-    <div *ngIf="sites.length === 0" class="empty-state">
+    <div *ngIf="sitesFiltered.length === 0" class="empty-state">
       <p>Aún no tienes sitios creados</p>
       <button routerLink="create" class="create-button-empty">+ Crear tu primer sitio</button>
     </div>
 
     <div class="sites-grid">
-      <div class="site-card" *ngFor="let site of sites"
+      <div class="site-card" *ngFor="let site of sitesFiltered"
         [style.backgroundImage]="'url(' + getImageUrl(site.images) + ')'"
         title="{{ site.name }}">
         <div class="site-overlay">
@@ -31,10 +31,10 @@
               {{ site.resources_count || 0 }} Recursos</p>
           </div>
           <div class="site-actions">
-            <button class="btn-action" title="Editar Info">
+            <button class="btn-action" title="Editar Info" (click)="goToEditSite(site.id)">
               <i class="bi bi-pencil"></i> Editar Info
             </button>
-            <button class="btn-action" title="Editar Recursos">
+            <button class="btn-action" title="Editar Recursos" (click)="goToManageResources(site.id)">
               <i class="bi bi-boxes"></i> Editar Recursos
             </button>
             <button class="btn-action" title="Ver Stats">

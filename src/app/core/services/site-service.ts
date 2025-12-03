@@ -16,9 +16,29 @@ export class SiteService {
       .then(r => r ?? []);
   }
 
+  getSiteById(id: number): Promise<any> {
+    return this.http
+      .get<any>(`${this.api}/sites/${id}`)
+      .toPromise()
+      .then(r => r ?? {});
+  }
+
   createSite(siteData: any): Promise<any> {
     return this.http
       .post<any>(`${this.api}/sites`, siteData)
       .toPromise();
   }
+
+  updateSite(id: number, siteData: any): Promise<any> {
+    return this.http
+      .put<any>(`${this.api}/sites/${id}`, siteData)
+      .toPromise();
+  }
+
+  deleteSite(id: number): Promise<any> {
+    return this.http
+      .delete<any>(`${this.api}/sites/${id}`)
+      .toPromise();
+  }
 }
+

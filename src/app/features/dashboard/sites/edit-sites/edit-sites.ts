@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { LocationsService } from '../../../../core/services/locations-service';
 import { Entidad } from '../../../../shared/interfaces/entidad';
 import { Municipio } from '../../../../shared/interfaces/municipio';
@@ -9,18 +9,25 @@ import { Localidad } from '../../../../shared/interfaces/localidad';
 import { SiteService } from '../../../../core/services/site-service';
 
 @Component({
-  selector: 'app-create-sites',
+  selector: 'app-edit-sites',
   imports: [FormsModule, CommonModule],
-  templateUrl: './create-sites.html',
-  styleUrl: './create-sites.css',
+  templateUrl: './edit-sites.html',
+  styleUrl: './edit-sites.css',
 })
-export class CreateSites implements OnInit {
-  constructor(private ubicacionService: LocationsService, private siteService: SiteService, private router: Router) { }
+export class EditSites implements OnInit {
+  constructor(
+    private ubicacionService: LocationsService,
+    private siteService: SiteService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
+  siteId?: number;
   siteName: string = '';
   description: string = '';
   uploadedImages: File[] = [];
   imagePreview: string[] = [];
+  existingImages: string[] = [];
   isDragging: boolean = false;
 
   // Autocomplete data
@@ -39,12 +46,50 @@ export class CreateSites implements OnInit {
   filtradosMunicipio: Municipio[] = [];
   filtradosLocalidad: Localidad[] = [];
 
+  // Modal
+  showDeleteModal = false;
+  isLoadingDelete = false;
+
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.siteId = params['id'];
+      if (this.siteId) {
+        this.loadSiteData();
+      }
+    });
     this.cargarEntidades();
   }
 
+  loadSiteData() {
+    this.siteService.getSiteById(this.siteId!)
+      .then((site: any) => {
+        this.siteName = site.name;
+        this.description = site.description || '';
+        this.entidadId = site.entidadId;
+        this.municipioId = site.municipioId;
+        this.localidadId = site.localidadId;
+        this.existingImages = site.images || [];
+
+        if (this.entidadId) {
+          this.ubicacionService.getEntidades().subscribe({
+            next: (entidades) => {
+              const selectedEntidad = entidades.find(e => e.id === this.entidadId);
+              if (selectedEntidad) {
+                this.entidad = selectedEntidad.name.toUpperCase();
+                this.cargarMunicipios(this.entidadId!);
+              }
+            }
+          });
+        }
+      })
+      .catch((error: any) => {
+        alert('Error al cargar el sitio.');
+        this.router.navigate(['/dashboard/sites']);
+      });
+  }
+
   // --------Entidad----------
-  async cargarEntidades() {
+  cargarEntidades() {
     this.ubicacionService.getEntidades().subscribe({
       next: (data) => this.entidades = data,
       error: (err) => console.log(err)
@@ -151,9 +196,10 @@ export class CreateSites implements OnInit {
 
   processFiles(files: File[]): void {
     const imageFiles = files.filter(file => file.type.startsWith('image/'));
-    
+    const maxAllowed = 3 - this.existingImages.length;
+
     imageFiles.forEach(file => {
-      if (this.uploadedImages.length < 3) {
+      if (this.uploadedImages.length < maxAllowed) {
         this.uploadedImages = [...this.uploadedImages, file];
         
         const reader = new FileReader();
@@ -167,24 +213,23 @@ export class CreateSites implements OnInit {
     });
   }
 
-  removeImage(index: number): void {
+  removeNewImage(index: number): void {
     this.uploadedImages = this.uploadedImages.filter((_, i) => i !== index);
     this.imagePreview = this.imagePreview.filter((_, i) => i !== index);
   }
 
-  cancelCreate() {
+  removeExistingImage(index: number): void {
+    this.existingImages = this.existingImages.filter((_, i) => i !== index);
+  }
+
+  goBack() {
     this.router.navigate(['/dashboard/sites']);
   }
 
-  createSite() {
+  updateSite() {
     this.siteName = this.siteName.trim();
     if (!this.siteName) {
       alert('El nombre del sitio es obligatorio.');
-      return;
-    }
-
-    if (this.uploadedImages.length === 0) {
-      alert('Debes subir al menos una imagen.');
       return;
     }
 
@@ -210,17 +255,44 @@ export class CreateSites implements OnInit {
     formData.append('municipioId', this.municipioId.toString());
     formData.append('localidadId', this.localidadId.toString());
     
-    this.uploadedImages.forEach((file) => {
-      formData.append('images', file, file.name);
+    // Enviar imágenes existentes
+    this.existingImages.forEach((image, index) => {
+      formData.append(`existingImages`, image);
     });
 
-    this.siteService.createSite(formData)
+    // Enviar nuevas imágenes
+    this.uploadedImages.forEach((file) => {
+      formData.append('newImages', file, file.name);
+    });
+
+    this.siteService.updateSite(this.siteId!, formData)
       .then(() => {
-        alert('Sitio creado exitosamente.');
+        alert('Sitio actualizado exitosamente.');
         this.router.navigate(['/dashboard/sites']);
       })
-      .catch((error) => {
-        alert('Hubo un error al crear el sitio. Por favor, intenta nuevamente.');
+      .catch((error: any) => {
+        alert('Hubo un error al actualizar el sitio. Por favor, intenta nuevamente.');
       });
   }
-} 
+
+  openDeleteModal() {
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal = false;
+  }
+
+  confirmDeleteSite() {
+    this.isLoadingDelete = true;
+    this.siteService.deleteSite(this.siteId!)
+      .then(() => {
+        alert('Sitio eliminado exitosamente.');
+        this.router.navigate(['/dashboard/sites']);
+      })
+      .catch((error: any) => {
+        alert('Hubo un error al eliminar el sitio.');
+        this.isLoadingDelete = false;
+      });
+  }
+}

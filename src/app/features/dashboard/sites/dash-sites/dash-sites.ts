@@ -1,35 +1,47 @@
 import { Component } from '@angular/core';
 import { SiteService } from '../../../../core/services/site-service';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dash-sites',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './dash-sites.html',
   styleUrl: './dash-sites.css',
 })
 export class DashSites {
-  constructor(private siteService: SiteService) { }
+  constructor(private siteService: SiteService, private router: Router) { }
 
   sites: any[] = [];
+  sitesFiltered: any[] = [];
+  search: string = '';
   apiUrl = 'http://localhost:3000';
 
   ngOnInit() {
     this.siteService.getSites()
       .then((data) => {
-        console.log(data);
+        console.log('Fetched sites:', data);
         this.sites = data;
+        this.sitesFiltered = data;
       })
       .catch((error) => {
         this.sites = [];
+        this.sitesFiltered = [];
         console.error('Error fetching sites:', error);
       });
   }
 
+  filtrarPorNombre(): void {
+    const term = this.search.toLowerCase();
+    this.sitesFiltered = term
+      ? this.sites.filter((site: any) => site.name.toLowerCase().includes(term))
+      : this.sites;
+  }
+
   getImageUrl(images: any): string {
     if (!images || images.length === 0) {
-      return '/images/placeholder-site.jpg';
+      return '';
     }
     
     const firstImage = images[0];
@@ -41,5 +53,13 @@ export class DashSites {
     
     // Si es un nombre de archivo, construir la URL
     return `${this.apiUrl}${firstImage}`;
+  }
+
+  goToEditSite(siteId: number): void {
+    this.router.navigate(['/dashboard/sites/edit', siteId]);
+  }
+
+  goToManageResources(siteId: number): void {
+    this.router.navigate(['/dashboard/sites/manage-resources', siteId]);
   }
 }

@@ -12,6 +12,8 @@ import { DashSites } from './features/dashboard/sites/dash-sites/dash-sites';
 import { CreateGroups } from './features/dashboard/groups/create-groups/create-groups';
 import { EditGroups } from './features/dashboard/groups/edit-groups/edit-groups';
 import { CreateSites } from './features/dashboard/sites/create-sites/create-sites';
+import { EditSites } from './features/dashboard/sites/edit-sites/edit-sites';
+import { ManageResources } from './features/dashboard/sites/manage-resources/manage-resources';
 import { HistoryReservas } from './features/dashboard/reservas/history-reservas/history-reservas';
 
 export const routes: Routes = [
@@ -38,7 +40,9 @@ export const routes: Routes = [
             { path: 'sites', component:Sites,
                 children: [
                     { path: '', component:DashSites },
-                    { path: 'create', component:CreateSites}
+                    { path: 'create', component:CreateSites},
+                    { path: 'edit/:id', component:EditSites},
+                    { path: 'manage-resources/:id', component:ManageResources}
                 ]
             }
     ]},

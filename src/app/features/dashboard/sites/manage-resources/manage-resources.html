@@ -1,0 +1,74 @@
+<div class="main-container">
+  <div class="header">
+    <div class="header-top">
+      <h1>Gestión de Recursos del Sitio</h1>
+      <button class="btn-back" (click)="goBack()">← Volver</button>
+    </div>
+    <p class="subtitle">Crea, edita y organiza los recursos disponibles para reserva.</p>
+  </div>
+
+  <!-- Crear o Editar Recurso -->
+  <div class="form-section">
+    <h2>{{ selectedResource ? 'Editar Recurso' : 'Crear o Editar Recurso' }}</h2>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="resourceName">Nombre del Recurso</label>
+        <input 
+          type="text" 
+          id="resourceName" 
+          [(ngModel)]="resourceName" 
+          placeholder="ej. Laptop Dell #14"
+          class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="resourceType">Tipo de Recurso</label>
+        <select 
+          id="resourceType" 
+          [(ngModel)]="resourceType"
+          class="form-input">
+          <option value="">Selecciona un tipo</option>
+          <option *ngFor="let type of resourceTypes" [value]="type">{{ type }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="capacity">Capacidad</label>
+        <input 
+          type="text" 
+          id="capacity" 
+          [(ngModel)]="capacity" 
+          placeholder="ej. 4"
+          class="form-input">
+      </div>
+
+      <button class="btn-submit" (click)="addResource()">Editar Recurso</button>
+    </div>
+  </div>
+
+  <!-- Buscar Recurso -->
+  <div class="search-section">
+    <div class="search-bar">
+      <i class="bi bi-search"></i>
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        placeholder="Buscar recurso por nombre..."
+        class="search-input">
+    </div>
+  </div>
+
+  <!-- Recursos por Tipo -->
+  <div class="resources-section">
+    <div class="resource-type-group" *ngFor="let type of resourceTypes">
+      <div class="type-header" (click)="toggleResourceType(type)">
+        <h3>{{ type }}</h3>
+        <i [class]="'bi ' + (expandedTypes[type] ? 'bi-chevron-up' : 'bi-chevron-down')"></i>
+      </div>
+
+      <div class="resources-grid" *ngIf="expandedTypes[type]">
+      </div>
+    </div>
+  </div>
+</div>
