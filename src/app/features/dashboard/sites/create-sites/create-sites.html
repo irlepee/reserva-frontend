@@ -1,1 +1,90 @@
-<p>create-sites works!</p>
+<div class="main-container">
+  <div class="top-section">
+    <h2>Crear Nuevo Sitio</h2>
+    <p>Rellena los siguientes campos para registrar un nuevo recurso compartido.</p>
+  </div>
+
+  <form class="form-container">
+    <div class="form-wrapper">
+      <!-- Left Column -->
+      <div class="form-left">
+        <!-- Nombre del Sitio -->
+        <div class="form-group">
+          <label for="siteName">Nombre del Sitio</label>
+          <input type="text" id="siteName" [(ngModel)]="siteName" name="siteName" class="form-input" placeholder="Ej: Biblioteca Los Mochis">
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group">
+          <label for="description">Descripción</label>
+          <textarea id="description" [(ngModel)]="description" name="description" class="form-textarea" placeholder="Añade una descripción detallada del sitio..."></textarea>
+        </div>
+
+        <!-- Estado -->
+        <div class="form-group">
+          <label for="estado">Estado</label>
+          <input type="text" id="estado" [(ngModel)]="entidad" name="entidad" (input)="filtrarEntidad()" autocomplete="off" class="form-input" placeholder="Selecciona Estado">
+          <ul *ngIf="filtradosEntidad.length > 0" class="options-list">
+            <li *ngFor="let e of filtradosEntidad" (click)="seleccionarEntidad(e)">
+              {{ e.name.toUpperCase() }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Municipio y Localidad -->
+        <div class="form-row">
+          <div class="form-group autocomplete-group">
+            <label for="municipio">Municipio</label>
+            <input type="text" id="municipio" [(ngModel)]="municipio" name="municipio" (input)="filtrarMunicipio()" autocomplete="off" class="form-input" placeholder="Selecciona Municipio">
+            <ul *ngIf="filtradosMunicipio.length > 0" class="options-list">
+              <li *ngFor="let m of filtradosMunicipio" (click)="seleccionarMunicipio(m)">
+                {{ m.name }}
+              </li>
+            </ul>
+          </div>
+          <div class="form-group autocomplete-group">
+            <label for="localidad">Localidad</label>
+            <input type="text" id="localidad" [(ngModel)]="localidad" name="localidad" (input)="filtrarLocalidad()" autocomplete="off" class="form-input" placeholder="Selecciona Localidad">
+            <ul *ngIf="filtradosLocalidad.length > 0" class="options-list">
+              <li *ngFor="let l of filtradosLocalidad" (click)="seleccionarLocalidad(l)">
+                {{ l.name }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="form-right">
+        <!-- Galería de Imágenes -->
+        <div class="form-group">
+          <label>Galería de Imágenes</label>
+          <input #fileInput type="file" multiple accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+          <div class="image-upload-area" (click)="fileInput.click()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" [class.drag-over]="isDragging">
+            <div class="upload-icon">📤</div>
+            <p class="upload-text">Haz clic para subir o arrastra y suelta</p>
+            <p class="upload-subtext">SVG, PNG, JPG (MÁX. 3 imágenes)</p>
+          </div>
+
+          <!-- Preview Images -->
+          <div class="image-preview-grid">
+            <div *ngFor="let image of uploadedImages; let i = index" class="image-preview-item">
+              <img [src]="image" alt="preview">
+              <button type="button" class="remove-btn" (click)="removeImage(i)">✕</button>
+            </div>
+            <div *ngIf="uploadedImages.length < 3" class="image-preview-item image-placeholder" (click)="fileInput.click()">
+              <span>+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="button" class="btn-cancel">Cancelar</button>
+      <button type="submit" class="btn-primary">Guardar Sitio</button>
+    </div>
+  </form>
+
+</div>

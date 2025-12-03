@@ -1,20 +1,30 @@
-<div class="container mt-4">
-  <div class="row g-3">
-    <div class="col-sm-6 col-md-4" *ngFor="let sitio of sites">
-      <div class="card shadow-sm h-100">
-        <div class="card-body d-flex flex-column justify-content-between">
-          <div>
-            <h5 class="card-title">{{ sitio.name }}</h5>
-            <p class="card-text mb-1"><strong>ID:</strong> {{ sitio.id }}</p>
-            <p class="card-text mb-1"><strong>Owner ID:</strong> {{ sitio.id_owner }}</p>
-            <p class="card-text mb-1"><strong>Entidad:</strong> {{ sitio.id_entidad }}</p>
-            <p class="card-text mb-1"><strong>Municipio:</strong> {{ sitio.id_municipio }}</p>
-            <p class="card-text mb-1"><strong>Localidad:</strong> {{ sitio.id_localidad }}</p>
-            <p class="card-text mb-1"><strong>Descripción:</strong> {{ sitio.description }}</p>
-          </div>
-          <small class="text-muted mt-2">Creado: {{ sitio.date_created | date:'mediumDate' }}</small>
+<div class="main-container">
+
+  <div class="top-section">
+    <h2>Mis sitios</h2>
+    <button routerLink="create" class="create-button" >+ Crear sitio</button>
+  </div>
+
+  <div class="sites-section">
+    <div *ngIf="sites.length === 0" class="empty-state">
+      <p>Aún no tienes sitios creados</p>
+    </div>
+
+    <div class="sites-grid">
+      <div class="site-card" *ngFor="let site of sites">
+        <div class="site-header">
+          <h3>{{ site.name }}</h3>
+        </div>
+        <div class="site-details">
+          <p><strong>Ubicación:</strong> {{ site.location || 'Sin ubicación' }}</p>
+          <p><strong>Descripción:</strong> {{ site.description || 'Sin descripción' }}</p>
+        </div>
+        <div class="site-actions">
+          <button class="btn-edit">Editar</button>
+          <button class="btn-delete">Eliminar</button>
         </div>
       </div>
     </div>
   </div>
+
 </div>

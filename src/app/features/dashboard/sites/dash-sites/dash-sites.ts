@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { SiteService } from '../../../../core/services/site-service';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dash-sites',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './dash-sites.html',
   styleUrl: './dash-sites.css',
 })
