@@ -31,7 +31,8 @@ export const routes: Routes = [
                 children: [
                     { path: '', component:DashGroup },
                     { path: 'create', component:CreateGroups},
-                    { path: 'edit/:id', component:EditGroups}
+                    { path: 'edit/:id', component:EditGroups},
+                    { path: 'view-group/:id', component:DashGroup }
                 ]
             },
             { path: 'sites', component:Sites,

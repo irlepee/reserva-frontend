@@ -87,5 +87,18 @@ export class GroupService {
       .toPromise()
       .then(r => r ?? {});
   }
+
+  removeMember(groupId: string, userId: string): Promise<any> {
+    console.log(`Eliminando usuario ${userId} del grupo ${groupId}`);
+    return this.http.post<any>(`${this.api}/groups/${groupId}/remove`, { userId })
+      .toPromise()
+      .then(r => r ?? {});
+  }
+
+  deleteGroup(groupId: string): Promise<any> {
+    return this.http.delete<any>(`${this.api}/groups/${groupId}`)
+      .toPromise()
+      .then(r => r ?? {});
+  }
 }
 

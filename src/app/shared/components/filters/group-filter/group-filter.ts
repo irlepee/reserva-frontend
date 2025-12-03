@@ -10,7 +10,6 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class GroupFilter {
 
   @Output() cerrar = new EventEmitter<void>();
-  @Output() ordenar = new EventEmitter<string>();
   @Output() filtroSeleccionado = new EventEmitter<string>();
 
   selectFilter(filter: string) {
@@ -24,11 +23,13 @@ export class GroupFilter {
     this.cerrar.emit();
   }
 
-  ordenarAsc() {
-    this.ordenar.emit('asc');
+  ordenarPorMiembrosAsc() {
+    this.selectedFilter = 'members_asc';
+    this.filtroSeleccionado.emit('members_asc');
   }
 
-  ordenarDesc() {
-    this.ordenar.emit('desc');
+  ordenarPorMiembrosDesc() {
+    this.selectedFilter = 'members_desc';
+    this.filtroSeleccionado.emit('members_desc');
   }
 }

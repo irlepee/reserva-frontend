@@ -1,0 +1,25 @@
+<div class="modal-backdrop" *ngIf="isOpen" (click)="onBackdropClick($event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>{{ title }}</h3>
+    </div>
+
+    <div class="modal-body">
+      <p>{{ message }}</p>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="onCancel()" [disabled]="isLoading">
+        {{ cancelText }}
+      </button>
+      <button 
+        [class.btn-confirm-danger]="isDangerous"
+        [class.btn-confirm]="!isDangerous" 
+        (click)="onConfirm()" 
+        [disabled]="isLoading"
+      >
+        {{ isLoading ? 'Procesando...' : confirmText }}
+      </button>
+    </div>
+  </div>
+</div>

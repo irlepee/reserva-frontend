@@ -58,3 +58,9 @@
 .panel div p {
   padding: 0.5rem;
 }
+
+.panel div button {
+  width: auto;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+}

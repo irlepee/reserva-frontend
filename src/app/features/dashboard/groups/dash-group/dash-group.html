@@ -18,7 +18,7 @@
 
   <div class="groups-section">
 
-    <div class="groups" *ngFor="let group of groups" [routerLink]="['/dashboard/groups/edit', group.id]">
+    <div class="groups" *ngFor="let group of groups" (click)="navigateToGroup(group)" style="cursor: pointer;">
       <div class="icon">
         <i class="bi bi-people-fill"></i>
       </div>
@@ -27,7 +27,7 @@
           <h3>{{ group.name }}</h3>
           <i class="bi bi-crown-fill owner-badge" *ngIf="group.id_owner === user?.id" title="Eres el dueño"></i>
         </div>
-        <p>{{ group.integrantes || 10 }} miembros</p>
+        <p>{{ group.memberCount || 0 }} miembros</p>
       </div>
       <div class="groups-detail">></div>
     </div>
@@ -35,5 +35,12 @@
   </div>
 
   <app-invitations *ngIf="mostrarInvitaciones" (cerrar)="mostrarInvitaciones = false"></app-invitations>
+
+  <!-- Modal de vista de grupo -->
+  <app-view-group 
+    [groupId]="selectedGroupForView?.id" 
+    [isOpen]="showViewModal"
+    (close)="closeViewModal()">
+  </app-view-group>
 
 </div>

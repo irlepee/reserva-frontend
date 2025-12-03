@@ -1,0 +1,62 @@
+<div class="modal-backdrop" *ngIf="isOpen" (click)="onBackdropClick($event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>{{ groupName }}</h2>
+      <button class="modal-close" (click)="closeModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body" *ngIf="!isLoading">
+      <!-- Color del grupo -->
+      <div class="group-color" [style.backgroundColor]="getColorHex(groupOwner)"></div>
+
+      <!-- Descripción -->
+      <div class="section">
+        <h3>Descripción</h3>
+        <p *ngIf="groupDescription" class="description">{{ groupDescription }}</p>
+        <p *ngIf="!groupDescription" class="no-description">No hay descripción disponible</p>
+      </div>
+
+      <!-- Administrador -->
+      <div class="section">
+        <h3>Administrador</h3>
+        <div class="admin-info">
+          <span class="member-icon">👤</span>
+          <div class="admin-details">
+            <span class="admin-name">{{ ownerName }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Integrantes del grupo -->
+      <div class="section">
+        <h3>Integrantes del grupo ({{ (members.length - 1) || 0 }})</h3>
+        <div class="member-list">
+          <div *ngIf="members.length <= 1" class="placeholder">
+            No hay integrantes adicionales
+          </div>
+          <div class="member-row" *ngFor="let member of members; let i = index" [hidden]="i === 0">
+            <div class="member-info">
+              <span class="member-icon">👤</span>
+              <div class="member-details">
+                <span class="member-name">{{ member.user.username || 'Usuario desconocido' }}</span>
+                <span class="member-email" *ngIf="member.user.email">{{ member.user.email }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-body" *ngIf="isLoading">
+      <div class="loading">
+        <p>Cargando grupo...</p>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-close" (click)="closeModal()">Cerrar</button>
+    </div>
+  </div>
+</div>

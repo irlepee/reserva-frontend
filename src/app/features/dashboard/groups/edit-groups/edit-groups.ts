@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { GroupService } from '../../../../core/services/group-service';
 import { AuthService } from '../../../../core/services/authService';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ConfirmModal } from '../../../../shared/components/confirm-modal/confirm-modal';
 
 @Component({
   selector: 'app-edit-groups',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmModal],
   templateUrl: './edit-groups.html',
   styleUrl: './edit-groups.css',
 })
@@ -38,6 +39,20 @@ export class EditGroups {
     { id: 3, name: 'Amarillo', hex: '#ffc107' }
   ];
 
+  // CONFIRM MODAL
+  showConfirmModal: boolean = false;
+  confirmModalConfig: any = {
+    title: '',
+    message: '',
+    confirmText: 'Confirmar',
+    cancelText: 'Cancelar',
+    isDangerous: false
+  };
+  memberToRemove: any = null;
+  isRemovingMember: boolean = false;
+  isDeleteGroupAction: boolean = false;
+  isDeletingGroup: boolean = false;
+
   ngOnInit() {
     // Obtener el usuario actual
     this.authService.fetchCurrentUser()
@@ -61,27 +76,27 @@ export class EditGroups {
         this.groupDescription = group.description;
         this.selectedColor = group.color;
         this.groupOwner = group.id_owner;
-        
+
         // Cargar miembros del grupo
         return this.groupService.getGroupMembers(this.groupId);
       })
       .then((members) => {
         console.log('Miembros del grupo cargados:', members);
         this.members = members || [];
-        
+
         // Obtener información del administrador del grupo
         return this.groupService.getGroupAdmin(this.groupId);
       })
       .then((adminData) => {
         console.log('Información del administrador:', adminData);
-        
+
         // Agregar el administrador al inicio de la lista de integrantes
         if (adminData) {
           this.members.unshift({
             user: adminData
           });
         }
-        
+
         this.isLoading = false;
       })
       .catch((error) => {
@@ -109,7 +124,7 @@ export class EditGroups {
       .checkIfuserExists(this.identifier)
       .then((userId: string) => {
         console.log('Usuario existe con ID:', userId);
-        
+
         // Validar que no sea el mismo usuario
         if (this.currentUser && userId === this.currentUser.id) {
           alert('No puedes agregarte a ti mismo');
@@ -151,8 +166,80 @@ export class EditGroups {
   }
 
   isAdmin(member: any): boolean {
-    // El administrador es el primero de la lista (el que agregamos al inicio)
     return this.members.length > 0 && member === this.members[0];
+  }
+
+  removeMemberFromGroup(member: any) {
+    this.memberToRemove = member;
+    this.confirmModalConfig = {
+      title: 'Eliminar miembro',
+      message: `¿Está seguro de que desea eliminar a ${member.user.username} del grupo?`,
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      isDangerous: true
+    };
+    this.showConfirmModal = true;
+  }
+
+  confirmRemoveMember() {
+    if (!this.memberToRemove || !this.memberToRemove.user?.id) {
+      console.error('No hay miembro seleccionado para eliminar');
+      return;
+    }
+
+    this.isRemovingMember = true;
+
+    this.groupService.removeMember(this.groupId, this.memberToRemove.user.id.toString())
+      .then(() => {
+        // Eliminar el miembro de la lista local
+        const index = this.members.indexOf(this.memberToRemove);
+        if (index > -1) {
+          this.members.splice(index, 1);
+        }
+        alert('Miembro eliminado del grupo correctamente');
+        this.closeConfirmModal();
+      })
+      .catch((error) => {
+        console.error('Error al eliminar miembro:', error);
+        alert('Error al eliminar el miembro del grupo');
+      })
+      .finally(() => {
+        this.isRemovingMember = false;
+      });
+  }
+
+  closeConfirmModal() {
+    this.showConfirmModal = false;
+    this.memberToRemove = null;
+    this.isDeleteGroupAction = false;
+  }
+
+  deleteGroup() {
+    this.isDeleteGroupAction = true;
+    this.memberToRemove = null;
+    this.confirmModalConfig = {
+      title: 'Eliminar grupo',
+      message: `¿Está seguro de que desea eliminar el grupo "${this.groupName}"? Esta acción no se puede deshacer.`,
+      confirmText: 'Eliminar grupo',
+      cancelText: 'Cancelar',
+      isDangerous: true
+    };
+    this.showConfirmModal = true;
+  }
+
+  confirmDeleteGroup() {
+    this.isDeletingGroup = true;
+
+    this.groupService.deleteGroup(this.groupId)
+      .then(() => {
+        alert('Grupo eliminado correctamente');
+        this.router.navigate(['/dashboard/groups']);
+      })
+      .catch((error) => {
+        console.error('Error al eliminar grupo:', error);
+        alert('Error al eliminar el grupo');
+        this.isDeletingGroup = false;
+      });
   }
 
   actualizarGrupo() {
@@ -170,7 +257,7 @@ export class EditGroups {
         if (this.invitedMembers.length > 0) {
 
           const userIds = this.invitedMembers.map(member => parseInt(member.id));
-          
+
           return this.groupService.inviteUser(this.groupId, userIds)
             .then(() => {
               console.log('Invitaciones enviadas correctamente');

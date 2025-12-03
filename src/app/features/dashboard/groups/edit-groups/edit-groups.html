@@ -68,15 +68,19 @@
               <span class="member-email" *ngIf="member.user.email">{{ member.user.email }}</span>
             </div>
           </div>
-          <div class="member-role" *ngIf="isAdmin(member)">
+          <div *ngIf="isAdmin(member)" class="member-role">
             Administrador
           </div>
+          <button *ngIf="!isAdmin(member)" type="button" class="btn-remove-member" (click)="removeMemberFromGroup(member)" title="Eliminar miembro">
+            <i class="bi bi-x-circle"></i>
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Botones de acción -->
     <div class="form-actions">
+      <button type="button" class="btn-danger" (click)="deleteGroup()">Eliminar grupo</button>
       <button type="submit" class="btn-primary">Actualizar grupo</button>
     </div>
   </form>
@@ -84,4 +88,18 @@
   <div *ngIf="isLoading" class="loading">
     <p>Cargando grupo...</p>
   </div>
+
+  <!-- Modal de confirmación para eliminar miembro -->
+  <app-confirm-modal 
+    [isOpen]="showConfirmModal"
+    [title]="confirmModalConfig.title"
+    [message]="confirmModalConfig.message"
+    [confirmText]="confirmModalConfig.confirmText"
+    [cancelText]="confirmModalConfig.cancelText"
+    [isDangerous]="confirmModalConfig.isDangerous"
+    [isLoading]="isRemovingMember || isDeletingGroup"
+    (confirm)="isDeleteGroupAction ? confirmDeleteGroup() : confirmRemoveMember()"
+    (cancel)="closeConfirmModal()">
+  </app-confirm-modal>
+
 </div>
