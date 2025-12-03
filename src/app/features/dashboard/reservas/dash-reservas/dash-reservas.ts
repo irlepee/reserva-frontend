@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ReservaService } from '../../../../core/services/reserva-service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dash-reservas',
@@ -9,7 +10,10 @@ import { CommonModule } from '@angular/common';
   styleUrl: './dash-reservas.css',
 })
 export class DashReservas {
-  constructor(private reservaService: ReservaService) { }
+  constructor(
+    private reservaService: ReservaService,
+    private router: Router
+  ) { }
 
   reservas: any[] = [];
 
@@ -22,5 +26,9 @@ export class DashReservas {
         this.reservas = [];
         console.log(err);
       });
+  }
+
+  createReservation() {
+    this.router.navigate(['/dashboard/reservas/create']);
   }
 }

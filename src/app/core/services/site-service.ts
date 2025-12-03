@@ -16,6 +16,10 @@ export class SiteService {
       .then(r => r ?? []);
   }
 
+  getAllSites(): Promise<any[]> {
+    return this.getSites();
+  }
+
   getSiteById(id: number): Promise<any> {
     return this.http
       .get<any>(`${this.api}/sites/${id}`)

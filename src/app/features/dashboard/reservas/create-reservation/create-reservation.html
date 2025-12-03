@@ -1,0 +1,177 @@
+<div class="reservation-modal">
+  <!-- PASO 1: Búsqueda de sitio -->
+  <div class="step-container" *ngIf="step === 'search'">
+    <h2>Busca un lugar para reservar</h2>
+    <p>Ingresa el nombre del sitio que deseas reservar</p>
+
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="searchSites()"
+        placeholder="Busca un sitio..."
+        class="search-input"
+      />
+      <i class="bi bi-search"></i>
+    </div>
+
+    <div class="sites-list" *ngIf="searchedSites.length > 0">
+      <div class="site-item" *ngFor="let site of searchedSites" (click)="selectSite(site)">
+        <div class="site-image">
+          <img [src]="site.image || 'assets/placeholder.png'" alt="{{ site.name }}" />
+        </div>
+        <div class="site-info">
+          <h3>{{ site.name }}</h3>
+          <p>{{ site.description || 'Sin descripción' }}</p>
+        </div>
+        <i class="bi bi-chevron-right"></i>
+      </div>
+    </div>
+
+    <div class="no-results" *ngIf="searchTerm && searchedSites.length === 0 && !isSearching">
+      <p>No se encontraron sitios</p>
+    </div>
+  </div>
+
+  <!-- PASO 2: Selección de recurso -->
+  <div class="step-container" *ngIf="step === 'resources'">
+    <div class="step-header">
+      <button class="btn-back" (click)="goBack()">← Atrás</button>
+      <h2>Selecciona un recurso</h2>
+    </div>
+
+    <div class="site-details" *ngIf="selectedSite">
+      <div class="site-banner">
+        <img [src]="selectedSite.image || 'assets/placeholder.png'" alt="{{ selectedSite.name }}" />
+      </div>
+      <div class="site-info-card">
+        <h3>{{ selectedSite.name }}</h3>
+        <p>{{ selectedSite.description }}</p>
+      </div>
+    </div>
+
+    <div class="resources-container">
+      <h4>Recursos disponibles</h4>
+      <div class="resources-grid">
+        <div
+          class="resource-card"
+          *ngFor="let resource of siteResources"
+          (click)="selectResource(resource)"
+        >
+          <div class="resource-header">
+            <h5>{{ resource.name }}</h5>
+            <span class="resource-status" [class.available]="resource.status === 'Available'">
+              {{ resource.status }}
+            </span>
+          </div>
+          <p class="resource-capacity" *ngIf="resource.capacity">
+            <i class="bi bi-people"></i> Capacidad: {{ resource.capacity }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASO 3: Calendario y horario -->
+  <div class="step-container" *ngIf="step === 'datetime'">
+    <div class="step-header">
+      <button class="btn-back" (click)="goBack()">← Atrás</button>
+      <h2>Selecciona fecha y horario</h2>
+    </div>
+
+    <div class="resource-selected">
+      <span class="resource-name">{{ selectedResource.name }}</span>
+    </div>
+
+    <div class="datetime-container">
+      <!-- Calendario -->
+      <div class="calendar-section">
+        <h4>{{ getMonthYear() }}</h4>
+        <div class="calendar">
+          <div class="calendar-header">
+            <div>L</div>
+            <div>M</div>
+            <div>M</div>
+            <div>J</div>
+            <div>V</div>
+            <div>S</div>
+            <div>D</div>
+          </div>
+          <div class="calendar-days">
+            <div
+              class="day"
+              *ngFor="let day of getCalendarDays()"
+              [class.empty]="!day"
+              [class.selected]="selectedDate"
+              (click)="selectDate(day)"
+            >
+              {{ day }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Horarios -->
+      <div class="time-section">
+        <h4>Horario de reserva</h4>
+        <div class="time-inputs">
+          <div class="time-group">
+            <label>Desde</label>
+            <input
+              type="time"
+              [(ngModel)]="startTime"
+              class="time-input"
+            />
+          </div>
+          <div class="time-group">
+            <label>Hasta</label>
+            <input
+              type="time"
+              [(ngModel)]="endTime"
+              class="time-input"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-next" (click)="goToSummary()" [disabled]="!selectedDate">
+      Continuar
+    </button>
+  </div>
+
+  <!-- PASO 4: Resumen -->
+  <div class="step-container" *ngIf="step === 'summary'">
+    <div class="step-header">
+      <button class="btn-back" (click)="goBack()">← Atrás</button>
+      <h2>Resumen de la reserva</h2>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-section">
+        <h4>Sitio</h4>
+        <p>{{ selectedSite.name }}</p>
+      </div>
+
+      <div class="summary-section">
+        <h4>Recurso</h4>
+        <p>{{ selectedResource.name }}</p>
+        <small *ngIf="selectedResource.capacity">Capacidad: {{ selectedResource.capacity }}</small>
+      </div>
+
+      <div class="summary-section">
+        <h4>Fecha</h4>
+        <p>{{ selectedDate | date: 'dd/MM/yyyy' }}</p>
+      </div>
+
+      <div class="summary-section">
+        <h4>Horario</h4>
+        <p>{{ startTime }} - {{ endTime }}</p>
+      </div>
+    </div>
+
+    <button class="btn-reserve" (click)="createReservation()">
+      Concretar reserva
+    </button>
+  </div>
+</div>

@@ -16,4 +16,10 @@ export class ReservaService {
       .toPromise()
       .then(r => r ?? []);
   }
+
+  createReservation(reservationData: any): Promise<any> {
+    return this.http
+      .post<any>(`${this.api}/reservas`, reservationData)
+      .toPromise();
+  }
 }
