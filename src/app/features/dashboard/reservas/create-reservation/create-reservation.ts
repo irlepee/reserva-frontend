@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { SiteService } from '../../../../core/services/site-service';
 import { ResourcesService } from '../../../../core/services/resources-service';
 import { ReservaService } from '../../../../core/services/reserva-service';
@@ -16,7 +17,8 @@ export class CreateReservationComponent implements OnInit {
   constructor(
     private siteService: SiteService,
     private resourcesService: ResourcesService,
-    private reservaService: ReservaService
+    private reservaService: ReservaService,
+    private router: Router
   ) {}
 
   // PASO 1: Búsqueda y selección de sitio
@@ -217,7 +219,6 @@ export class CreateReservationComponent implements OnInit {
 
   // PASO 4: Resumen y crear reserva
   createReservation() {
-    // Por ahora solo mostramos el resumen sin funcionalidad
     const startDateTime = new Date(`${this.selectedDate}T${this.startTime}`);
     const endDateTime = new Date(`${this.selectedDate}T${this.endTime}`);
 
@@ -228,8 +229,17 @@ export class CreateReservationComponent implements OnInit {
     };
 
     console.log('Reserva a crear:', reservationData);
-    alert('¡Reserva creada exitosamente! (Simulado)');
-    // this.reservaService.createReservation(reservationData)...
+
+    this.reservaService.createReservation(reservationData)
+      .then((response: any) => {
+        console.log('Reserva creada exitosamente:', response);
+        alert('¡Reserva creada exitosamente!');
+        this.router.navigate(['/dashboard/reservas']);
+      })
+      .catch((error: any) => {
+        console.error('Error al crear la reserva:', error);
+        alert('Error al crear la reserva. Por favor intenta de nuevo.');
+      });
   }
 
   // Navegación
