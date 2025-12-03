@@ -171,20 +171,24 @@ export class CreateReservationComponent implements OnInit {
 
     // Validar que no sea una reserva en el pasado
     const now = new Date();
-    const selectedDateTime = new Date(`${this.selectedDate}T${this.startTime}`);
+    const startHour = parseInt(this.startTime);
+    now.setHours(startHour, 0, 0, 0);
 
-    if (selectedDateTime <= now) {
+    const selectedDateTime = new Date(this.selectedDate);
+    selectedDateTime.setHours(startHour, 0, 0, 0);
+
+    if (selectedDateTime <= new Date()) {
       alert('No puedes hacer una reserva en el pasado');
       return false;
     }
 
-    // Validar duración mínima (al menos 30 minutos)
-    const startMinutes = parseInt(this.startTime.split(':')[0]) * 60 + parseInt(this.startTime.split(':')[1]);
-    const endMinutes = parseInt(this.endTime.split(':')[0]) * 60 + parseInt(this.endTime.split(':')[1]);
-    const duration = endMinutes - startMinutes;
+    // Validar duración mínima (al menos 1 hora)
+    const startHourInt = parseInt(this.startTime);
+    const endHourInt = parseInt(this.endTime);
+    const duration = endHourInt - startHourInt;
 
-    if (duration < 30) {
-      alert('La reserva debe ser por lo menos 30 minutos');
+    if (duration < 1) {
+      alert('La reserva debe ser por lo menos 1 hora');
       return false;
     }
 
@@ -210,17 +214,49 @@ export class CreateReservationComponent implements OnInit {
     return '00:00';
   }
 
+  // PASO 3: Calendario
   calculateDuration(): number {
     if (!this.startTime || !this.endTime) return 0;
-    const startMinutes = parseInt(this.startTime.split(':')[0]) * 60 + parseInt(this.startTime.split(':')[1]);
-    const endMinutes = parseInt(this.endTime.split(':')[0]) * 60 + parseInt(this.endTime.split(':')[1]);
-    return (endMinutes - startMinutes) / 60;
+    const startHour = parseInt(this.startTime);
+    const endHour = parseInt(this.endTime);
+    return endHour - startHour;
+  }
+
+  getAvailableHours(): string[] {
+    const hours: string[] = [];
+    const today = new Date();
+    const selectedDate = new Date(this.selectedDate);
+    selectedDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    // Si es hoy, empezar desde la hora actual
+    const startHour = selectedDate.getTime() === today.getTime() ? new Date().getHours() : 0;
+
+    for (let i = startHour; i < 24; i++) {
+      hours.push(String(i).padStart(2, '0'));
+    }
+
+    return hours;
+  }
+
+  getEndHours(): string[] {
+    if (!this.startTime) return [];
+
+    const hours: string[] = [];
+    const startHour = parseInt(this.startTime);
+
+    // Las horas finales empiezan desde una hora después de la inicial
+    for (let i = startHour + 1; i <= 24; i++) {
+      hours.push(String(i).padStart(2, '0'));
+    }
+
+    return hours;
   }
 
   // PASO 4: Resumen y crear reserva
   createReservation() {
-    const startDateTime = new Date(`${this.selectedDate}T${this.startTime}`);
-    const endDateTime = new Date(`${this.selectedDate}T${this.endTime}`);
+    const startDateTime = new Date(`${this.selectedDate}T${this.startTime}:00`);
+    const endDateTime = new Date(`${this.selectedDate}T${this.endTime}:00`);
 
     const reservationData = {
       id_resource: this.selectedResource.id,
@@ -255,8 +291,8 @@ export class CreateReservationComponent implements OnInit {
       this.step = 'resources';
     } else if (this.step === 'summary') {
       this.selectedDate = '';
-      this.startTime = '09:00';
-      this.endTime = '10:00';
+      this.startTime = '';
+      this.endTime = '';
       this.step = 'datetime';
     }
   }

@@ -153,25 +153,26 @@
         <div class="time-inputs">
           <div class="time-group">
             <label>Desde</label>
-            <input
-              type="time"
-              [(ngModel)]="startTime"
-              [min]="getMinStartTime()"
-              class="time-input"
-            />
+            <select [(ngModel)]="startTime" class="time-input">
+              <option value="">Selecciona una hora</option>
+              <option *ngFor="let hour of getAvailableHours()" [value]="hour">
+                {{ hour }}:00
+              </option>
+            </select>
             <small *ngIf="selectedDate" class="time-hint">
               Desde la hora actual
             </small>
           </div>
           <div class="time-group">
             <label>Hasta</label>
-            <input
-              type="time"
-              [(ngModel)]="endTime"
-              class="time-input"
-            />
+            <select [(ngModel)]="endTime" class="time-input">
+              <option value="">Selecciona una hora</option>
+              <option *ngFor="let hour of getEndHours()" [value]="hour">
+                {{ hour }}:00
+              </option>
+            </select>
             <small class="time-hint">
-              Mínimo 30 minutos de duración
+              Mínimo 1 hora de duración
             </small>
           </div>
         </div>

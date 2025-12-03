@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ReservaService } from '../../../../core/services/reserva-service';
-import { CommonModule, NgIf, NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dash-reservas',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgIf, NgFor],
+  imports: [CommonModule, FormsModule],
   templateUrl: './dash-reservas.html',
   styleUrl: './dash-reservas.css',
 })
@@ -52,12 +52,25 @@ export class DashReservas {
     this.router.navigate(['/dashboard/reservas/create']);
   }
 
+  goToHistory() {
+    this.router.navigate(['/dashboard/reservas/history']);
+  }
+
   cancelReservation(reservaId: number) {
-    if (confirm('¿Estás seguro de que deseas cancelar esta reserva?')) {
+    const mensaje = '¿Estás seguro de que deseas cancelar esta reserva? Esta acción no se puede deshacer.';
+    if (confirm(mensaje)) {
       console.log('Cancelando reserva:', reservaId);
-      // TODO: Implementar cancelación cuando tengas el endpoint
-      alert('Reserva cancelada (simulado)');
-      this.loadReservas();
+      
+      this.reservaService.cancelReservation(reservaId)
+        .then((response: any) => {
+          console.log('Reserva cancelada exitosamente:', response);
+          alert('Reserva cancelada exitosamente');
+          this.loadReservas();
+        })
+        .catch((error: any) => {
+          console.error('Error al cancelar la reserva:', error);
+          alert('Error al cancelar la reserva. Por favor intenta de nuevo.');
+        });
     }
   }
 

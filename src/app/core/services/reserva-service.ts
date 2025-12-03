@@ -22,4 +22,17 @@ export class ReservaService {
       .post<any>(`${this.api}/reservas`, reservationData)
       .toPromise();
   }
+
+  cancelReservation(reservaId: number): Promise<any> {
+    return this.http
+      .delete<any>(`${this.api}/reservas/${reservaId}`)
+      .toPromise();
+  }
+
+  getReservasHistory(): Promise<Reserva[]> {
+    return this.http
+      .get<Reserva[]>(`${this.api}/reservas/history`)
+      .toPromise()
+      .then(r => r ?? []);
+  }
 }

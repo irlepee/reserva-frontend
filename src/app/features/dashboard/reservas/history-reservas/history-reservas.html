@@ -1,1 +1,67 @@
-<p>history-reservas works!</p>
+<div class="main-container">
+
+  <div class="top-section">
+    <div class="top-left">
+      <h2>Historial de reservas</h2>
+    </div>
+  </div>
+
+  <p class="subtitle">Consulta todas tus reservas pasadas, activas y canceladas.</p>
+
+  <div class="search-bar">
+    <i class="bi bi-search"></i>
+    <input type="text" placeholder="Buscar por recurso o sitio..." [(ngModel)]="search" (input)="filtrarPorNombre()">
+  </div>
+
+  <div class="reservas-section">
+    <div *ngIf="isLoading" class="loading-state">
+      <i class="bi bi-arrow-repeat"></i>
+      <p>Cargando historial...</p>
+    </div>
+
+    <div *ngIf="!isLoading && historyFiltered.length === 0" class="empty-state">
+      <p>No tienes historial de reservas</p>
+    </div>
+
+    <div class="reservas-grid" *ngIf="!isLoading && historyFiltered.length > 0">
+      <div class="reservation-card" *ngFor="let reserva of historyFiltered">
+        <div class="reservation-header">
+          <div class="reservation-title">
+            <h3>{{ reserva.Resource?.name || 'Recurso' }}</h3>
+            <p class="reservation-site">{{ reserva.Resource?.belongs?.name || 'Sitio' }}</p>
+          </div>
+          <span class="reservation-status" [ngClass]="getStatusClass(reserva.status)">
+            {{ getStatusLabel(reserva.status) }}
+          </span>
+        </div>
+
+        <div class="reservation-details">
+          <div class="detail-item">
+            <i class="bi bi-calendar3"></i>
+            <div>
+              <span class="label">Fecha</span>
+              <p>{{ getFormattedDate(reserva.start_date) }}</p>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <i class="bi bi-clock"></i>
+            <div>
+              <span class="label">Horario</span>
+              <p>{{ getFormattedTime(reserva.start_date) }} - {{ getFormattedTime(reserva.end_date) }}</p>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <i class="bi bi-info-circle"></i>
+            <div>
+              <span class="label">ID Reserva</span>
+              <p>#{{ reserva.id }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

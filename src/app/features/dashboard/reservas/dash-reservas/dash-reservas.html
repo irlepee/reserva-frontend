@@ -4,7 +4,14 @@
     <div class="top-left">
       <h2>Mis reservas</h2>
     </div>
-    <button class="create-button" (click)="createReservation()" title="Crear nueva reserva">+ Nueva reserva</button>  
+    <div class="top-buttons">
+      <button class="create-button" (click)="goToHistory()" title="Ver historial">
+        <i class="bi bi-clock-history"></i> Historial
+      </button>
+      <button class="create-button" (click)="createReservation()" title="Crear nueva reserva">
+        <i class="bi bi-plus-circle"></i> Nueva reserva
+      </button>
+    </div>
   </div>
 
   <p class="subtitle">Gestiona tus reservas activas y consulta los detalles de cada una.</p>
@@ -59,9 +66,6 @@
         </div>
 
         <div class="reservation-actions">
-          <button class="btn-details">
-            <i class="bi bi-eye"></i> Ver detalles
-          </button>
           <button class="btn-cancel" (click)="cancelReservation(reserva.id)">
             <i class="bi bi-x-circle"></i> Cancelar
           </button>
