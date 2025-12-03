@@ -43,7 +43,8 @@
           class="form-input">
       </div>
 
-      <button class="btn-submit" (click)="addResource()">{{ selectedResource ? 'Actualizar Recurso' : 'Crear Recurso' }}</button>
+      <button class="btn-submit" (click)="addResource()">{{ isEditing ? 'Actualizar Recurso' : 'Crear Recurso' }}</button>
+      <button class="btn-cancel" *ngIf="isEditing" (click)="cancelEdit()">Cancelar</button>
     </div>
   </div>
 
@@ -61,7 +62,7 @@
 
   <!-- Recursos por Tipo -->
   <div class="resources-section">
-    <div class="resource-type-group" *ngFor="let type of resourceTypes">
+    <div class="resource-type-group" *ngFor="let type of getResourcesWithCount()">
       <div class="type-header" (click)="toggleResourceType(type.name)">
         <h3>{{ type.name }}</h3>
         <i [class]="'bi ' + (expandedTypes[type.name] ? 'bi-chevron-up' : 'bi-chevron-down')"></i>
@@ -80,8 +81,11 @@
             <button class="btn-delete" (click)="deleteResource(resource)">🗑️ Eliminar</button>
           </div>
         </div>
-        <p class="no-resources" *ngIf="!resourcesByType[type.name] || resourcesByType[type.name].length === 0">No hay recursos de este tipo</p>
       </div>
+    </div>
+
+    <div class="no-resources-message" *ngIf="getResourcesWithCount().length === 0">
+      <p>No hay recursos creados aún. ¡Crea el primero!</p>
     </div>
   </div>
 </div>

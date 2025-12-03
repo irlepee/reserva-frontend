@@ -37,6 +37,7 @@ export class ManageResources implements OnInit {
   // UI state
   expandedTypes: { [key: string]: boolean } = {};
   selectedResource: any = null;
+  isEditing: boolean = false;
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -114,20 +115,35 @@ export class ManageResources implements OnInit {
       capacity: this.capacity ? parseInt(this.capacity) : null
     };
 
-    this.resourcesService.createResource(this.siteId, resourceData)
-      .then((newResource: any) => {
-        alert('Recurso creado exitosamente');
-        // Recargar recursos para actualizar la lista
-        this.loadResources();
-        // Limpiar formulario
-        this.resourceName = '';
-        this.resourceType = '';
-        this.capacity = '';
-      })
-      .catch((error: any) => {
-        console.error('Error creating resource:', error);
-        alert('Error al crear el recurso: ' + (error?.error?.message || 'Error desconocido'));
-      });
+    if (this.isEditing && this.selectedResource) {
+      // Editar recurso existente
+      this.resourcesService.editResource(this.siteId, this.selectedResource.id, resourceData)
+        .then((updatedResource: any) => {
+          alert('Recurso actualizado exitosamente');
+          // Recargar recursos para actualizar la lista
+          this.loadResources();
+          // Limpiar formulario
+          this.clearForm();
+        })
+        .catch((error: any) => {
+          console.error('Error updating resource:', error);
+          alert('Error al actualizar el recurso: ' + (error?.error?.message || 'Error desconocido'));
+        });
+    } else {
+      // Crear nuevo recurso
+      this.resourcesService.createResource(this.siteId, resourceData)
+        .then((newResource: any) => {
+          alert('Recurso creado exitosamente');
+          // Recargar recursos para actualizar la lista
+          this.loadResources();
+          // Limpiar formulario
+          this.clearForm();
+        })
+        .catch((error: any) => {
+          console.error('Error creating resource:', error);
+          alert('Error al crear el recurso: ' + (error?.error?.message || 'Error desconocido'));
+        });
+    }
   }
 
   toggleResourceType(type: string) {
@@ -138,12 +154,37 @@ export class ManageResources implements OnInit {
     this.selectedResource = this.selectedResource?.id === resource.id ? null : resource;
   }
 
+  clearForm() {
+    this.resourceName = '';
+    this.resourceType = '';
+    this.capacity = '';
+    this.selectedResource = null;
+    this.isEditing = false;
+  }
+
+  cancelEdit() {
+    this.clearForm();
+  }
+
   editResource(resource: any) {
-    // Aquí irá la lógica para editar
+    this.selectedResource = resource;
+    this.isEditing = true;
+    this.resourceName = resource.name;
+    this.resourceType = resource.resource_type.toString();
+    this.capacity = resource.capacity ? resource.capacity.toString() : '';
+    // Hacer scroll al formulario
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   deleteResource(resource: any) {
     // Aquí irá la lógica para eliminar con confirmación
+  }
+
+  getResourcesWithCount(): any[] {
+    // Retornar solo los tipos que tienen recursos
+    return this.resourceTypes.filter(type => 
+      this.resourcesByType[type.name] && this.resourcesByType[type.name].length > 0
+    );
   }
 
   goBack() {

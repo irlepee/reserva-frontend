@@ -29,4 +29,11 @@ export class ResourcesService {
             .toPromise()
             .then(r => r ?? {});
     }
+
+    editResource(siteId: number, resourceId: number, resourceData: any): Promise<any> {
+        return this.http
+            .put<any>(`${this.api}/sites/${siteId}/resources/${resourceId}`, resourceData)
+            .toPromise()
+            .then(r => r ?? {});
+    }
 }
