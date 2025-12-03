@@ -1,22 +1,70 @@
 <div class="main-container">
+
   <div class="top-section">
-    <div class="name-section">Mis reservas</div>
-    <button class="new-reserva-button" (click)="createReservation()">+ Reservar</button>
+    <div class="top-left">
+      <h2>Mis reservas</h2>
+    </div>
+    <button class="create-button" (click)="createReservation()" title="Crear nueva reserva">+ Nueva reserva</button>  
   </div>
 
-  <div class="historial-section">
-    <button class="view-historial-button">Historial</button>
+  <p class="subtitle">Gestiona tus reservas activas y consulta los detalles de cada una.</p>
+
+  <div class="search-bar">
+    <i class="bi bi-search"></i>
+    <input type="text" placeholder="Buscar por recurso o sitio..." [(ngModel)]="search" (input)="filtrarPorNombre()">
   </div>
 
   <div class="reservas-section">
-    <div *ngFor="let reserva of reservas">
-      <div class="reserva-item">
-        <img class="reserva-img" src="/images/fondo1.png" alt="">
-        <div>
-          <h3>Sitio: {{ reserva.id_resource }}</h3>
-          <p>Fecha inicio: {{ reserva.start_date | date:'hh:mm a' }}</p>
-          <p>Fecha fin: {{ reserva.end_date | date:'hh:mm a' }}</p>
-          <p>{{ reserva.id }}</p>
+    <div *ngIf="reservasFiltered.length === 0" class="empty-state">
+      <p>No tienes reservas activas</p>
+      <button class="create-button-empty" (click)="createReservation()">+ Crear tu primera reserva</button>
+    </div>
+
+    <div class="reservas-grid">
+      <div class="reservation-card" *ngFor="let reserva of reservasFiltered">
+        <div class="reservation-header">
+          <div class="reservation-title">
+            <h3>{{ reserva.Resource?.name || 'Recurso' }}</h3>
+            <p class="reservation-site">{{ reserva.Resource?.belongs?.name || 'Sitio' }}</p>
+          </div>
+          <span class="reservation-status" [class.active]="reserva.status === 'Active'">
+            {{ reserva.status }}
+          </span>
+        </div>
+
+        <div class="reservation-details">
+          <div class="detail-item">
+            <i class="bi bi-calendar3"></i>
+            <div>
+              <span class="label">Fecha</span>
+              <p>{{ getFormattedDate(reserva.start_date) }}</p>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <i class="bi bi-clock"></i>
+            <div>
+              <span class="label">Horario</span>
+              <p>{{ getFormattedTime(reserva.start_date) }} - {{ getFormattedTime(reserva.end_date) }}</p>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <i class="bi bi-info-circle"></i>
+            <div>
+              <span class="label">ID Reserva</span>
+              <p>#{{ reserva.id }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reservation-actions">
+          <button class="btn-details">
+            <i class="bi bi-eye"></i> Ver detalles
+          </button>
+          <button class="btn-cancel" (click)="cancelReservation(reserva.id)">
+            <i class="bi bi-x-circle"></i> Cancelar
+          </button>
         </div>
       </div>
     </div>

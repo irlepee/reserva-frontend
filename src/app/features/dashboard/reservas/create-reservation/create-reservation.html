@@ -1,10 +1,13 @@
 <div class="reservation-modal">
   <!-- PASO 1: Búsqueda de sitio -->
   <div class="step-container" *ngIf="step === 'search'">
-    <h2>Busca un lugar para reservar</h2>
-    <p>Ingresa el nombre del sitio que deseas reservar</p>
+    <div class="search-header">
+      <h2>Busca un lugar para reservar</h2>
+      <p>Ingresa el nombre del sitio que deseas reservar</p>
+    </div>
 
     <div class="search-box">
+      <i class="bi bi-search"></i>
       <input
         type="text"
         [(ngModel)]="searchTerm"
@@ -12,17 +15,26 @@
         placeholder="Busca un sitio..."
         class="search-input"
       />
-      <i class="bi bi-search"></i>
+      <span *ngIf="isSearching" class="search-loader">
+        <i class="bi bi-arrow-repeat"></i>
+      </span>
     </div>
 
     <div class="sites-list" *ngIf="searchedSites.length > 0">
       <div class="site-item" *ngFor="let site of searchedSites" (click)="selectSite(site)">
         <div class="site-image">
-          <img [src]="site.image || 'assets/placeholder.png'" alt="{{ site.name }}" />
+          <img 
+            [src]="site.image_url || site.image || '/images/placeholder.png'" 
+            alt="{{ site.name }}" 
+            (error)="$event.target.src='/images/placeholder.png'"
+          />
         </div>
         <div class="site-info">
           <h3>{{ site.name }}</h3>
           <p>{{ site.description || 'Sin descripción' }}</p>
+          <span class="site-location" *ngIf="site.location || site.municipio">
+            <i class="bi bi-geo-alt"></i> {{ site.location || site.municipio }}
+          </span>
         </div>
         <i class="bi bi-chevron-right"></i>
       </div>
@@ -42,11 +54,20 @@
 
     <div class="site-details" *ngIf="selectedSite">
       <div class="site-banner">
-        <img [src]="selectedSite.image || 'assets/placeholder.png'" alt="{{ selectedSite.name }}" />
+        <img 
+          [src]="selectedSite.image_url || selectedSite.image || '/images/placeholder.png'" 
+          alt="{{ selectedSite.name }}"
+          (error)="$event.target.src='/images/placeholder.png'"
+        />
       </div>
       <div class="site-info-card">
         <h3>{{ selectedSite.name }}</h3>
         <p>{{ selectedSite.description }}</p>
+        <div class="site-meta" *ngIf="selectedSite.location || selectedSite.municipio">
+          <span class="meta-item">
+            <i class="bi bi-geo-alt"></i> {{ selectedSite.location || selectedSite.municipio }}
+          </span>
+        </div>
       </div>
     </div>
 
@@ -86,7 +107,16 @@
     <div class="datetime-container">
       <!-- Calendario -->
       <div class="calendar-section">
-        <h4>{{ getMonthYear() }}</h4>
+        <div class="calendar-header-controls">
+          <button class="btn-month" (click)="previousMonth()" title="Mes anterior">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <h4>{{ getMonthYear() }}</h4>
+          <button class="btn-month" (click)="nextMonth()" title="Mes siguiente">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+        
         <div class="calendar">
           <div class="calendar-header">
             <div>L</div>
@@ -102,12 +132,18 @@
               class="day"
               *ngFor="let day of getCalendarDays()"
               [class.empty]="!day"
-              [class.selected]="selectedDate"
+              [class.selected]="isDateSelected(day)"
+              [class.disabled]="isDateDisabled(day)"
               (click)="selectDate(day)"
             >
               {{ day }}
             </div>
           </div>
+        </div>
+
+        <div *ngIf="selectedDate" class="selected-date-display">
+          <i class="bi bi-check-circle-fill"></i>
+          Fecha seleccionada: {{ selectedDate | date: 'dd/MM/yyyy' }}
         </div>
       </div>
 
@@ -120,8 +156,12 @@
             <input
               type="time"
               [(ngModel)]="startTime"
+              [min]="getMinStartTime()"
               class="time-input"
             />
+            <small *ngIf="selectedDate" class="time-hint">
+              Desde la hora actual
+            </small>
           </div>
           <div class="time-group">
             <label>Hasta</label>
@@ -130,6 +170,16 @@
               [(ngModel)]="endTime"
               class="time-input"
             />
+            <small class="time-hint">
+              Mínimo 30 minutos de duración
+            </small>
+          </div>
+        </div>
+
+        <div *ngIf="startTime && endTime" class="time-summary">
+          <div class="time-summary-item">
+            <span>Duración:</span>
+            <strong>{{ calculateDuration() | number: '1.0-0' }} horas</strong>
           </div>
         </div>
       </div>
