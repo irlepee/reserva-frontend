@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { LocationsService } from '../../../../core/services/locations-service';
 import { Entidad } from '../../../../shared/interfaces/entidad';
 import { Municipio } from '../../../../shared/interfaces/municipio';
 import { Localidad } from '../../../../shared/interfaces/localidad';
+import { SiteService } from '../../../../core/services/site-service';
 
 @Component({
   selector: 'app-create-sites',
@@ -13,7 +15,7 @@ import { Localidad } from '../../../../shared/interfaces/localidad';
   styleUrl: './create-sites.css',
 })
 export class CreateSites implements OnInit {
-  constructor(private ubicacionService: LocationsService) { }
+  constructor(private ubicacionService: LocationsService, private siteService: SiteService, private router: Router) { }
 
   siteName: string = '';
   description: string = '';
@@ -166,7 +168,32 @@ export class CreateSites implements OnInit {
     this.uploadedImages = this.uploadedImages.filter((_, i) => i !== index);
   }
 
+  cancelCreate() {
+    this.router.navigate(['/dashboard/sites']);
+  }
+
   createSite() {
-    
+    this.siteName = this.siteName.trim();
+    if (!this.siteName) {
+      alert('El nombre del sitio es obligatorio.');
+      return;
+    }
+    const siteData = {
+      name: this.siteName,
+      description: this.description,
+      entidadId: this.entidadId,
+      municipioId: this.municipioId,
+      localidadId: this.localidadId,
+      images: this.uploadedImages
+    };
+
+    this.siteService.createSite(siteData)
+      .then(() => {
+        alert('Sitio creado exitosamente.');
+        this.router.navigate(['/dashboard/sites']);
+      })
+      .catch((error) => {
+        alert('Hubo un error al crear el sitio. Por favor, intenta nuevamente.');
+      });
   }
 }

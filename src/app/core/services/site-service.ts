@@ -15,4 +15,10 @@ export class SiteService {
       .toPromise()
       .then(r => r ?? []);
   }
+
+  createSite(siteData: any): Promise<any> {
+    return this.http
+      .post<any>(`${this.api}/sites`, siteData)
+      .toPromise();
+  }
 }
