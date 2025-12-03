@@ -130,5 +130,9 @@ export class CreateGroups {
     this.invitedMembers.splice(index, 1);
   }
 
+  goBack() {
+    this.router.navigate(['/dashboard/groups']);
+  }
+
 }
 

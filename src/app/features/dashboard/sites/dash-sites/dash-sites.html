@@ -1,27 +1,46 @@
 <div class="main-container">
 
   <div class="top-section">
-    <h2>Mis sitios</h2>
-    <button routerLink="create" class="create-button" >+ Crear sitio</button>
+    <div class="top-left">
+      <h2>Mis sitios</h2>
+    </div>
+    <button routerLink="create" class="create-button" title="Crear nuevo sitio">+ Crear sitio</button>  
+  </div>
+
+  <p class="subtitle">Gestiona la información, recursos y estadísticas de tus sitios.</p>
+
+  <div class="search-bar">
+    <i class="bi bi-search"></i>
+    <input type="text" placeholder="Buscar por nombre o ubicación...">
   </div>
 
   <div class="sites-section">
     <div *ngIf="sites.length === 0" class="empty-state">
       <p>Aún no tienes sitios creados</p>
+      <button routerLink="create" class="create-button-empty">+ Crear tu primer sitio</button>
     </div>
 
     <div class="sites-grid">
-      <div class="site-card" *ngFor="let site of sites">
-        <div class="site-header">
-          <h3>{{ site.name }}</h3>
-        </div>
-        <div class="site-details">
-          <p><strong>Ubicación:</strong> {{ site.location || 'Sin ubicación' }}</p>
-          <p><strong>Descripción:</strong> {{ site.description || 'Sin descripción' }}</p>
-        </div>
-        <div class="site-actions">
-          <button class="btn-edit">Editar</button>
-          <button class="btn-delete">Eliminar</button>
+      <div class="site-card" *ngFor="let site of sites"
+        [style.backgroundImage]="'url(' + (site.images?.[0] || '/images/placeholder-site.jpg') + ')'"
+        title="{{ site.name }}">
+        <div class="site-overlay">
+          <div class="site-info">
+            <h3 class="site-name">{{ site.name }}</h3>
+            <p class="site-location">{{ site.municipio?.name || 'Ubicación' }}, {{ site.entidad?.name || 'España' }} •
+              {{ site.resources_count || 0 }} Recursos</p>
+          </div>
+          <div class="site-actions">
+            <button class="btn-action" title="Editar Info">
+              <i class="bi bi-pencil"></i> Editar Info
+            </button>
+            <button class="btn-action" title="Editar Recursos">
+              <i class="bi bi-boxes"></i> Editar Recursos
+            </button>
+            <button class="btn-action" title="Ver Stats">
+              <i class="bi bi-bar-chart"></i> Ver Stats
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -78,9 +78,16 @@
       </div>
     </div>
 
+    <!-- Sección de peligro - Eliminar grupo -->
+    <div class="section danger-section">
+      <h3>Peligro</h3>
+      <p class="danger-text">Esta acción no se puede deshacer. Todos los datos del grupo serán eliminados.</p>
+      <button type="button" class="btn-danger" (click)="deleteGroup()">Eliminar grupo</button>
+    </div>
+
     <!-- Botones de acción -->
     <div class="form-actions">
-      <button type="button" class="btn-danger" (click)="deleteGroup()">Eliminar grupo</button>
+      <button type="button" class="btn-cancel" (click)="goBack()">Volver</button>
       <button type="submit" class="btn-primary">Actualizar grupo</button>
     </div>
   </form>

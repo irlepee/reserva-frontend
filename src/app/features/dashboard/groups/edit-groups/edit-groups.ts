@@ -274,4 +274,9 @@ export class EditGroups {
         alert('Error al actualizar el grupo o enviar invitaciones');
       });
   }
+
+  goBack() {
+    this.router.navigate(['/dashboard/groups']);
+  }
 }
+

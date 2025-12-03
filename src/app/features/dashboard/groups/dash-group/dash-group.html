@@ -1,46 +1,61 @@
 <div class="main-container">
 
   <div class="top-section">
-    <h2>Mis grupos</h2>
-    <button class="invitations-button" (click)="toggleInvitations()"><i class="bi bi-bell-fill"></i></button>
-    <button routerLink="create">+ Crear grupo</button>
+    <div class="top-left">
+      <h2 style="font-size: 2.5rem; font-weight: 700;">Mis grupos</h2>
+      <button class="invitations-button" (click)="toggleInvitations()" title="Ver invitaciones">
+        <i class="bi bi-bell-fill"></i>
+      </button>
+    </div>
+    <button routerLink="create" class="create-button" title="Crear nuevo grupo">+ Crear grupo</button>
   </div>
 
+  <p class="subtitle">Administra tus grupos, invita miembros y colabora en equipo.</p>
+
   <div class="filter-section">
-    <input class="search-input" type="text" placeholder="Buscar grupo..." [(ngModel)]="search"
-      (input)="filtrarPorNombre()" />
+    <div class="search-bar">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Buscar grupo..." [(ngModel)]="search" (input)="filtrarPorNombre()">
+    </div>
     <div class="filter-button-container">
-      <button class="filter-button" (click)="toggleFiltros()">Filtrar</button><app-group-filter *ngIf="mostrarFiltros"
-        (cerrar)="mostrarFiltros = false" (filtroSeleccionado)="aplicarFiltro($event)">
+      <button class="filter-button" (click)="toggleFiltros()">
+        <i class="bi bi-funnel"></i> Filtrar
+      </button>
+      <app-group-filter *ngIf="mostrarFiltros" (cerrar)="mostrarFiltros = false"
+        (filtroSeleccionado)="aplicarFiltro($event)">
       </app-group-filter>
     </div>
   </div>
 
   <div class="groups-section">
-
-    <div class="groups" *ngFor="let group of groups" (click)="navigateToGroup(group)" style="cursor: pointer;">
-      <div class="icon">
-        <i class="bi bi-people-fill"></i>
-      </div>
-      <div>
-        <div class="name-with-badge">
-          <h3>{{ group.name }}</h3>
-          <i class="bi bi-crown-fill owner-badge" *ngIf="group.id_owner === user?.id" title="Eres el dueño"></i>
-        </div>
-        <p>{{ group.memberCount || 0 }} miembros</p>
-      </div>
-      <div class="groups-detail">></div>
+    <div *ngIf="groups.length === 0" class="empty-state">
+      <p>Aún no tienes grupos creados</p>
+      <button routerLink="create" class="create-button-empty">+ Crear tu primer grupo</button>
     </div>
 
+    <div class="groups-list">
+      <div class="group-card" *ngFor="let group of groups" (click)="navigateToGroup(group)" title="{{ group.name }}">
+        <div class="group-icon">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <div class="group-info">
+          <div class="group-header">
+            <h3 class="group-name">{{ group.name }}</h3>
+            <i class="bi bi-crown-fill owner-badge" *ngIf="group.id_owner === user?.id" title="Eres el dueño"></i>
+          </div>
+          <p class="group-members">{{ group.memberCount || 0 }} miembros</p>
+        </div>
+        <div class="group-arrow">
+          <i class="bi bi-chevron-right"></i>
+        </div>
+      </div>
+    </div>
   </div>
 
   <app-invitations *ngIf="mostrarInvitaciones" (cerrar)="mostrarInvitaciones = false"></app-invitations>
 
   <!-- Modal de vista de grupo -->
-  <app-view-group 
-    [groupId]="selectedGroupForView?.id" 
-    [isOpen]="showViewModal"
-    (close)="closeViewModal()">
+  <app-view-group [groupId]="selectedGroupForView?.id" [isOpen]="showViewModal" (close)="closeViewModal()">
   </app-view-group>
 
 </div>
