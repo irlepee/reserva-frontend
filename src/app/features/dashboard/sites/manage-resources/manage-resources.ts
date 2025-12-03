@@ -24,8 +24,9 @@ export class ManageResources implements OnInit {
   resourceType: string = '';
   capacity: string = '';
 
-  // Resource types
-  resourceTypes: string[] = [];
+  // Resource types - ahora almacenamos id y name
+  resourceTypes: any[] = [];
+  resourceTypesMap: { [key: number]: string } = {};
 
   // Resources grouped by type
   resourcesByType: { [key: string]: any[] } = {};
@@ -53,11 +54,16 @@ export class ManageResources implements OnInit {
   loadCategories() {
     this.resourcesService.getCategories()
       .then((categories: any[]) => {
-        this.resourceTypes = categories.map((c: any) => c.name);
+        this.resourceTypes = categories;
+        
+        // Crear mapeo de ID a nombre para referencia rápida
+        categories.forEach((category: any) => {
+          this.resourceTypesMap[category.id] = category.name;
+        });
         
         // Reinicializar tipos expandidos
-        this.resourceTypes.forEach(type => {
-          this.expandedTypes[type] = true;
+        categories.forEach((category: any) => {
+          this.expandedTypes[category.name] = true;
         });
       })
       .catch((error: any) => {
@@ -66,8 +72,29 @@ export class ManageResources implements OnInit {
   }
 
   loadResources() {
-    // Aquí irá la lógica para cargar recursos
-    // Por ahora, datos de ejemplo
+    if (!this.siteId) return;
+    
+    this.resourcesService.getResources(this.siteId)
+      .then((resources: any[]) => {
+        // Agrupar recursos por tipo
+        this.resourcesByType = {};
+        
+        resources.forEach((resource: any) => {
+          const typeName = this.getTypeName(resource.resource_type);
+          if (!this.resourcesByType[typeName]) {
+            this.resourcesByType[typeName] = [];
+          }
+          this.resourcesByType[typeName].push(resource);
+        });
+      })
+      .catch((error: any) => {
+        console.error('Error loading resources:', error);
+      });
+  }
+
+  getTypeName(resourceTypeId: number): string {
+    // Retornar el nombre del tipo del mapeo
+    return this.resourceTypesMap[resourceTypeId] || 'Tipo ' + resourceTypeId;
   }
 
   addResource() {
@@ -76,16 +103,31 @@ export class ManageResources implements OnInit {
       return;
     }
 
-    // Aquí irá la lógica para agregar recurso
-    console.log('Agregando recurso:', {
-      name: this.resourceName,
-      type: this.resourceType,
-      capacity: this.capacity
-    });
+    if (!this.siteId) {
+      alert('Error: No se encontró el sitio');
+      return;
+    }
 
-    this.resourceName = '';
-    this.resourceType = '';
-    this.capacity = '';
+    const resourceData = {
+      name: this.resourceName,
+      resource_type: parseInt(this.resourceType),
+      capacity: this.capacity ? parseInt(this.capacity) : null
+    };
+
+    this.resourcesService.createResource(this.siteId, resourceData)
+      .then((newResource: any) => {
+        alert('Recurso creado exitosamente');
+        // Recargar recursos para actualizar la lista
+        this.loadResources();
+        // Limpiar formulario
+        this.resourceName = '';
+        this.resourceType = '';
+        this.capacity = '';
+      })
+      .catch((error: any) => {
+        console.error('Error creating resource:', error);
+        alert('Error al crear el recurso: ' + (error?.error?.message || 'Error desconocido'));
+      });
   }
 
   toggleResourceType(type: string) {

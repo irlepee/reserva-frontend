@@ -29,7 +29,7 @@
           [(ngModel)]="resourceType"
           class="form-input">
           <option value="">Selecciona un tipo</option>
-          <option *ngFor="let type of resourceTypes" [value]="type">{{ type }}</option>
+          <option *ngFor="let type of resourceTypes" [value]="type.id">{{ type.name }}</option>
         </select>
       </div>
 
@@ -43,7 +43,7 @@
           class="form-input">
       </div>
 
-      <button class="btn-submit" (click)="addResource()">Editar Recurso</button>
+      <button class="btn-submit" (click)="addResource()">{{ selectedResource ? 'Actualizar Recurso' : 'Crear Recurso' }}</button>
     </div>
   </div>
 
@@ -62,12 +62,25 @@
   <!-- Recursos por Tipo -->
   <div class="resources-section">
     <div class="resource-type-group" *ngFor="let type of resourceTypes">
-      <div class="type-header" (click)="toggleResourceType(type)">
-        <h3>{{ type }}</h3>
-        <i [class]="'bi ' + (expandedTypes[type] ? 'bi-chevron-up' : 'bi-chevron-down')"></i>
+      <div class="type-header" (click)="toggleResourceType(type.name)">
+        <h3>{{ type.name }}</h3>
+        <i [class]="'bi ' + (expandedTypes[type.name] ? 'bi-chevron-up' : 'bi-chevron-down')"></i>
       </div>
 
-      <div class="resources-grid" *ngIf="expandedTypes[type]">
+      <div class="resources-grid" *ngIf="expandedTypes[type.name]">
+        <div class="resource-card" *ngFor="let resource of resourcesByType[type.name]">
+          <div class="resource-info">
+            <h4>{{ resource.name }}</h4>
+            <p class="resource-detail">Capacidad: {{ resource.capacity || 'N/A' }}</p>
+            <p class="resource-detail">Estado: {{ resource.status }}</p>
+            <p class="resource-date">Creado: {{ resource.date_created | date: 'dd/MM/yyyy' }}</p>
+          </div>
+          <div class="resource-actions">
+            <button class="btn-edit" (click)="editResource(resource)">✏️ Editar</button>
+            <button class="btn-delete" (click)="deleteResource(resource)">🗑️ Eliminar</button>
+          </div>
+        </div>
+        <p class="no-resources" *ngIf="!resourcesByType[type.name] || resourcesByType[type.name].length === 0">No hay recursos de este tipo</p>
       </div>
     </div>
   </div>

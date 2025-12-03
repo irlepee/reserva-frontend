@@ -15,4 +15,18 @@ export class ResourcesService {
             .toPromise()
             .then(r => r ?? []);
     }
+
+    getResources(siteId: number): Promise<any[]> {
+        return this.http
+            .get<any[]>(`${this.api}/sites/${siteId}/resources`)
+            .toPromise()
+            .then(r => r ?? []);
+    }
+
+    createResource(siteId: number, resourceData: any): Promise<any> {
+        return this.http
+            .post<any>(`${this.api}/sites/${siteId}/resources`, resourceData)
+            .toPromise()
+            .then(r => r ?? {});
+    }
 }
