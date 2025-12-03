@@ -1,0 +1,32 @@
+<div class="verify-container">
+  <div class="verify-card">
+    <!-- Cargando -->
+    <div class="loading-state" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <h2>Verificando tu email...</h2>
+      <p>Por favor espera mientras verificamos tu dirección de correo.</p>
+      <p style="font-size: 0.8rem; color: #999; margin-top: 1rem;">Debug: Cargando...</p>
+    </div>
+
+    <!-- Éxito -->
+    <div class="success-state" *ngIf="isSuccess">
+      <div class="success-icon">
+        <i class="bi bi-check-circle"></i>
+      </div>
+      <h2>¡Email Verificado!</h2>
+      <p class="email-text">{{ email }}</p>
+      <p class="message">Tu email ha sido verificado correctamente. Serás redirigido al login en unos momentos.</p>
+      <button class="btn-primary" (click)="goToLogin()">Ir al Login</button>
+    </div>
+
+    <!-- Error -->
+    <div class="error-state" *ngIf="isError">
+      <div class="error-icon">
+        <i class="bi bi-x-circle"></i>
+      </div>
+      <h2>Error en la Verificación</h2>
+      <p class="error-message">{{ errorMessage }}</p>
+      <button class="btn-primary" (click)="goToLogin()">Volver al Login</button>
+    </div>
+  </div>
+</div>

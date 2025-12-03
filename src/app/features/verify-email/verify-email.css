@@ -1,0 +1,157 @@
+.verify-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem;
+}
+
+.verify-card {
+  background: white;
+  border-radius: 12px;
+  padding: 3rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Estado de Carga */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-state h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.loading-state p {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Estado de Éxito */
+.success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.success-icon {
+  font-size: 3.5rem;
+  color: #10b981;
+  margin-bottom: 0.5rem;
+}
+
+.success-state h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.email-text {
+  font-weight: 600;
+  color: #667eea;
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+}
+
+.success-state .message {
+  margin: 0 0 1.5rem 0;
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Estado de Error */
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.error-icon {
+  font-size: 3.5rem;
+  color: #ef4444;
+  margin-bottom: 0.5rem;
+}
+
+.error-state h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.error-message {
+  margin: 0 0 1.5rem 0;
+  color: #ef4444;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  background-color: #fef2f2;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #ef4444;
+}
+
+/* Botón */
+.btn-primary {
+  background-color: #667eea;
+  color: white;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+  background-color: #5568d3;
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .verify-card {
+    padding: 2rem;
+  }
+
+  .success-icon,
+  .error-icon {
+    font-size: 2.5rem;
+  }
+
+  .success-state h2,
+  .error-state h2 {
+    font-size: 1.5rem;
+  }
+
+  .verify-card {
+    margin: 1rem;
+  }
+}

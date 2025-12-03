@@ -19,6 +19,10 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/auth/register`, data).toPromise();
   }
 
+  verifyEmail(token: string): Promise<any> {
+    return this.http.post(`${this.apiUrl}/auth/verify-email`, { token }).toPromise();
+  }
+
   fetchCurrentUser(): Promise<any> {
     const token = localStorage.getItem('token');
     return this.http.get(`${this.apiUrl}/auth`, {

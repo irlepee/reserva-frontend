@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Home } from './features/home/home';
 import { Auth } from './features/auth/auth';
+import { VerifyEmailComponent } from './features/verify-email/verify-email';
 import { DashboardLayout } from './shared/layout/dashboard-layout/dashboard-layout';
 import { DashHome } from './features/dashboard/dash-home/dash-home';
 import { Groups } from './features/dashboard/groups/groups';
@@ -19,6 +20,8 @@ import { HistoryReservas } from './features/dashboard/reservas/history-reservas/
 export const routes: Routes = [
     { path: '', component:Home },
     { path: 'login', component:Auth},
+    { path: 'auth', component:Auth},
+    { path: 'verify-email', component:VerifyEmailComponent},
     { path: 'dashboard',
          component:DashboardLayout,
          children: [
