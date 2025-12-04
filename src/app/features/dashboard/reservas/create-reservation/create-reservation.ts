@@ -29,6 +29,9 @@ export class CreateReservationComponent implements OnInit {
 
   // PASO 2: Selección de recurso
   siteResources: any[] = [];
+  resourcesByCategory: Map<string, any[]> = new Map();
+  resourceTypesMap: { [key: number]: string } = {};
+  categories: string[] = [];
   selectedResource: any = null;
 
   // PASO 3: Calendario y horario
@@ -40,7 +43,62 @@ export class CreateReservationComponent implements OnInit {
   // Estados de paso
   step: 'search' | 'resources' | 'datetime' | 'summary' = 'search';
 
-  ngOnInit() {}
+  // URL de la API para imágenes
+  apiUrl = 'http://localhost:3000';
+
+  ngOnInit() {
+    this.loadCategories();
+  }
+
+  // Cargar categorías desde el backend
+  loadCategories() {
+    this.resourcesService.getCategories()
+      .then((categories: any[]) => {
+        // Crear mapeo de ID a nombre para referencia rápida
+        categories.forEach((category: any) => {
+          this.resourceTypesMap[category.id] = category.name;
+        });
+      })
+      .catch(() => {
+        this.resourceTypesMap = {};
+      });
+  }
+
+  // Obtener nombre del tipo de recurso por ID
+  getTypeName(resourceTypeId: number): string {
+    return this.resourceTypesMap[resourceTypeId] || 'Sin categoría';
+  }
+
+  // Obtener URL de imagen del sitio
+  getImageUrl(images: any): string {
+    if (!images || images.length === 0) {
+      return '';
+    }
+    
+    const firstImage = images[0];
+    
+    // Si ya es una URL completa
+    if (firstImage.startsWith('http')) {
+      return firstImage;
+    }
+    
+    // Si es un nombre de archivo, construir la URL
+    return `${this.apiUrl}${firstImage}`;
+  }
+
+  // Obtener todas las URLs de imágenes del sitio
+  getAllImageUrls(images: any): string[] {
+    if (!images || images.length === 0) {
+      return [];
+    }
+    
+    return images.map((img: string) => {
+      if (img.startsWith('http')) {
+        return img;
+      }
+      return `${this.apiUrl}${img}`;
+    });
+  }
 
   // PASO 1: Búsqueda de sitios
   searchSites() {
@@ -50,28 +108,22 @@ export class CreateReservationComponent implements OnInit {
     }
 
     this.isSearching = true;
-    console.log('🔍 Buscando sitios con término:', this.searchTerm);
     
-    // Usar getPublicSites que usa /reservas/sites (muestra todos los sitios)
     this.siteService.getPublicSites()
       .then((sites: any[]) => {
-        console.log('✅ Sitios obtenidos:', sites);
         const term = this.searchTerm.toLowerCase();
         this.searchedSites = sites.filter(site =>
           site.name.toLowerCase().includes(term)
         );
-        console.log('📋 Sitios filtrados:', this.searchedSites);
         this.isSearching = false;
       })
       .catch((error: any) => {
-        console.error('❌ Error searching sites:', error);
         this.searchedSites = [];
         this.isSearching = false;
       });
   }
 
   selectSite(site: any) {
-    console.log('🏢 Sitio seleccionado:', site);
     this.selectedSite = site;
     this.step = 'resources';
     this.loadSiteResources();
@@ -79,19 +131,37 @@ export class CreateReservationComponent implements OnInit {
 
   loadSiteResources() {
     if (!this.selectedSite) return;
-
-    console.log('🔄 Cargando recursos del sitio:', this.selectedSite.id);
     
-    // Usar getPublicResources que usa /reservas/sites/:siteId (muestra todos los recursos del sitio)
     this.siteService.getPublicResources(this.selectedSite.id)
       .then((resources: any[]) => {
-        console.log('✅ Recursos obtenidos:', resources);
         this.siteResources = resources;
+        this.organizeResourcesByCategory(resources);
       })
       .catch((error: any) => {
-        console.error('❌ Error loading resources:', error);
         this.siteResources = [];
+        this.resourcesByCategory = new Map();
+        this.categories = [];
       });
+  }
+
+  // Organizar recursos por categoría
+  organizeResourcesByCategory(resources: any[]) {
+    this.resourcesByCategory = new Map();
+    
+    resources.forEach(resource => {
+      const categoryName = this.getTypeName(resource.resource_type);
+      
+      if (!this.resourcesByCategory.has(categoryName)) {
+        this.resourcesByCategory.set(categoryName, []);
+      }
+      this.resourcesByCategory.get(categoryName)?.push(resource);
+    });
+    
+    this.categories = Array.from(this.resourcesByCategory.keys());
+  }
+
+  getResourcesByCategory(category: string): any[] {
+    return this.resourcesByCategory.get(category) || [];
   }
 
   // PASO 2: Selección de recurso

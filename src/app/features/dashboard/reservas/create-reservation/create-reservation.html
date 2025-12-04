@@ -22,6 +22,9 @@
 
     <div class="sites-list" *ngIf="searchedSites.length > 0">
       <div class="site-item" *ngFor="let site of searchedSites" (click)="selectSite(site)">
+        <div class="site-image" *ngIf="getImageUrl(site.images)">
+          <img [src]="getImageUrl(site.images)" alt="{{ site.name }}" />
+        </div>
         <div class="site-info">
           <h3>{{ site.name }}</h3>
           <p>{{ site.description || 'Sin descripción' }}</p>
@@ -46,12 +49,29 @@
     </div>
 
     <div class="site-details" *ngIf="selectedSite">
+      <!-- Galería de imágenes -->
+      <div class="site-gallery" *ngIf="getAllImageUrls(selectedSite.images).length > 0">
+        <div class="gallery-scroll">
+          <img 
+            *ngFor="let imgUrl of getAllImageUrls(selectedSite.images)" 
+            [src]="imgUrl" 
+            alt="{{ selectedSite.name }}"
+            class="gallery-image"
+          />
+        </div>
+      </div>
+
+      <!-- Información del sitio -->
       <div class="site-info-card">
         <h3>{{ selectedSite.name }}</h3>
-        <p>{{ selectedSite.description }}</p>
-        <div class="site-meta" *ngIf="selectedSite.location || selectedSite.municipio">
-          <span class="meta-item">
+        <p class="site-description">{{ selectedSite.description || 'Sin descripción' }}</p>
+        
+        <div class="site-meta">
+          <span class="meta-item" *ngIf="selectedSite.location || selectedSite.municipio">
             <i class="bi bi-geo-alt"></i> {{ selectedSite.location || selectedSite.municipio }}
+          </span>
+          <span class="meta-item">
+            <i class="bi bi-box"></i> {{ siteResources.length }} recursos disponibles
           </span>
         </div>
       </div>
@@ -59,7 +79,36 @@
 
     <div class="resources-container">
       <h4>Recursos disponibles</h4>
-      <div class="resources-grid">
+      
+      <!-- Recursos organizados por categoría -->
+      <div class="category-section" *ngFor="let category of categories">
+        <div class="category-header">
+          <i class="bi bi-tag"></i>
+          <span>{{ category }}</span>
+          <span class="category-count">({{ getResourcesByCategory(category).length }})</span>
+        </div>
+        
+        <div class="resources-grid">
+          <div
+            class="resource-card"
+            *ngFor="let resource of getResourcesByCategory(category)"
+            (click)="selectResource(resource)"
+          >
+            <div class="resource-header">
+              <h5>{{ resource.name }}</h5>
+              <span class="resource-status" [class.available]="resource.status === 'Available'">
+                {{ resource.status === 'Available' ? 'Disponible' : resource.status }}
+              </span>
+            </div>
+            <p class="resource-capacity" *ngIf="resource.capacity">
+              <i class="bi bi-people"></i> Capacidad: {{ resource.capacity }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Si no hay categorías pero sí recursos -->
+      <div class="resources-grid" *ngIf="categories.length === 0 && siteResources.length > 0">
         <div
           class="resource-card"
           *ngFor="let resource of siteResources"
@@ -68,13 +117,19 @@
           <div class="resource-header">
             <h5>{{ resource.name }}</h5>
             <span class="resource-status" [class.available]="resource.status === 'Available'">
-              {{ resource.status }}
+              {{ resource.status === 'Available' ? 'Disponible' : resource.status }}
             </span>
           </div>
           <p class="resource-capacity" *ngIf="resource.capacity">
             <i class="bi bi-people"></i> Capacidad: {{ resource.capacity }}
           </p>
         </div>
+      </div>
+
+      <!-- Sin recursos -->
+      <div class="no-resources" *ngIf="siteResources.length === 0">
+        <i class="bi bi-inbox"></i>
+        <p>Este sitio no tiene recursos disponibles</p>
       </div>
     </div>
   </div>

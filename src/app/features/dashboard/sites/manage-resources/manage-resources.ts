@@ -42,18 +42,15 @@ export class ManageResources implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.siteId = params['id'];
-      this.loadCategories();
-      this.loadResources();
-    });
-
-    // Inicializar tipos expandidos
-    this.resourceTypes.forEach(type => {
-      this.expandedTypes[type] = true;
+      // Primero cargar categorías, luego recursos
+      this.loadCategories().then(() => {
+        this.loadResources();
+      });
     });
   }
 
-  loadCategories() {
-    this.resourcesService.getCategories()
+  loadCategories(): Promise<void> {
+    return this.resourcesService.getCategories()
       .then((categories: any[]) => {
         this.resourceTypes = categories;
         
