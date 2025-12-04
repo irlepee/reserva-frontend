@@ -29,7 +29,6 @@ export class HistoryReservas implements OnInit {
         this.history = data;
         this.historyFiltered = data;
         this.isLoading = false;
-        console.log('Historial cargado:', data);
       })
       .catch(err => {
         this.history = [];

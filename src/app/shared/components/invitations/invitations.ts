@@ -28,7 +28,6 @@ export class Invitations implements OnInit {
     this.error = null;
     this.groupService.getInvitations()
       .then(data => {
-        console.log('Invitaciones cargadas:', data);
         this.invitations = Array.isArray(data) ? data : [];
       })
       .catch(err => {
@@ -45,7 +44,6 @@ export class Invitations implements OnInit {
   }
 
   aceptarInvitacion(invitation: any) {
-    console.log('Invitación aceptada:', invitation);
     this.procesando[invitation.id] = true;
     
     this.groupService.acceptInvitation(invitation.id)
@@ -61,7 +59,6 @@ export class Invitations implements OnInit {
   }
 
   rechazarInvitacion(invitation: any) {
-    console.log('Invitación rechazada:', invitation);
     this.procesando[invitation.id] = true;
     
     this.groupService.rejectInvitation(invitation.id)

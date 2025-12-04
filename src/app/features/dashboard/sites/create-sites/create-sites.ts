@@ -47,7 +47,7 @@ export class CreateSites implements OnInit {
   async cargarEntidades() {
     this.ubicacionService.getEntidades().subscribe({
       next: (data) => this.entidades = data,
-      error: (err) => console.log(err)
+      error: () => {}
     })
   }
 

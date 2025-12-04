@@ -31,7 +31,6 @@ export class DashSites implements OnInit {
   loadSites() {
     this.siteService.getSites()
       .then((data) => {
-        console.log('Fetched sites:', data);
         this.sites = data;
         this.sitesFiltered = data;
         this.loadResourcesCounts();

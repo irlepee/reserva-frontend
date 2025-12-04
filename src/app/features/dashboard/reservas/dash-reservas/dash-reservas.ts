@@ -30,7 +30,6 @@ export class DashReservas {
       .then(data => {
         this.reservas = data;
         this.reservasFiltered = data;
-        console.log('Reservas cargadas:', data);
       }).catch(err => {
         this.reservas = [];
         this.reservasFiltered = [];
@@ -59,11 +58,8 @@ export class DashReservas {
   cancelReservation(reservaId: number) {
     const mensaje = '¿Estás seguro de que deseas cancelar esta reserva? Esta acción no se puede deshacer.';
     if (confirm(mensaje)) {
-      console.log('Cancelando reserva:', reservaId);
-      
       this.reservaService.cancelReservation(reservaId)
         .then((response: any) => {
-          console.log('Reserva cancelada exitosamente:', response);
           alert('Reserva cancelada exitosamente');
           this.loadReservas();
         })

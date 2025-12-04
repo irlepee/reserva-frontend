@@ -92,7 +92,7 @@ export class Auth {
   async cargarEntidades() {
     this.ubicacionService.getEntidades().subscribe({
       next: (data) => this.entidades = data,
-      error: (err) => console.log(err)
+      error: () => {}
     })
   }
 
@@ -201,7 +201,6 @@ export class Auth {
       };
 
       await this.authenticator.register(data);
-      console.log('Registro exitoso');
     } catch (error: any) {
       console.error('Error en registro:', error.error?.error || 'Ocurrió un error desconocido');
       alert('Error en registro: ' + error.error?.error || 'Ocurrió un error desconocido');

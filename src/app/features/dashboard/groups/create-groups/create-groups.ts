@@ -63,7 +63,6 @@ export class CreateGroups {
           
           this.groupService.inviteUser(groupId.toString(), userIds)
             .then(() => {
-              console.log('Invitaciones enviadas correctamente');
               this.invitedMembers = [];
             })
             .catch((error) => {
@@ -97,7 +96,6 @@ export class CreateGroups {
     this.groupService
       .checkIfuserExists(this.identifier)
       .then((userId: string) => {
-        console.log('Usuario existe con ID:', userId);
         
         // Validar que no sea el mismo usuario
         if (this.currentUser && userId === this.currentUser.id) {

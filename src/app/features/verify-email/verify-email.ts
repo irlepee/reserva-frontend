@@ -27,18 +27,14 @@ export class VerifyEmailComponent implements OnInit {
 
   verifyEmail() {
     const token = new URLSearchParams(window.location.search).get('token');
-    console.log('Token extraído:', token);
 
     if (!token) {
-      console.error('No se proporcionó token');
       this.handleError('Token no proporcionado. Verifica el enlace de verificación.');
       return;
     }
 
-    console.log('Llamando a verifyEmail con token:', token);
     this.authService.verifyEmail(token)
       .then((response: any) => {
-        console.log('Respuesta del servidor:', response);
         this.isSuccess = true;
         this.isLoading = false;
         this.email = response.email || '';

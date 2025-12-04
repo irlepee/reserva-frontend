@@ -81,14 +81,12 @@ export class EditGroups {
         return this.groupService.getGroupMembers(this.groupId);
       })
       .then((members) => {
-        console.log('Miembros del grupo cargados:', members);
         this.members = members || [];
 
         // Obtener información del administrador del grupo
         return this.groupService.getGroupAdmin(this.groupId);
       })
       .then((adminData) => {
-        console.log('Información del administrador:', adminData);
 
         // Agregar el administrador al inicio de la lista de integrantes
         if (adminData) {
@@ -123,7 +121,6 @@ export class EditGroups {
     this.groupService
       .checkIfuserExists(this.identifier)
       .then((userId: string) => {
-        console.log('Usuario existe con ID:', userId);
 
         // Validar que no sea el mismo usuario
         if (this.currentUser && userId === this.currentUser.id) {
@@ -260,7 +257,6 @@ export class EditGroups {
 
           return this.groupService.inviteUser(this.groupId, userIds)
             .then(() => {
-              console.log('Invitaciones enviadas correctamente');
               this.invitedMembers = [];
               this.router.navigate(['/dashboard/groups']);
             });
