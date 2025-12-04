@@ -39,6 +39,8 @@ export class CreateReservationComponent implements OnInit {
   startTime: string = '09:00';
   endTime: string = '10:00';
   currentCalendarDate: Date = new Date();
+  occupiedHours: { start_hour: string; end_hour: string }[] = [];
+  isLoadingHours: boolean = false;
 
   // Estados de paso
   step: 'search' | 'resources' | 'datetime' | 'summary' = 'search';
@@ -209,6 +211,40 @@ export class CreateReservationComponent implements OnInit {
     const year = this.currentCalendarDate.getFullYear();
     const month = this.currentCalendarDate.getMonth();
     this.selectedDate = new Date(year, month, day).toISOString().split('T')[0];
+    
+    // Cargar horas ocupadas para este recurso y fecha
+    this.loadOccupiedHours();
+  }
+
+  loadOccupiedHours() {
+    if (!this.selectedResource || !this.selectedDate) return;
+    
+    this.isLoadingHours = true;
+    // Limpiar selección previa al cambiar de fecha
+    this.startTime = '';
+    this.endTime = '';
+    
+    this.reservaService.getOccupiedHours(this.selectedResource.id, this.selectedDate)
+      .then((response: any) => {
+        // Manejar el formato de respuesta: { date, occupied_hours: [{ start, end }] }
+        if (response && Array.isArray(response.occupied_hours)) {
+          // Convertir al formato que usamos internamente
+          this.occupiedHours = response.occupied_hours.map((h: any) => ({
+            start_hour: String(h.start).padStart(2, '0'),
+            end_hour: String(h.end).padStart(2, '0')
+          }));
+        } else if (Array.isArray(response)) {
+          this.occupiedHours = response;
+        } else {
+          this.occupiedHours = [];
+        }
+        this.isLoadingHours = false;
+      })
+      .catch((error) => {
+        console.error('Error cargando horas ocupadas:', error);
+        this.occupiedHours = [];
+        this.isLoadingHours = false;
+      });
   }
 
   isDateSelected(day: number | null): boolean {
@@ -302,6 +338,118 @@ export class CreateReservationComponent implements OnInit {
     return endHour - startHour;
   }
 
+  // Generar slots de horas para la grilla visual
+  getHourSlots(): { hour: string; occupied: boolean; past: boolean }[] {
+    const slots: { hour: string; occupied: boolean; past: boolean }[] = [];
+    
+    if (!this.selectedDate) return slots;
+    
+    const today = new Date();
+    const [year, month, day] = this.selectedDate.split('-').map(Number);
+    const selectedDate = new Date(year, month - 1, day);
+    selectedDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    
+    const isToday = selectedDate.getTime() === today.getTime();
+    const currentHour = new Date().getHours();
+    
+    // Asegurar que occupiedHours sea un array
+    const occupied = Array.isArray(this.occupiedHours) ? this.occupiedHours : [];
+
+    for (let i = 0; i < 24; i++) {
+      const hourStr = String(i).padStart(2, '0');
+      
+      // Verificar si esta hora está ocupada
+      const isOccupied = occupied.some(occ => {
+        const occupiedStart = parseInt(occ.start_hour);
+        const occupiedEnd = parseInt(occ.end_hour);
+        return i >= occupiedStart && i < occupiedEnd;
+      });
+      
+      // Verificar si es una hora pasada (solo aplica para hoy)
+      const isPast = isToday && i <= currentHour;
+      
+      slots.push({
+        hour: hourStr,
+        occupied: isOccupied,
+        past: isPast
+      });
+    }
+
+    return slots;
+  }
+
+  // Verificar si una hora está dentro del rango seleccionado
+  isHourInRange(hour: string): boolean {
+    if (!this.startTime) return false;
+    const h = parseInt(hour);
+    const start = parseInt(this.startTime);
+    
+    // Si solo hay inicio, marcar solo esa hora
+    if (!this.endTime) {
+      return h === start;
+    }
+    
+    const end = parseInt(this.endTime);
+    // Marcar desde inicio hasta fin (sin incluir fin)
+    return h >= start && h < end;
+  }
+
+  // Seleccionar un slot de hora
+  selectHourSlot(slot: { hour: string; occupied: boolean; past: boolean }) {
+    // No permitir seleccionar horas ocupadas o pasadas
+    if (slot.occupied || slot.past) return;
+
+    const clickedHour = parseInt(slot.hour);
+
+    // Si no hay hora de inicio, establecerla
+    if (!this.startTime) {
+      this.startTime = slot.hour;
+      this.endTime = '';
+      return;
+    }
+
+    // Si ya hay hora de inicio pero no de fin
+    if (this.startTime && !this.endTime) {
+      const start = parseInt(this.startTime);
+      
+      // Si hace clic en la misma hora o antes, reiniciar con esa hora como inicio
+      if (clickedHour <= start) {
+        this.startTime = slot.hour;
+        this.endTime = '';
+        return;
+      }
+
+      // Verificar que no haya horas ocupadas entre el inicio y el clic
+      const occupied = Array.isArray(this.occupiedHours) ? this.occupiedHours : [];
+      const hasOccupiedInBetween = occupied.some(occ => {
+        const occupiedStart = parseInt(occ.start_hour);
+        // Verificar si hay una reserva que comienza entre nuestro inicio y fin
+        return occupiedStart >= start && occupiedStart < clickedHour;
+      });
+
+      if (hasOccupiedInBetween) {
+        // No se puede seleccionar un rango que atraviese una reserva
+        alert('No puedes reservar un rango que incluya horas ocupadas');
+        return;
+      }
+
+      // Establecer hora de fin (la hora clickeada es donde termina la reserva)
+      this.endTime = String(clickedHour).padStart(2, '0');
+      return;
+    }
+
+    // Si ya hay ambas horas, reiniciar con nueva selección
+    this.startTime = slot.hour;
+    this.endTime = '';
+  }
+
+  // Limpiar selección de horario
+  clearTimeSelection() {
+    this.startTime = '';
+    this.endTime = '';
+  }
+
   getAvailableHours(): string[] {
     const hours: string[] = [];
     const today = new Date();
@@ -313,7 +461,19 @@ export class CreateReservationComponent implements OnInit {
     const startHour = selectedDate.getTime() === today.getTime() ? new Date().getHours() : 0;
 
     for (let i = startHour; i < 24; i++) {
-      hours.push(String(i).padStart(2, '0'));
+      const hourStr = String(i).padStart(2, '0');
+      
+      // Verificar si esta hora está ocupada
+      const isOccupied = this.occupiedHours.some(occupied => {
+        const occupiedStart = parseInt(occupied.start_hour);
+        const occupiedEnd = parseInt(occupied.end_hour);
+        // La hora está ocupada si cae dentro de un rango reservado
+        return i >= occupiedStart && i < occupiedEnd;
+      });
+      
+      if (!isOccupied) {
+        hours.push(hourStr);
+      }
     }
 
     return hours;
@@ -325,8 +485,20 @@ export class CreateReservationComponent implements OnInit {
     const hours: string[] = [];
     const startHour = parseInt(this.startTime);
 
+    // Encontrar la próxima hora ocupada después de la hora de inicio seleccionada
+    let maxEndHour = 24;
+    for (const occupied of this.occupiedHours) {
+      const occupiedStart = parseInt(occupied.start_hour);
+      // Si hay una reserva que empieza después de nuestra hora de inicio,
+      // no podemos terminar después de que esa reserva empiece
+      if (occupiedStart > startHour && occupiedStart < maxEndHour) {
+        maxEndHour = occupiedStart;
+      }
+    }
+
     // Las horas finales empiezan desde una hora después de la inicial
-    for (let i = startHour + 1; i <= 24; i++) {
+    // y no pueden exceder la próxima hora ocupada
+    for (let i = startHour + 1; i <= maxEndHour; i++) {
       hours.push(String(i).padStart(2, '0'));
     }
 
@@ -344,17 +516,21 @@ export class CreateReservationComponent implements OnInit {
       end_date: endDateTime.toISOString(),
     };
 
-    console.log('Reserva a crear:', reservationData);
-
     this.reservaService.createReservation(reservationData)
       .then((response: any) => {
-        console.log('Reserva creada exitosamente:', response);
         alert('¡Reserva creada exitosamente!');
         this.router.navigate(['/dashboard/reservas']);
       })
       .catch((error: any) => {
-        console.error('Error al crear la reserva:', error);
-        alert('Error al crear la reserva. Por favor intenta de nuevo.');
+        // Manejar error de horario ocupado
+        const errorMessage = error?.error?.error || '';
+        
+        if (errorMessage.includes('ya está reservado') || errorMessage.includes('horario')) {
+          alert('Este horario ya está ocupado. Por favor selecciona otro horario disponible.');
+          this.step = 'datetime'; // Regresar al paso de selección de horario
+        } else {
+          alert('Error al crear la reserva. Por favor intenta de nuevo.');
+        }
       });
   }
 

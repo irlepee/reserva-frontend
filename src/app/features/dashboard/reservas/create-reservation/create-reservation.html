@@ -189,45 +189,93 @@
       </div>
 
       <!-- Horarios -->
-      <div class="time-section">
-        <h4>Horario de reserva</h4>
-        <div class="time-inputs">
-          <div class="time-group">
-            <label>Desde</label>
-            <select [(ngModel)]="startTime" class="time-input">
-              <option value="">Selecciona una hora</option>
-              <option *ngFor="let hour of getAvailableHours()" [value]="hour">
-                {{ hour }}:00
-              </option>
-            </select>
-            <small *ngIf="selectedDate" class="time-hint">
-              Desde la hora actual
-            </small>
+      <div class="time-section" *ngIf="selectedDate">
+        <h4>Selecciona el horario</h4>
+        
+        <!-- Indicador de carga -->
+        <div *ngIf="isLoadingHours" class="loading-hours">
+          <i class="bi bi-hourglass-split"></i> Cargando horarios disponibles...
+        </div>
+
+        <!-- Leyenda -->
+        <div class="time-legend" *ngIf="!isLoadingHours">
+          <div class="legend-item">
+            <span class="legend-dot available"></span>
+            <span>Disponible</span>
           </div>
-          <div class="time-group">
-            <label>Hasta</label>
-            <select [(ngModel)]="endTime" class="time-input">
-              <option value="">Selecciona una hora</option>
-              <option *ngFor="let hour of getEndHours()" [value]="hour">
-                {{ hour }}:00
-              </option>
-            </select>
-            <small class="time-hint">
-              Mínimo 1 hora de duración
-            </small>
+          <div class="legend-item">
+            <span class="legend-dot occupied"></span>
+            <span>Ocupado</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot selected"></span>
+            <span>Tu selección</span>
           </div>
         </div>
 
-        <div *ngIf="startTime && endTime" class="time-summary">
-          <div class="time-summary-item">
-            <span>Duración:</span>
-            <strong>{{ calculateDuration() | number: '1.0-0' }} horas</strong>
+        <!-- Grilla de horas -->
+        <div class="hours-grid" *ngIf="!isLoadingHours">
+          <div 
+            *ngFor="let slot of getHourSlots()" 
+            class="hour-slot"
+            [class.occupied]="slot.occupied"
+            [class.past]="slot.past"
+            [class.selected]="isHourInRange(slot.hour)"
+            [class.start]="slot.hour === startTime"
+            [class.end]="slot.hour === endTime"
+            (click)="selectHourSlot(slot)"
+          >
+            <span class="hour-label">{{ slot.hour }}:00</span>
+            <span class="hour-status" *ngIf="slot.occupied">
+              <i class="bi bi-lock-fill"></i>
+            </span>
           </div>
+        </div>
+
+        <!-- Instrucciones -->
+        <div class="time-instructions" *ngIf="!isLoadingHours && !startTime">
+          <i class="bi bi-hand-index"></i>
+          <span>Haz clic en una hora para empezar tu reserva</span>
+        </div>
+        
+        <div class="time-instructions" *ngIf="!isLoadingHours && startTime && !endTime">
+          <i class="bi bi-hand-index"></i>
+          <span>Ahora selecciona la hora de fin</span>
+        </div>
+
+        <!-- Resumen de selección -->
+        <div *ngIf="startTime && endTime" class="time-summary">
+          <div class="time-summary-header">
+            <i class="bi bi-clock"></i>
+            <span>Tu reserva</span>
+          </div>
+          <div class="time-summary-details">
+            <div class="time-range">
+              <span class="time-value">{{ startTime }}:00</span>
+              <i class="bi bi-arrow-right"></i>
+              <span class="time-value">{{ endTime }}:00</span>
+            </div>
+            <div class="time-duration">
+              <strong>{{ calculateDuration() }}</strong> {{ calculateDuration() === 1 ? 'hora' : 'horas' }}
+            </div>
+          </div>
+          <button class="btn-clear-selection" (click)="clearTimeSelection()">
+            <i class="bi bi-x-circle"></i> Cambiar horario
+          </button>
+        </div>
+      </div>
+
+      <!-- Mensaje si no hay fecha seleccionada -->
+      <div class="time-section" *ngIf="!selectedDate">
+        <h4>Horario de reserva</h4>
+        <div class="select-date-first">
+          <i class="bi bi-calendar-event"></i>
+          <span>Primero selecciona una fecha en el calendario</span>
         </div>
       </div>
     </div>
 
-    <button class="btn-next" (click)="goToSummary()" [disabled]="!selectedDate">
+    <button class="btn-next" (click)="goToSummary()" [disabled]="!selectedDate || !startTime || !endTime">
       Continuar
     </button>
   </div>
@@ -278,7 +326,7 @@
           </div>
           <div class="info">
             <span class="label">Fecha</span>
-            <span class="value">{{ selectedDate | date: 'EEEE, d MMMM yyyy' }}</span>
+            <span class="value">{{ selectedDate | date: 'EEEE, d MMMM yyyy':'':'es' }}</span>
           </div>
         </div>
 

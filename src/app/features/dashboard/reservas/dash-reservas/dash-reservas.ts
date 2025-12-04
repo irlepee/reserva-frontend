@@ -42,8 +42,8 @@ export class DashReservas {
     const term = this.search.toLowerCase();
     this.reservasFiltered = term
       ? this.reservas.filter((reserva: any) => 
-          reserva.Resource?.name.toLowerCase().includes(term) ||
-          reserva.Resource?.belongs?.name.toLowerCase().includes(term)
+          reserva.resource_name?.toLowerCase().includes(term) ||
+          reserva.site_name?.toLowerCase().includes(term)
         )
       : this.reservas;
   }

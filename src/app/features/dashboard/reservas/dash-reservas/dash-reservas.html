@@ -31,8 +31,8 @@
       <div class="reservation-card" *ngFor="let reserva of reservasFiltered">
         <div class="reservation-header">
           <div class="reservation-title">
-            <h3>{{ reserva.Resource?.name || 'Recurso' }}</h3>
-            <p class="reservation-site">{{ reserva.Resource?.belongs?.name || 'Sitio' }}</p>
+            <h3>{{ reserva.resource_name || 'Recurso' }}</h3>
+            <p class="reservation-site">{{ reserva.site_name || 'Sitio' }}</p>
           </div>
           <span class="reservation-status" [class.active]="reserva.status === 'Active'">
             {{ reserva.status }}

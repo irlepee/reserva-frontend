@@ -109,7 +109,7 @@ export class ManageResources implements OnInit {
     const resourceData = {
       name: this.resourceName,
       resource_type: parseInt(this.resourceType),
-      capacity: this.capacity ? parseInt(this.capacity) : null
+      capacity: this.capacity ? parseInt(this.capacity) : 1
     };
 
     if (this.isEditing && this.selectedResource) {

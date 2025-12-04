@@ -35,4 +35,11 @@ export class ReservaService {
       .toPromise()
       .then(r => r ?? []);
   }
+
+  getOccupiedHours(resourceId: number, date: string): Promise<{ start_hour: string; end_hour: string }[]> {
+    return this.http
+      .get<{ start_hour: string; end_hour: string }[]>(`${this.api}/reservas/resources/${resourceId}/occupied?date=${date}`)
+      .toPromise()
+      .then(r => r ?? []);
+  }
 }
