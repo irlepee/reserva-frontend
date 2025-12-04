@@ -252,12 +252,12 @@ export class CreateReservationComponent implements OnInit {
     // Validar que no sea una reserva en el pasado
     const now = new Date();
     const startHour = parseInt(this.startTime);
-    now.setHours(startHour, 0, 0, 0);
+    
+    // Parsear la fecha seleccionada correctamente en hora local
+    const [year, month, day] = this.selectedDate.split('-').map(Number);
+    const selectedDateTime = new Date(year, month - 1, day, startHour, 0, 0, 0);
 
-    const selectedDateTime = new Date(this.selectedDate);
-    selectedDateTime.setHours(startHour, 0, 0, 0);
-
-    if (selectedDateTime <= new Date()) {
+    if (selectedDateTime <= now) {
       alert('No puedes hacer una reserva en el pasado');
       return false;
     }

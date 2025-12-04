@@ -239,31 +239,71 @@
       <h2>Resumen de la reserva</h2>
     </div>
 
-    <div class="summary-card">
-      <div class="summary-section">
-        <h4>Sitio</h4>
-        <p>{{ selectedSite.name }}</p>
+    <div class="summary-container">
+      <!-- Header con icono -->
+      <div class="summary-header">
+        <i class="bi bi-calendar-check"></i>
+        <h3>¡Tu reserva está lista!</h3>
+        <p>Revisa los detalles antes de confirmar</p>
       </div>
 
-      <div class="summary-section">
-        <h4>Recurso</h4>
-        <p>{{ selectedResource.name }}</p>
-        <small *ngIf="selectedResource.capacity">Capacidad: {{ selectedResource.capacity }}</small>
+      <!-- Detalles de la reserva -->
+      <div class="summary-card">
+        <div class="summary-row">
+          <div class="icon site">
+            <i class="bi bi-building"></i>
+          </div>
+          <div class="info">
+            <span class="label">Sitio</span>
+            <span class="value">{{ selectedSite.name }}</span>
+          </div>
+        </div>
+
+        <div class="summary-row">
+          <div class="icon resource">
+            <i class="bi bi-box"></i>
+          </div>
+          <div class="info">
+            <span class="label">Recurso</span>
+            <span class="value">{{ selectedResource.name }}</span>
+            <span class="sub-value" *ngIf="selectedResource.capacity">
+              <i class="bi bi-people"></i> Capacidad: {{ selectedResource.capacity }} personas
+            </span>
+          </div>
+        </div>
+
+        <div class="summary-row">
+          <div class="icon date">
+            <i class="bi bi-calendar3"></i>
+          </div>
+          <div class="info">
+            <span class="label">Fecha</span>
+            <span class="value">{{ selectedDate | date: 'EEEE, d MMMM yyyy' }}</span>
+          </div>
+        </div>
+
+        <div class="summary-row">
+          <div class="icon time">
+            <i class="bi bi-clock"></i>
+          </div>
+          <div class="info">
+            <span class="label">Horario</span>
+            <span class="value">{{ startTime }}:00 - {{ endTime }}:00</span>
+          </div>
+        </div>
       </div>
 
-      <div class="summary-section">
-        <h4>Fecha</h4>
-        <p>{{ selectedDate | date: 'dd/MM/yyyy' }}</p>
+      <!-- Duración -->
+      <div class="summary-duration">
+        <i class="bi bi-hourglass-split"></i>
+        <span>Duración total: {{ calculateDuration() }} hora(s)</span>
       </div>
 
-      <div class="summary-section">
-        <h4>Horario</h4>
-        <p>{{ startTime }} - {{ endTime }}</p>
-      </div>
+      <!-- Botón confirmar -->
+      <button class="btn-reserve" (click)="createReservation()">
+        <i class="bi bi-check-circle"></i>
+        Confirmar reserva
+      </button>
     </div>
-
-    <button class="btn-reserve" (click)="createReservation()">
-      Concretar reserva
-    </button>
   </div>
 </div>
