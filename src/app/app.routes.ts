@@ -17,6 +17,7 @@ import { CreateSites } from './features/dashboard/sites/create-sites/create-site
 import { EditSites } from './features/dashboard/sites/edit-sites/edit-sites';
 import { ManageResources } from './features/dashboard/sites/manage-resources/manage-resources';
 import { HistoryReservas } from './features/dashboard/reservas/history-reservas/history-reservas';
+import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
     { path: '', component:Home },
@@ -25,6 +26,7 @@ export const routes: Routes = [
     { path: 'verify-email', component:VerifyEmailComponent},
     { path: 'dashboard',
          component:DashboardLayout,
+         canActivate: [AuthGuard],
          children: [
             { path: 'home', component:DashHome },
             { path: 'reservas', component:Reservas,

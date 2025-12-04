@@ -160,6 +160,10 @@
     flex-wrap: wrap;
 }
 
+.site-resources {
+    color: rgb(161, 161, 161);
+}
+
 .btn-action {
     display: flex;
     align-items: center;

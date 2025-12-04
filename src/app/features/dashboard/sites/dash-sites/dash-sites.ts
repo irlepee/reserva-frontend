@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SiteService } from '../../../../core/services/site-service';
+import { ResourcesService } from '../../../../core/services/resources-service';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -10,26 +11,53 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './dash-sites.html',
   styleUrl: './dash-sites.css',
 })
-export class DashSites {
-  constructor(private siteService: SiteService, private router: Router) { }
+export class DashSites implements OnInit {
+  constructor(
+    private siteService: SiteService,
+    private router: Router,
+    private resourcesService: ResourcesService
+  ) { }
 
   sites: any[] = [];
   sitesFiltered: any[] = [];
   search: string = '';
   apiUrl = 'http://localhost:3000';
+  resourcesCount: Map<number, number> = new Map();
 
   ngOnInit() {
+    this.loadSites();
+  }
+
+  loadSites() {
     this.siteService.getSites()
       .then((data) => {
         console.log('Fetched sites:', data);
         this.sites = data;
         this.sitesFiltered = data;
+        this.loadResourcesCounts();
       })
       .catch((error) => {
         this.sites = [];
         this.sitesFiltered = [];
         console.error('Error fetching sites:', error);
       });
+  }
+
+  loadResourcesCounts() {
+    this.sites.forEach(site => {
+      this.resourcesService.getResources(site.id)
+        .then((resources: any[]) => {
+          this.resourcesCount.set(site.id, resources.length);
+        })
+        .catch((error) => {
+          this.resourcesCount.set(site.id, 0);
+          console.error(`Error fetching resources for site ${site.id}:`, error);
+        });
+    });
+  }
+
+  getResourcesCount(siteId: number): number {
+    return this.resourcesCount.get(siteId) || 0;
   }
 
   filtrarPorNombre(): void {

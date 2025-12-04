@@ -2,8 +2,10 @@ nav {
     font-family: 'Manrope', 'Montserrat', sans-serif;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 1rem;
-    padding: 0.5rem 12vw;
+    padding: 0.75rem 12vw;
+    height: 70px;
 }
 
 h1 {
@@ -20,8 +22,19 @@ a {
 
 .buttonsdiv {
     display: flex;
-    margin-left: auto;
+    align-items: center;
     gap: 1rem;
+    position: relative;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.logged-buttons {
+    display: flex;
+    position: relative;
 }
 
 .loginbutton {
@@ -30,7 +43,64 @@ a {
     background-color: var(--button-color);
     border: 0px;
     border-radius: 10px;
-    padding: 0.5rem;
+    padding: 0.7rem 1.2rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.loginbutton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.user-button {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background-color: transparent;
+    border: 2px solid var(--button-color);
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    color: var(--button-color);
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.user-button:hover {
+    background-color: var(--button-color);
+    color: white;
+}
+
+.user-button i:first-child {
+    font-size: 1.3rem;
+}
+
+.dropdown-icon {
+    transition: transform 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.dropdown-icon.open {
+    transform: rotate(180deg);
+}
+
+.dashboard-button {
+    font-weight: 500;
+    color: white;
+    background-color: var(--button-color);
+    border: 0px;
+    border-radius: 10px;
+    padding: 0.7rem 1.2rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .userbutton {
@@ -40,6 +110,50 @@ a {
 
 #logo {
     width: 3rem;
+}
+
+.header-dropdown {
+    position: absolute;
+    top: 70px;
+    right: 12vw;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 180px;
+    z-index: 100;
+    padding: 0.5rem 0;
+}
+
+.dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background-color: transparent;
+    border: none;
+    color: #333333;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-align: left;
+}
+
+.dropdown-link:hover {
+    background-color: #f5f5f5;
+}
+
+.logout-link {
+    color: #dc3545;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.logout-link:hover {
+    background-color: #ffe0e0;
 }
 
 /* Fondo semitransparente que cubre toda la pantalla */

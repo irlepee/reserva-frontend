@@ -11,7 +11,7 @@
 
   <div class="search-bar">
     <i class="bi bi-search"></i>
-    <input type="text" placeholder="Buscar por nombre o ubicación..." [(ngModel)]="search" (input)="filtrarPorNombre()">
+    <input type="text" placeholder="Buscar por nombre..." [(ngModel)]="search" (input)="filtrarPorNombre()">
   </div>
 
   <div class="sites-section">
@@ -27,8 +27,7 @@
         <div class="site-overlay">
           <div class="site-info">
             <h3 class="site-name">{{ site.name }}</h3>
-            <p class="site-location">{{ site.municipio?.name || 'Ubicación' }}, {{ site.entidad?.name || 'España' }} •
-              {{ site.resources_count || 0 }} Recursos</p>
+            <p class="site-resources">{{ getResourcesCount(site.id) }} Recursos</p>
           </div>
           <div class="site-actions">
             <button class="btn-action" title="Editar Info" (click)="goToEditSite(site.id)">

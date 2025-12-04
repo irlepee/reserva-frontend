@@ -5,7 +5,27 @@
     <h1>ReserVa</h1>
 
     <div class="buttonsdiv">
-      <button class="loginbutton" (click)="openLogin()">Iniciar sesión</button>
+      <div *ngIf="!isLoggedIn" class="auth-buttons">
+        <button class="loginbutton" (click)="openLogin()">Iniciar sesión</button>
+      </div>
+      <div *ngIf="isLoggedIn" class="logged-buttons">
+        <button class="user-button" (click)="toggleUserDropdown()" title="Opciones de usuario">
+          <i class="bi bi-person-circle"></i>
+          <span class="user-name">{{ user?.name || 'Usuario' }}</span>
+          <i class="bi bi-chevron-down dropdown-icon" [class.open]="showUserDropdown"></i>
+        </button>
+        
+        <div *ngIf="showUserDropdown" class="header-dropdown">
+          <button class="dropdown-link" (click)="goToDashboard()">
+            <i class="bi bi-speedometer2"></i>
+            Ir a panel
+          </button>
+          <button class="dropdown-link logout-link" (click)="logout()">
+            <i class="bi bi-box-arrow-left"></i>
+            Cerrar sesión
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="modal-backdrop" *ngIf="showLogin">

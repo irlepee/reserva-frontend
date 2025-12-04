@@ -169,14 +169,14 @@ export class Auth {
 
   // ---------------------Register---------------------
 
-  name = 'asd';
-  lastname = 'asd';
-  email = 'asd@asd.com';
-  username = 'asdsa';
-  passwordRegister = 'qweasd';
-  password2Register = 'qweasd';
-  age = 21;
-  gender = 'F';
+  name = '';
+  lastname = '';
+  email = '';
+  username = '';
+  passwordRegister = '';
+  password2Register = '';
+  age = 0;
+  gender = '';
 
   registroExitoso = false;
 

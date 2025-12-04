@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { RouterModule, Router } from '@angular/router';
 import { Auth } from '../../../features/auth/auth';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/services/authService';
@@ -10,11 +10,25 @@ import { AuthService } from '../../../core/services/authService';
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
-export class Header {
+export class Header implements OnInit {
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   showLogin = false;
+  isLoggedIn = false;
+  user: any = null;
+  showUserDropdown = false;
+
+  ngOnInit() {
+    this.isLoggedIn = !!localStorage.getItem('token');
+    this.authService.fetchCurrentUser()
+      .then(user => {
+        this.user = user;
+      })
+      .catch(err => {
+        this.user = null;
+      });
+  }
 
   openLogin() {
     this.showLogin = true;
@@ -24,15 +38,20 @@ export class Header {
     this.showLogin = false;
   }
 
-  user: any = null;
+  toggleUserDropdown() {
+    this.showUserDropdown = !this.showUserDropdown;
+  }
 
-  ngOnInit() {
-    this.authService.fetchCurrentUser()
-      .then(user => {
-        this.user = user;
-      })
-      .catch(err => {
-        this.user = null;
-      });
+  goToDashboard() {
+    this.router.navigate(['/dashboard/home']);
+    this.showUserDropdown = false;
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.isLoggedIn = false;
+    this.showUserDropdown = false;
+    this.router.navigate(['/']);
   }
 }
