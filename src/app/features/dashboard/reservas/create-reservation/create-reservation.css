@@ -750,8 +750,10 @@
 }
 
 .hour-slot.end {
+  background: #fff3e0;
   border-color: #ff9800;
   box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.3);
+  color: #e65100;
 }
 
 .hour-label {
@@ -1087,5 +1089,230 @@
 
   .summary-row {
     padding: 1rem;
+  }
+}
+
+/* Sección de tipo de reserva */
+.reservation-type-section {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.reservation-type-section h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reservation-type-section h4 i {
+  color: #667eea;
+}
+
+.type-options {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.type-option {
+  flex: 1;
+  cursor: pointer;
+}
+
+.type-option input {
+  display: none;
+}
+
+.type-option .option-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.25rem 1rem;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.type-option .option-content i {
+  font-size: 1.8rem;
+  color: #9ca3af;
+}
+
+.type-option .option-content span {
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.type-option:hover .option-content {
+  border-color: #667eea;
+  background: #f0f4ff;
+}
+
+.type-option.selected .option-content {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.type-option.selected .option-content i,
+.type-option.selected .option-content span {
+  color: white;
+}
+
+.type-option.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.type-option.disabled:hover .option-content {
+  border-color: #e5e7eb;
+  background: white;
+}
+
+/* Selector de grupo */
+.group-selector {
+  margin-top: 1rem;
+}
+
+.group-selector label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.group-selector select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.group-selector select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Advertencia de capacidad */
+.capacity-warning {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 12px;
+  border-left: 4px solid #f59e0b;
+}
+
+.warning-icon {
+  flex-shrink: 0;
+}
+
+.warning-icon i {
+  font-size: 1.5rem;
+  color: #f59e0b;
+}
+
+.warning-content {
+  flex: 1;
+}
+
+.warning-content strong {
+  color: #92400e;
+  font-size: 1rem;
+}
+
+.warning-content p {
+  margin: 0.5rem 0;
+  color: #92400e;
+  font-size: 0.95rem;
+}
+
+.btn-confirm-warning {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: #f59e0b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-confirm-warning:hover {
+  background: #d97706;
+}
+
+/* Info del grupo */
+.group-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: #d1fae5;
+  border: 1px solid #10b981;
+  border-radius: 8px;
+  color: #065f46;
+  font-weight: 500;
+}
+
+.group-info i {
+  color: #10b981;
+}
+
+/* Mensaje sin grupos */
+.no-groups-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: #e0f2fe;
+  border: 1px solid #0ea5e9;
+  border-radius: 8px;
+  color: #0369a1;
+  font-size: 0.9rem;
+}
+
+.no-groups-message i {
+  color: #0ea5e9;
+}
+
+/* Botón reservar deshabilitado */
+.btn-reserve:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-reserve:disabled:hover {
+  background: #9ca3af;
+  box-shadow: none;
+  transform: none;
+}
+
+@media (max-width: 480px) {
+  .type-options {
+    flex-direction: column;
   }
 }

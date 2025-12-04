@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { SiteService } from '../../../../core/services/site-service';
 import { ResourcesService } from '../../../../core/services/resources-service';
 import { ReservaService } from '../../../../core/services/reserva-service';
+import { GroupService } from '../../../../core/services/group-service';
+import { AuthService } from '../../../../core/services/authService';
 
 @Component({
   selector: 'app-create-reservation',
@@ -18,6 +20,8 @@ export class CreateReservationComponent implements OnInit {
     private siteService: SiteService,
     private resourcesService: ResourcesService,
     private reservaService: ReservaService,
+    private groupService: GroupService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -42,6 +46,15 @@ export class CreateReservationComponent implements OnInit {
   occupiedHours: { start_hour: string; end_hour: string }[] = [];
   isLoadingHours: boolean = false;
 
+  // PASO 4: Selección de tipo de reserva (personal o grupo)
+  reservationType: 'personal' | 'group' = 'personal';
+  myGroups: any[] = [];
+  selectedGroup: any = null;
+  groupMembers: any[] = [];
+  isLoadingGroups: boolean = false;
+  showCapacityWarning: boolean = false;
+  currentUser: any = null;
+
   // Estados de paso
   step: 'search' | 'resources' | 'datetime' | 'summary' = 'search';
 
@@ -50,6 +63,30 @@ export class CreateReservationComponent implements OnInit {
 
   ngOnInit() {
     this.loadCategories();
+    this.loadCurrentUserAndGroups();
+  }
+
+  // Cargar usuario actual y luego sus grupos
+  loadCurrentUserAndGroups() {
+    this.isLoadingGroups = true;
+    this.authService.fetchCurrentUser()
+      .then((user: any) => {
+        this.currentUser = user;
+        return this.groupService.getGroups();
+      })
+      .then((groups: any[]) => {
+        // Filtrar solo los grupos donde el usuario es dueño
+        if (this.currentUser) {
+          this.myGroups = groups.filter(g => g.id_owner === this.currentUser.id);
+        } else {
+          this.myGroups = [];
+        }
+        this.isLoadingGroups = false;
+      })
+      .catch(() => {
+        this.myGroups = [];
+        this.isLoadingGroups = false;
+      });
   }
 
   // Cargar categorías desde el backend
@@ -275,7 +312,61 @@ export class CreateReservationComponent implements OnInit {
       return;
     }
 
+    // Resetear la selección de grupo al entrar al resumen
+    this.reservationType = 'personal';
+    this.selectedGroup = null;
+    this.groupMembers = [];
+    this.showCapacityWarning = false;
+
     this.step = 'summary';
+  }
+
+  // Cambiar tipo de reserva
+  onReservationTypeChange() {
+    if (this.reservationType === 'personal') {
+      this.selectedGroup = null;
+      this.groupMembers = [];
+      this.showCapacityWarning = false;
+    }
+  }
+
+  // Seleccionar grupo
+  onGroupSelect() {
+    if (!this.selectedGroup) {
+      this.groupMembers = [];
+      this.showCapacityWarning = false;
+      return;
+    }
+
+    // Cargar miembros del grupo seleccionado
+    this.groupService.getGroupMembers(this.selectedGroup.id.toString())
+      .then((members: any[]) => {
+        this.groupMembers = members || [];
+        // Agregar el dueño del grupo (que no está en members)
+        const totalMembers = this.groupMembers.length + 1; // +1 por el dueño
+        
+        // Verificar capacidad
+        const capacity = this.selectedResource?.capacity || 0;
+        if (capacity > 0 && totalMembers > capacity) {
+          this.showCapacityWarning = true;
+        } else {
+          this.showCapacityWarning = false;
+        }
+      })
+      .catch(() => {
+        this.groupMembers = [];
+        this.showCapacityWarning = false;
+      });
+  }
+
+  // Obtener total de miembros del grupo (incluyendo dueño)
+  getTotalGroupMembers(): number {
+    return this.groupMembers.length + 1; // +1 por el dueño
+  }
+
+  // Confirmar reserva con advertencia de capacidad
+  confirmCapacityWarning() {
+    this.showCapacityWarning = false;
   }
 
   validateTimes(): boolean {
@@ -507,14 +598,25 @@ export class CreateReservationComponent implements OnInit {
 
   // PASO 4: Resumen y crear reserva
   createReservation() {
+    // Si hay advertencia de capacidad y no se ha confirmado, mostrar alerta
+    if (this.showCapacityWarning) {
+      alert('Por favor confirma que deseas continuar a pesar de exceder la capacidad.');
+      return;
+    }
+
     const startDateTime = new Date(`${this.selectedDate}T${this.startTime}:00`);
     const endDateTime = new Date(`${this.selectedDate}T${this.endTime}:00`);
 
-    const reservationData = {
+    const reservationData: any = {
       id_resource: this.selectedResource.id,
       start_date: startDateTime.toISOString(),
       end_date: endDateTime.toISOString(),
     };
+
+    // Agregar id_group si es reserva de grupo
+    if (this.reservationType === 'group' && this.selectedGroup) {
+      reservationData.id_group = this.selectedGroup.id;
+    }
 
     this.reservaService.createReservation(reservationData)
       .then((response: any) => {

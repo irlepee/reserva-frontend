@@ -295,6 +295,83 @@
         <p>Revisa los detalles antes de confirmar</p>
       </div>
 
+      <!-- Tipo de reserva -->
+      <div class="reservation-type-section">
+        <h4><i class="bi bi-people"></i> ¿Para quién es la reserva?</h4>
+        
+        <div class="type-options">
+          <label class="type-option" [class.selected]="reservationType === 'personal'">
+            <input 
+              type="radio" 
+              name="reservationType" 
+              value="personal" 
+              [(ngModel)]="reservationType"
+              (change)="onReservationTypeChange()"
+            >
+            <div class="option-content">
+              <i class="bi bi-person"></i>
+              <span>Para mí</span>
+            </div>
+          </label>
+          
+          <label class="type-option" [class.selected]="reservationType === 'group'" [class.disabled]="myGroups.length === 0">
+            <input 
+              type="radio" 
+              name="reservationType" 
+              value="group" 
+              [(ngModel)]="reservationType"
+              (change)="onReservationTypeChange()"
+              [disabled]="myGroups.length === 0"
+            >
+            <div class="option-content">
+              <i class="bi bi-people-fill"></i>
+              <span>Para un grupo</span>
+            </div>
+          </label>
+        </div>
+
+        <!-- Selector de grupo -->
+        <div class="group-selector" *ngIf="reservationType === 'group'">
+          <label>Selecciona el grupo:</label>
+          <select [(ngModel)]="selectedGroup" (change)="onGroupSelect()">
+            <option [ngValue]="null">-- Selecciona un grupo --</option>
+            <option *ngFor="let group of myGroups" [ngValue]="group">
+              {{ group.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Advertencia de capacidad -->
+        <div class="capacity-warning" *ngIf="showCapacityWarning">
+          <div class="warning-icon">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+          </div>
+          <div class="warning-content">
+            <strong>¡Atención!</strong>
+            <p>
+              El grupo tiene <strong>{{ getTotalGroupMembers() }} miembros</strong> 
+              pero el recurso solo tiene capacidad para <strong>{{ selectedResource.capacity }} personas</strong>.
+            </p>
+            <p>¿Deseas continuar de todas formas?</p>
+            <button class="btn-confirm-warning" (click)="confirmCapacityWarning()">
+              <i class="bi bi-check-lg"></i> Sí, continuar
+            </button>
+          </div>
+        </div>
+
+        <!-- Info del grupo seleccionado -->
+        <div class="group-info" *ngIf="reservationType === 'group' && selectedGroup && !showCapacityWarning">
+          <i class="bi bi-check-circle-fill"></i>
+          <span>Grupo "{{ selectedGroup.name }}" ({{ getTotalGroupMembers() }} miembros)</span>
+        </div>
+
+        <!-- Mensaje si no tiene grupos -->
+        <div class="no-groups-message" *ngIf="reservationType === 'group' && myGroups.length === 0">
+          <i class="bi bi-info-circle"></i>
+          <span>No tienes grupos donde seas el administrador.</span>
+        </div>
+      </div>
+
       <!-- Detalles de la reserva -->
       <div class="summary-card">
         <div class="summary-row">
@@ -348,7 +425,11 @@
       </div>
 
       <!-- Botón confirmar -->
-      <button class="btn-reserve" (click)="createReservation()">
+      <button 
+        class="btn-reserve" 
+        (click)="createReservation()"
+        [disabled]="(reservationType === 'group' && !selectedGroup) || showCapacityWarning"
+      >
         <i class="bi bi-check-circle"></i>
         Confirmar reserva
       </button>
