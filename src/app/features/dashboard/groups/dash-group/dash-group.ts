@@ -27,6 +27,7 @@ export class DashGroup {
   // CARGA GRUPOS, USUARIO E INVITACIONES
 
   ngOnInit() {
+    this.loadInvitations();
     this.groupService.getGroups()
       .then(data => {
         this.groups = data;
@@ -118,10 +119,42 @@ export class DashGroup {
   // INVITATIONS
 
   invitations: any[] = [];
+  invitationsCount: number = 0;
   mostrarInvitaciones = false;
+
+  loadInvitations() {
+    this.groupService.getInvitations()
+      .then((data: any[]) => {
+        this.invitations = data || [];
+        this.invitationsCount = this.invitations.length;
+      })
+      .catch(() => {
+        this.invitations = [];
+        this.invitationsCount = 0;
+      });
+  }
 
   toggleInvitations() {
     this.mostrarInvitaciones = !this.mostrarInvitaciones;
+  }
+
+  onInvitationsClosed() {
+    this.mostrarInvitaciones = false;
+    // Recargar invitaciones y grupos después de cerrar el modal
+    this.loadInvitations();
+    this.groupService.getGroups()
+      .then(data => {
+        this.groups = data;
+        this.originalGroups = data;
+        return this.loadMembersCountForAllGroups(data);
+      })
+      .then(() => {
+        this.groups = this.groups.map((group: any) => ({
+          ...group,
+          memberCount: this.groupsMembersCount[group.id] || 0
+        }));
+        this.originalGroups = this.groups;
+      });
   }
 
   // NAVIGATE TO GROUP

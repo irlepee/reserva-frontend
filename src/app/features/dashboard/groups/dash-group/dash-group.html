@@ -5,6 +5,7 @@
       <h2>Mis grupos</h2>
       <button class="invitations-button" (click)="toggleInvitations()" title="Ver invitaciones">
         <i class="bi bi-bell-fill"></i>
+        <span class="invitation-badge" *ngIf="invitationsCount > 0">{{ invitationsCount }}</span>
       </button>
     </div>
     <button routerLink="create" class="create-button" title="Crear nuevo grupo">+ Crear grupo</button>
@@ -52,7 +53,7 @@
     </div>
   </div>
 
-  <app-invitations *ngIf="mostrarInvitaciones" (cerrar)="mostrarInvitaciones = false"></app-invitations>
+  <app-invitations *ngIf="mostrarInvitaciones" (cerrar)="onInvitationsClosed()"></app-invitations>
 
   <!-- Modal de vista de grupo -->
   <app-view-group [groupId]="selectedGroupForView?.id" [isOpen]="showViewModal" (close)="closeViewModal()">

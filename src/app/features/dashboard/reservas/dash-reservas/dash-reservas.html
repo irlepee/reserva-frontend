@@ -57,10 +57,11 @@
           </div>
 
           <div class="detail-item">
-            <i class="bi bi-info-circle"></i>
+            <i class="bi" [ngClass]="reserva.id_group ? 'bi-people-fill' : 'bi-person-fill'"></i>
             <div>
-              <span class="label">ID Reserva</span>
-              <p>#{{ reserva.id }}</p>
+              <span class="label">Tipo</span>
+              <p *ngIf="!reserva.id_group">Individual</p>
+              <p *ngIf="reserva.id_group">Grupal - {{ reserva.group_name || 'Grupo' }}</p>
             </div>
           </div>
         </div>

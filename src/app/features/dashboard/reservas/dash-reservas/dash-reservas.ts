@@ -28,8 +28,14 @@ export class DashReservas {
   loadReservas() {
     this.reservaService.getReservas()
       .then(data => {
-        this.reservas = data;
-        this.reservasFiltered = data;
+        // Mapear datos de la API al formato esperado por el componente
+        this.reservas = data.map((reserva: any) => ({
+          ...reserva,
+          resource_name: reserva.Resource?.name || reserva.resource_name,
+          site_name: reserva.Resource?.belongs?.name || reserva.site_name,
+          group_name: reserva.Group?.name || reserva.group_name
+        }));
+        this.reservasFiltered = this.reservas;
       }).catch(err => {
         this.reservas = [];
         this.reservasFiltered = [];
