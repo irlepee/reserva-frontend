@@ -1,0 +1,210 @@
+<div class="main-container">
+  
+  <div class="top-section">
+    <div class="top-left">
+      <button class="back-button" (click)="goBack()">
+        <i class="bi bi-arrow-left"></i>
+      </button>
+      <div>
+        <h2>Estadísticas</h2>
+        <p class="site-name">{{ siteName }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <i class="bi bi-hourglass-split"></i>
+    <p>Cargando estadísticas...</p>
+  </div>
+
+  <div *ngIf="!loading" class="stats-content">
+    
+    <!-- Tarjetas de resumen -->
+    <div class="summary-cards">
+      <div class="summary-card">
+        <div class="card-icon blue">
+          <i class="bi bi-calendar-check"></i>
+        </div>
+        <div class="card-info">
+          <span class="card-value">{{ stats.totalReservas }}</span>
+          <span class="card-label">Total Reservas</span>
+        </div>
+      </div>
+      
+      <div class="summary-card">
+        <div class="card-icon green">
+          <i class="bi bi-calendar-week"></i>
+        </div>
+        <div class="card-info">
+          <span class="card-value">{{ stats.reservasUltimaSemana }}</span>
+          <span class="card-label">Última Semana</span>
+        </div>
+      </div>
+      
+      <div class="summary-card">
+        <div class="card-icon purple">
+          <i class="bi bi-calendar-month"></i>
+        </div>
+        <div class="card-info">
+          <span class="card-value">{{ stats.reservasUltimoMes }}</span>
+          <span class="card-label">Último Mes</span>
+        </div>
+      </div>
+      
+      <div class="summary-card">
+        <div class="card-icon orange">
+          <i class="bi bi-percent"></i>
+        </div>
+        <div class="card-info">
+          <span class="card-value">{{ stats.tasaOcupacion }}%</span>
+          <span class="card-label">Tasa de Ocupación</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráficas principales -->
+    <div class="charts-grid">
+      
+      <!-- Reservas por día de la semana -->
+      <div class="chart-card">
+        <h3 class="chart-title">
+          <i class="bi bi-bar-chart-fill"></i>
+          Reservas por Día de la Semana
+        </h3>
+        <p class="chart-subtitle">Últimas 4 semanas</p>
+        <div class="bar-chart">
+          <div class="bar-item" *ngFor="let dia of stats.reservasPorDia">
+            <div class="bar-container">
+              <div class="bar" 
+                   [style.height.%]="(dia.cantidad / getMaxReservasDia()) * 100"
+                   [attr.data-value]="dia.cantidad">
+              </div>
+            </div>
+            <span class="bar-label">{{ dia.dia }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top recursos -->
+      <div class="chart-card">
+        <h3 class="chart-title">
+          <i class="bi bi-trophy-fill"></i>
+          Recursos Más Reservados
+        </h3>
+        <p class="chart-subtitle">Ranking por cantidad de reservas</p>
+        <div class="ranking-list" *ngIf="stats.topRecursos.length > 0">
+          <div class="ranking-item" *ngFor="let recurso of stats.topRecursos; let i = index">
+            <div class="ranking-position" [ngClass]="{'gold': i === 0, 'silver': i === 1, 'bronze': i === 2}">
+              {{ i + 1 }}
+            </div>
+            <div class="ranking-info">
+              <span class="ranking-name">{{ recurso.nombre }}</span>
+              <div class="ranking-bar-container">
+                <div class="ranking-bar" [style.width.%]="recurso.porcentaje"></div>
+              </div>
+            </div>
+            <span class="ranking-value">{{ recurso.reservas }}</span>
+          </div>
+        </div>
+        <div class="empty-chart" *ngIf="stats.topRecursos.length === 0">
+          <i class="bi bi-inbox"></i>
+          <p>Sin datos disponibles</p>
+        </div>
+      </div>
+
+      <!-- Reservas por semana -->
+      <div class="chart-card">
+        <h3 class="chart-title">
+          <i class="bi bi-graph-up"></i>
+          Tendencia Semanal
+        </h3>
+        <p class="chart-subtitle">Últimas 8 semanas</p>
+        <div class="line-chart" *ngIf="stats.reservasPorSemana.length > 0">
+          <div class="line-chart-bars">
+            <div class="line-bar-item" *ngFor="let semana of stats.reservasPorSemana">
+              <div class="line-bar-container">
+                <div class="line-bar" 
+                     [style.height.%]="(semana.cantidad / getMaxReservasSemana()) * 100">
+                  <span class="line-bar-value">{{ semana.cantidad }}</span>
+                </div>
+              </div>
+              <span class="line-bar-label">{{ semana.semana }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="empty-chart" *ngIf="stats.reservasPorSemana.length === 0">
+          <i class="bi bi-inbox"></i>
+          <p>Sin datos disponibles</p>
+        </div>
+      </div>
+
+      <!-- Horas más populares -->
+      <div class="chart-card">
+        <h3 class="chart-title">
+          <i class="bi bi-clock-fill"></i>
+          Horas Más Populares
+        </h3>
+        <p class="chart-subtitle">Horarios con más reservas</p>
+        <div class="hours-chart" *ngIf="stats.horasPopulares.length > 0">
+          <div class="hour-item" *ngFor="let hora of stats.horasPopulares">
+            <span class="hour-label">{{ hora.hora }}</span>
+            <div class="hour-bar-container">
+              <div class="hour-bar" [style.width.%]="(hora.cantidad / getMaxHorasPopulares()) * 100"></div>
+            </div>
+            <span class="hour-value">{{ hora.cantidad }}</span>
+          </div>
+        </div>
+        <div class="empty-chart" *ngIf="stats.horasPopulares.length === 0">
+          <i class="bi bi-inbox"></i>
+          <p>Sin datos disponibles</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Tipos de reserva -->
+    <div class="chart-card full-width">
+      <h3 class="chart-title">
+        <i class="bi bi-pie-chart-fill"></i>
+        Tipos de Reserva
+      </h3>
+      <p class="chart-subtitle">Distribución entre individuales y grupales</p>
+      <div class="donut-chart-container">
+        <div class="donut-chart">
+          <svg viewBox="0 0 100 100" class="donut-svg">
+            <circle 
+              class="donut-segment individual"
+              cx="50" cy="50" r="40"
+              [attr.stroke-dasharray]="(stats.tiposReserva.individuales / getTotalTiposReserva()) * 251.2 + ' 251.2'"
+              stroke-dashoffset="0">
+            </circle>
+            <circle 
+              class="donut-segment grupal"
+              cx="50" cy="50" r="40"
+              [attr.stroke-dasharray]="(stats.tiposReserva.grupales / getTotalTiposReserva()) * 251.2 + ' 251.2'"
+              [attr.stroke-dashoffset]="-((stats.tiposReserva.individuales / getTotalTiposReserva()) * 251.2)">
+            </circle>
+          </svg>
+          <div class="donut-center">
+            <span class="donut-total">{{ stats.tiposReserva.individuales + stats.tiposReserva.grupales }}</span>
+            <span class="donut-label">Total</span>
+          </div>
+        </div>
+        <div class="donut-legend">
+          <div class="legend-item">
+            <span class="legend-color individual"></span>
+            <span class="legend-label">Individuales</span>
+            <span class="legend-value">{{ stats.tiposReserva.individuales }}</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color grupal"></span>
+            <span class="legend-label">Grupales</span>
+            <span class="legend-value">{{ stats.tiposReserva.grupales }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

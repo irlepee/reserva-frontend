@@ -16,6 +16,7 @@ import { EditGroups } from './features/dashboard/groups/edit-groups/edit-groups'
 import { CreateSites } from './features/dashboard/sites/create-sites/create-sites';
 import { EditSites } from './features/dashboard/sites/edit-sites/edit-sites';
 import { ManageResources } from './features/dashboard/sites/manage-resources/manage-resources';
+import { SiteStats } from './features/dashboard/sites/site-stats/site-stats';
 import { HistoryReservas } from './features/dashboard/reservas/history-reservas/history-reservas';
 import { AuthGuard } from './core/guards/auth.guard';
 
@@ -49,7 +50,8 @@ export const routes: Routes = [
                     { path: '', component:DashSites },
                     { path: 'create', component:CreateSites},
                     { path: 'edit/:id', component:EditSites},
-                    { path: 'manage-resources/:id', component:ManageResources}
+                    { path: 'manage-resources/:id', component:ManageResources},
+                    { path: 'stats/:id', component:SiteStats}
                 ]
             }
     ]},

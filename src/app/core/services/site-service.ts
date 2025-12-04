@@ -58,5 +58,12 @@ export class SiteService {
       .toPromise()
       .then(r => r ?? []);
   }
+
+  getSiteStats(siteId: number): Promise<any> {
+    return this.http
+      .get<any>(`${this.api}/sites/${siteId}/stats`)
+      .toPromise()
+      .then(r => r ?? {});
+  }
 }
 

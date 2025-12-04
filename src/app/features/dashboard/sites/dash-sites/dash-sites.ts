@@ -89,4 +89,8 @@ export class DashSites implements OnInit {
   goToManageResources(siteId: number): void {
     this.router.navigate(['/dashboard/sites/manage-resources', siteId]);
   }
+
+  goToStats(siteId: number): void {
+    this.router.navigate(['/dashboard/sites/stats', siteId]);
+  }
 }
