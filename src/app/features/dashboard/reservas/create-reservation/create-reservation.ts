@@ -50,22 +50,28 @@ export class CreateReservationComponent implements OnInit {
     }
 
     this.isSearching = true;
-    this.siteService.getAllSites()
+    console.log('🔍 Buscando sitios con término:', this.searchTerm);
+    
+    // Usar getPublicSites que usa /reservas/sites (muestra todos los sitios)
+    this.siteService.getPublicSites()
       .then((sites: any[]) => {
+        console.log('✅ Sitios obtenidos:', sites);
         const term = this.searchTerm.toLowerCase();
         this.searchedSites = sites.filter(site =>
           site.name.toLowerCase().includes(term)
         );
+        console.log('📋 Sitios filtrados:', this.searchedSites);
         this.isSearching = false;
       })
       .catch((error: any) => {
-        console.error('Error searching sites:', error);
+        console.error('❌ Error searching sites:', error);
         this.searchedSites = [];
         this.isSearching = false;
       });
   }
 
   selectSite(site: any) {
+    console.log('🏢 Sitio seleccionado:', site);
     this.selectedSite = site;
     this.step = 'resources';
     this.loadSiteResources();
@@ -74,12 +80,16 @@ export class CreateReservationComponent implements OnInit {
   loadSiteResources() {
     if (!this.selectedSite) return;
 
-    this.resourcesService.getResources(this.selectedSite.id)
+    console.log('🔄 Cargando recursos del sitio:', this.selectedSite.id);
+    
+    // Usar getPublicResources que usa /reservas/sites/:siteId (muestra todos los recursos del sitio)
+    this.siteService.getPublicResources(this.selectedSite.id)
       .then((resources: any[]) => {
+        console.log('✅ Recursos obtenidos:', resources);
         this.siteResources = resources;
       })
       .catch((error: any) => {
-        console.error('Error loading resources:', error);
+        console.error('❌ Error loading resources:', error);
         this.siteResources = [];
       });
   }

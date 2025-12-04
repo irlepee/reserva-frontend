@@ -22,13 +22,6 @@
 
     <div class="sites-list" *ngIf="searchedSites.length > 0">
       <div class="site-item" *ngFor="let site of searchedSites" (click)="selectSite(site)">
-        <div class="site-image">
-          <img 
-            [src]="site.image_url || site.image || '/images/placeholder.png'" 
-            alt="{{ site.name }}" 
-            (error)="$event.target.src='/images/placeholder.png'"
-          />
-        </div>
         <div class="site-info">
           <h3>{{ site.name }}</h3>
           <p>{{ site.description || 'Sin descripción' }}</p>
@@ -53,13 +46,6 @@
     </div>
 
     <div class="site-details" *ngIf="selectedSite">
-      <div class="site-banner">
-        <img 
-          [src]="selectedSite.image_url || selectedSite.image || '/images/placeholder.png'" 
-          alt="{{ selectedSite.name }}"
-          (error)="$event.target.src='/images/placeholder.png'"
-        />
-      </div>
       <div class="site-info-card">
         <h3>{{ selectedSite.name }}</h3>
         <p>{{ selectedSite.description }}</p>

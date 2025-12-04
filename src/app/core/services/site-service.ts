@@ -44,5 +44,19 @@ export class SiteService {
       .delete<any>(`${this.api}/sites/${id}`)
       .toPromise();
   }
+
+  getPublicSites() : Promise<any[]> {
+    return this.http
+      .get<any[]>(`${this.api}/reservas/sites`)
+      .toPromise()
+      .then(r => r ?? []);
+  }
+
+  getPublicResources(siteId: number): Promise<any[]> {
+    return this.http
+      .get<any[]>(`${this.api}/reservas/sites/${siteId}`)
+      .toPromise()
+      .then(r => r ?? []);
+  }
 }
 
