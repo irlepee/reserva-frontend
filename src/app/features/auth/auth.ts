@@ -92,9 +92,15 @@ export class Auth {
   // --------Entidad---------- 163
 
   async cargarEntidades() {
+    console.log('Cargando Estados...');
     this.ubicacionService.getEntidades().subscribe({
-      next: (data) => this.entidades = data,
-      error: () => {}
+      next: (data) => {
+        console.log('Estados cargados:', data);
+        this.entidades = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar Estados:', err);
+      }
     })
   }
 
@@ -115,14 +121,18 @@ export class Auth {
   // --------Municipio----------
 
   cargarMunicipios(entidadId: number) {
+    console.log('Cargando Municipios para Estado ID:', entidadId);
     this.municipios = [];
     this.municipio = '';
     this.municipioId = undefined;
     this.filtradosMunicipio = [];
 
     this.ubicacionService.getMunicipios(entidadId).subscribe({
-      next: (data: Municipio[]) => this.municipios = data,
-      error: (err) => console.error(err)
+      next: (data: Municipio[]) => {
+        console.log('Municipios cargados:', data);
+        this.municipios = data;
+      },
+      error: (err) => console.error('Error al cargar Municipios:', err)
     });
   }
 
@@ -145,14 +155,18 @@ export class Auth {
   // --------Localidad----------
 
   cargarLocalidades(entidadId: number, municipioId: number) {
+    console.log('Cargando Localidades para Estado ID:', entidadId, 'y Municipio ID:', municipioId);
     this.localidades = [];
     this.localidad = '';
     this.localidadId = undefined;
     this.filtradosLocalidad = [];
 
     this.ubicacionService.getLocalidades(entidadId, municipioId).subscribe({
-      next: (data: Localidad[]) => this.localidades = data,
-      error: (err) => console.error(err)
+      next: (data: Localidad[]) => {
+        console.log('Localidades cargadas:', data);
+        this.localidades = data;
+      },
+      error: (err) => console.error('Error al cargar Localidades:', err)
     });
   }
 

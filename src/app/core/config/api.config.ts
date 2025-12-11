@@ -3,7 +3,5 @@
 
 export const API_CONFIG = {
     
-  apiUrl: 'http://localhost:3000'
-  
-  //apiUrl: 'https://reserva-backend-cqcu.onrender.com'
+  apiUrl: 'https://reserva-backend-cqcu.onrender.com'
 };
