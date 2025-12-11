@@ -43,4 +43,11 @@ export class ReservaService {
       .toPromise()
       .then(r => r ?? []);
   }
+
+  getReservasBySite(siteId: number): Promise<any[]> {
+    return this.http
+      .get<any[]>(`${this.api}/reservas/${siteId}`)
+      .toPromise()
+      .then(r => r ?? []);
+  }
 }

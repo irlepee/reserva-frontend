@@ -94,4 +94,8 @@ export class DashSites implements OnInit {
   goToStats(siteId: number): void {
     this.router.navigate(['/dashboard/sites/stats', siteId]);
   }
+
+  goToManageSite(siteId: number): void {
+    this.router.navigate(['/dashboard/sites/manage', siteId]);
+  }
 }

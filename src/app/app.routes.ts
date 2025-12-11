@@ -17,6 +17,7 @@ import { CreateSites } from './features/dashboard/sites/create-sites/create-site
 import { EditSites } from './features/dashboard/sites/edit-sites/edit-sites';
 import { ManageResources } from './features/dashboard/sites/manage-resources/manage-resources';
 import { SiteStats } from './features/dashboard/sites/site-stats/site-stats';
+import { ManageSite } from './features/dashboard/sites/manage-site/manage-site';
 import { HistoryReservas } from './features/dashboard/reservas/history-reservas/history-reservas';
 import { AuthGuard } from './core/guards/auth.guard';
 
@@ -51,6 +52,7 @@ export const routes: Routes = [
                     { path: 'create', component:CreateSites},
                     { path: 'edit/:id', component:EditSites},
                     { path: 'manage-resources/:id', component:ManageResources},
+                    { path: 'manage/:id', component:ManageSite},
                     { path: 'stats/:id', component:SiteStats}
                 ]
             }
