@@ -34,7 +34,10 @@
             <h3>{{ reserva.resource_name || 'Recurso' }}</h3>
             <p class="reservation-site">{{ reserva.site_name || 'Sitio' }}</p>
           </div>
-          <span class="reservation-status" [class.active]="reserva.status === 'Active'">
+          <span class="reservation-status" 
+            [class.active]="reserva.status === 'Active'" 
+            [class.in-progress]="reserva.status === 'In Progress'"
+            [class.completed]="reserva.status === 'Completed'">
             {{ reserva.status }}
           </span>
         </div>

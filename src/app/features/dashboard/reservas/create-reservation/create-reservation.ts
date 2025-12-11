@@ -8,6 +8,7 @@ import { ReservaService } from '../../../../core/services/reserva-service';
 import { GroupService } from '../../../../core/services/group-service';
 import { AuthService } from '../../../../core/services/authService';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { Recommendation } from '../../../../core/services/recommendation.service';
 import { API_CONFIG } from '../../../../core/config/api.config';
 
 @Component({
@@ -67,6 +68,57 @@ export class CreateReservationComponent implements OnInit {
   ngOnInit() {
     this.loadCategories();
     this.loadCurrentUserAndGroups();
+    this.loadRecommendationFromSession();
+  }
+
+  // Cargar recomendación desde sessionStorage si existe
+  loadRecommendationFromSession() {
+    const recData = sessionStorage.getItem('recommendationData');
+    if (recData) {
+      try {
+        const recommendation: Recommendation = JSON.parse(recData);
+        
+        // Buscar el sitio
+        this.siteService.getPublicSites()
+          .then((sites: any[]) => {
+            const matchingSite = sites.find(s => 
+              s.name.toLowerCase().includes(recommendation.site.toLowerCase())
+            );
+            
+            if (matchingSite) {
+              this.selectedSite = matchingSite;
+              this.loadSiteResources();
+              
+              // Establecer hora y duración
+              this.startTime = `${String(recommendation.suggestedHour).padStart(2, '0')}:00`;
+              const endHour = recommendation.suggestedHour + recommendation.suggestedDuration;
+              this.endTime = `${String(endHour).padStart(2, '0')}:00`;
+              
+              // Buscar el recurso y seleccionarlo
+              setTimeout(() => {
+                const matchingResource = this.siteResources.find(r => 
+                  r.name.toLowerCase() === recommendation.resourceName.toLowerCase()
+                );
+                if (matchingResource) {
+                  this.selectedResource = matchingResource;
+                  this.selectedDate = new Date().toISOString().split('T')[0];
+                  this.step = 'summary';
+                }
+              }, 500);
+            } else {
+              this.notificationService.error('No se pudo cargar la recomendación');
+            }
+          })
+          .catch((err) => {
+            this.notificationService.error('No se pudo cargar la recomendación');
+          })
+          .finally(() => {
+            sessionStorage.removeItem('recommendationData');
+          });
+      } catch (error) {
+        sessionStorage.removeItem('recommendationData');
+      }
+    }
   }
 
   // Cargar usuario actual y luego sus grupos
@@ -310,7 +362,6 @@ export class CreateReservationComponent implements OnInit {
         this.isLoadingHours = false;
       })
       .catch((error) => {
-        console.error('Error cargando horas ocupadas:', error);
         this.occupiedHours = [];
         this.isLoadingHours = false;
       });

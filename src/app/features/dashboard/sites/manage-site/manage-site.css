@@ -571,20 +571,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  background: linear-gradient(135deg, #0066cc, #0099ff);
   transition: all 0.3s ease;
   user-select: none;
-  border-bottom: 2px solid #90caf9;
+  border-bottom: 2px solid #0052a3;
 }
 
 .category-group.has-reservas .category-header {
-  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-  border-bottom-color: #64b5f6;
+  background: linear-gradient(135deg, #0066cc, #0099ff);
+  border-bottom-color: #0052a3;
 }
 
 .category-header:hover {
-  background: linear-gradient(135deg, #bbdefb, #90caf9);
-  box-shadow: inset 0 2px 4px rgba(0, 102, 204, 0.1);
+  background: linear-gradient(135deg, #0052a3, #0066cc);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .category-info {
@@ -595,7 +595,7 @@
 }
 
 .category-info i {
-  color: #0066cc;
+  color: white;
   font-size: 18px;
   transition: all 0.3s ease;
   flex-shrink: 0;
@@ -606,7 +606,7 @@
   margin: 0;
   font-size: 15px;
   font-weight: 600;
-  color: #333;
+  color: white;
   flex: 1;
   text-transform: capitalize;
 }
@@ -618,22 +618,23 @@
   min-width: 32px;
   height: 32px;
   padding: 0 8px;
-  background: #0066cc;
+  background: rgba(255, 255, 255, 0.25);
   color: white;
   border-radius: 16px;
   font-size: 12px;
   font-weight: 700;
   flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .category-resources {
   padding: 12px 12px 12px 20px;
-  background: #fafbfc;
+  background: #f8f9fa;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   animation: slideDown 0.3s ease;
-  border-left: 2px solid #e0e0e0;
+  border-left: 3px solid #0066cc;
 }
 
 .resource-group {
@@ -718,14 +719,13 @@
 }
 
 .resource-reservas {
-  padding: 10px 10px 10px 16px;
+  padding: 12px 12px 12px 16px;
   background: #fafbfc;
-  border-top: 2px solid #e0ecff;
+  border-top: 1px solid #e0ecff;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   animation: slideDown 0.3s ease;
-  max-width: 600px;
   border-radius: 0 0 8px 8px;
 }
 
@@ -751,21 +751,20 @@
 
 .reserva-card {
   border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  padding: 10px;
+  border-radius: 8px;
+  padding: 14px;
   background: white;
   transition: all 0.3s ease;
   margin-bottom: 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  max-width: 600px;
-  margin-left: 12px;
-  border-left: 3px solid #0066cc;
+  box-shadow: 0 2px 6px rgba(0, 102, 204, 0.08);
+  border-left: 4px solid #0066cc;
 }
 
 .reserva-card:hover {
   border-color: #0066cc;
-  box-shadow: 0 2px 6px rgba(0, 102, 204, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.2);
   background: #f9fbff;
+  transform: translateY(-2px);
 }
 
 .reserva-header {
@@ -784,8 +783,8 @@
 
 .reserva-title h6 {
   margin: 0;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   color: #333;
 }
 
@@ -804,24 +803,26 @@
 }
 
 .status-badge {
-  padding: 3px 8px;
-  border-radius: 5px;
-  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .status-badge.active {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  color: #1b5e20;
+  border: 1px solid #81c784;
 }
 
 .status-badge.cancelled {
-  background: #ffebee;
-  color: #c62828;
+  background: linear-gradient(135deg, #ffebee, #ffcdd2);
+  color: #b71c1c;
+  border: 1px solid #ef5350;
 }
 
 .reserva-details {
@@ -857,24 +858,25 @@
 }
 
 .btn-cancel {
-  padding: 5px 10px;
+  padding: 6px 12px;
   background: #ffebee;
   border: 1px solid #ef5350;
-  border-radius: 5px;
+  border-radius: 6px;
   color: #c62828;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   transition: all 0.3s ease;
 }
 
 .btn-cancel:hover {
   background: #ef5350;
   color: white;
-  box-shadow: 0 2px 6px rgba(239, 83, 80, 0.3);
+  box-shadow: 0 4px 12px rgba(239, 83, 80, 0.3);
+  transform: translateY(-1px);
 }
 
 .btn-cancel:active {

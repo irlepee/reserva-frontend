@@ -63,50 +63,49 @@
                 <h3 class="section-title">Recomendaciones de IA</h3>
                 <span class="ai-badge">✨ Personalizado</span>
             </div>
-            <div class="recommendations-grid">
-                <div class="recommendation-card">
-                    <div class="recommendation-header">
-                        <div class="recommendation-icon">📚</div>
-                        <div class="recommendation-top">
-                            <h5>Biblioteca TEC</h5>
-                            <p class="recommendation-detail">Sala de estudio 3B</p>
-                        </div>
-                    </div>
-                    <p class="recommendation-time">
-                        <i class="bi bi-clock-history"></i>
-                        Mañana, 10:00 - 11:30
-                    </p>
-                    <button class="btn-recommend">Reservar</button>
+
+            <!-- Cargando -->
+            <div class="loading-state" *ngIf="isLoadingRecommendations">
+                <div class="spinner"></div>
+                <p>Generando recomendaciones personalizadas...</p>
+            </div>
+
+            <!-- Error -->
+            <div class="error-state" *ngIf="recommendationsError && !isLoadingRecommendations">
+                <div class="error-icon">
+                    <i class="bi bi-exclamation-circle"></i>
                 </div>
-                <div class="recommendation-card">
+                <p class="error-message">{{ recommendationsErrorMessage }}</p>
+                <button class="btn-retry" (click)="retryLoadRecommendations()">
+                    <i class="bi bi-arrow-clockwise"></i> Reintentar
+                </button>
+            </div>
+
+            <!-- Recomendaciones cargadas -->
+            <div class="recommendations-grid" *ngIf="recommendations.length > 0 && !isLoadingRecommendations && !recommendationsError">
+                <div class="recommendation-card" *ngFor="let rec of recommendations" (click)="applyRecommendation(rec)">
                     <div class="recommendation-header">
-                        <div class="recommendation-icon">🏀</div>
                         <div class="recommendation-top">
-                            <h5>Centro Comunitario</h5>
-                            <p class="recommendation-detail">Cancha de basket</p>
+                            <h5>{{ rec.resourceName }}</h5>
+                            <p class="recommendation-detail">{{ rec.site }}</p>
                         </div>
+                        <span class="resource-type-badge">{{ rec.resourceType }}</span>
                     </div>
                     <p class="recommendation-time">
                         <i class="bi bi-clock-history"></i>
-                        Viernes, 18:00 - 19:00
+                        {{ rec.suggestedHour }}:00 - {{ rec.suggestedHour + rec.suggestedDuration }}:00
                     </p>
-                    <button class="btn-recommend">Reservar</button>
-                </div>
-                <div class="recommendation-card">
-                    <div class="recommendation-header">
-                        <div class="recommendation-icon">🏥</div>
-                        <div class="recommendation-top">
-                            <h5>Facultad de Medicina</h5>
-                            <p class="recommendation-detail">Proyector Aula 5</p>
-                        </div>
-                    </div>
-                    <p class="recommendation-time">
-                        <i class="bi bi-clock-history"></i>
-                        Sábado, 09:00 - 10:00
-                    </p>
-                    <button class="btn-recommend">Reservar</button>
+                    <p class="recommendation-reason">{{ rec.reason }}</p>
+                    <button class="btn-recommend" type="button">Reservar</button>
                 </div>
             </div>
+
+            <!-- Sin recomendaciones -->
+            <ng-template #noRecommendations>
+                <div class="empty-state">
+                    <p>No hay recomendaciones disponibles en este momento</p>
+                </div>
+            </ng-template>
         </div>
 
         <!-- Próximos Eventos -->
