@@ -49,11 +49,18 @@
     </div>
 
     <div class="site-details" *ngIf="selectedSite">
-      <!-- Banner con imagen principal -->
-      <div class="site-header-banner" *ngIf="getImageUrl(selectedSite.images)">
-        <img [src]="getImageUrl(selectedSite.images)" alt="{{ selectedSite.name }}" />
-        <div class="site-header-overlay">
-          <h2>{{ selectedSite.name }}</h2>
+      <!-- Carrusel de imágenes -->
+      <div class="site-gallery-section" *ngIf="getAllImageUrls(selectedSite.images).length > 0">
+        <div class="gallery-carousel">
+          <img 
+            *ngFor="let imgUrl of getAllImageUrls(selectedSite.images)" 
+            [src]="imgUrl" 
+            alt="{{ selectedSite.name }}"
+            class="carousel-slide"
+          />
+          <div class="site-header-overlay">
+            <h2>{{ selectedSite.name }}</h2>
+          </div>
         </div>
       </div>
 
@@ -79,7 +86,7 @@
       <!-- Recursos organizados por categoría -->
       <div class="category-section" *ngFor="let category of categories">
         <div class="category-header">
-          <i class="bi bi-tag"></i>
+          <i [class]="getCategoryIcon(category)"></i>
           <span>{{ category }}</span>
           <span class="category-count">({{ getResourcesByCategory(category).length }})</span>
         </div>

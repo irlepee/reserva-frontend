@@ -109,6 +109,35 @@ export class CreateReservationComponent implements OnInit {
     return this.resourceTypesMap[resourceTypeId] || 'Sin categoría';
   }
 
+  // Obtener icono correspondiente a la categoría
+  getCategoryIcon(category: string): string {
+    const lowerCategory = category.toLowerCase();
+    
+    if (lowerCategory.includes('aula')) {
+      return 'bi bi-door-closed';
+    }
+    if (lowerCategory.includes('equipamiento')) {
+      return 'bi bi-tools';
+    }
+    if (lowerCategory.includes('cubículo') || lowerCategory.includes('cubiculo')) {
+      return 'bi bi-layout-split';
+    }
+    if (lowerCategory.includes('computadora') || lowerCategory.includes('computador')) {
+      return 'bi bi-laptop';
+    }
+    if (lowerCategory.includes('espacio específico')) {
+      return 'bi bi-easel2';
+    }
+    if (lowerCategory.includes('auditorio') || lowerCategory.includes('auditor')) {
+      return 'bi bi-mic';
+    }
+    if (lowerCategory.includes('otro')) {
+      return 'bi bi-box';
+    }
+    
+    return 'bi bi-box';
+  }
+
   // Obtener URL de imagen del sitio
   getImageUrl(images: any): string {
     if (!images || images.length === 0) {

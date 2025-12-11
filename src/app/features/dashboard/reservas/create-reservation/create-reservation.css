@@ -221,21 +221,51 @@
   margin-bottom: 2rem;
 }
 
-/* Banner superior con imagen y título */
-.site-header-banner {
-  width: 100%;
-  height: 220px;
+/* Carrusel de imágenes */
+.site-gallery-section {
   border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 0;
-  position: relative;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin-bottom: 1rem;
+  background: white;
+  border: 2px solid #e5e7eb;
 }
 
-.site-header-banner img {
+.gallery-carousel {
+  width: 100%;
+  height: 280px;
+  position: relative;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  overflow: hidden;
+}
+
+.carousel-slide {
+  position: absolute;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  animation: fadeCarousel 12s infinite ease-in-out;
+  opacity: 0;
+}
+
+.carousel-slide:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.carousel-slide:nth-child(2) {
+  animation-delay: 4s;
+}
+
+.carousel-slide:nth-child(3) {
+  animation-delay: 8s;
+}
+
+@keyframes fadeCarousel {
+  0%, 100% {
+    opacity: 0;
+  }
+  10%, 90% {
+    opacity: 1;
+  }
 }
 
 .site-header-overlay {
@@ -245,6 +275,7 @@
   display: flex;
   align-items: flex-end;
   padding: 2rem;
+  z-index: 1;
 }
 
 .site-header-overlay h2 {
@@ -258,10 +289,10 @@
 /* Información compacta del sitio */
 .site-header-info {
   background: white;
-  border-radius: 0 0 12px 12px;
   padding: 1.25rem;
   border: 2px solid #e5e7eb;
   border-top: none;
+  border-radius: 0 0 12px 12px;
   margin-bottom: 2rem;
 }
 
@@ -306,7 +337,7 @@
   font-size: 0.9rem;
 }
 
-/* Galería de imágenes - Removida */
+/* Galería de imágenes antigua - Removida */
 .site-gallery {
   display: none;
 }
@@ -320,6 +351,10 @@
 }
 
 .site-banner {
+  display: none;
+}
+
+.site-header-banner {
   display: none;
 }
 
