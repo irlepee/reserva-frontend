@@ -7,6 +7,7 @@ import { ResourcesService } from '../../../../core/services/resources-service';
 import { ReservaService } from '../../../../core/services/reserva-service';
 import { GroupService } from '../../../../core/services/group-service';
 import { AuthService } from '../../../../core/services/authService';
+import { NotificationService } from '../../../../core/services/notification.service';
 import { API_CONFIG } from '../../../../core/config/api.config';
 
 @Component({
@@ -23,6 +24,7 @@ export class CreateReservationComponent implements OnInit {
     private reservaService: ReservaService,
     private groupService: GroupService,
     private authService: AuthService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
 
@@ -334,7 +336,7 @@ export class CreateReservationComponent implements OnInit {
 
   goToSummary() {
     if (!this.selectedDate) {
-      alert('Por favor selecciona una fecha');
+      this.notificationService.error('Por favor selecciona una fecha');
       return;
     }
 
@@ -402,7 +404,7 @@ export class CreateReservationComponent implements OnInit {
   validateTimes(): boolean {
     // Validar que la hora de inicio sea antes que la de fin
     if (this.startTime >= this.endTime) {
-      alert('La hora de inicio debe ser anterior a la hora de fin');
+      this.notificationService.error('La hora de inicio debe ser anterior a la hora de fin');
       return false;
     }
 
@@ -415,7 +417,7 @@ export class CreateReservationComponent implements OnInit {
     const selectedDateTime = new Date(year, month - 1, day, startHour, 0, 0, 0);
 
     if (selectedDateTime <= now) {
-      alert('No puedes hacer una reserva en el pasado');
+      this.notificationService.error('No puedes hacer una reserva en el pasado');
       return false;
     }
 
@@ -425,7 +427,7 @@ export class CreateReservationComponent implements OnInit {
     const duration = endHourInt - startHourInt;
 
     if (duration < 1) {
-      alert('La reserva debe ser por lo menos 1 hora');
+      this.notificationService.error('La reserva debe ser por lo menos 1 hora');
       return false;
     }
 
@@ -551,7 +553,7 @@ export class CreateReservationComponent implements OnInit {
 
       if (hasOccupiedInBetween) {
         // No se puede seleccionar un rango que atraviese una reserva
-        alert('No puedes reservar un rango que incluya horas ocupadas');
+        this.notificationService.error('No puedes reservar un rango que incluya horas ocupadas');
         return;
       }
 
@@ -630,7 +632,7 @@ export class CreateReservationComponent implements OnInit {
   createReservation() {
     // Si hay advertencia de capacidad y no se ha confirmado, mostrar alerta
     if (this.showCapacityWarning) {
-      alert('Por favor confirma que deseas continuar a pesar de exceder la capacidad.');
+      this.notificationService.warning('Por favor confirma que deseas continuar a pesar de exceder la capacidad.');
       return;
     }
 
@@ -650,7 +652,7 @@ export class CreateReservationComponent implements OnInit {
 
     this.reservaService.createReservation(reservationData)
       .then((response: any) => {
-        alert('¡Reserva creada exitosamente!');
+        this.notificationService.success('¡Reserva creada exitosamente!');
         this.router.navigate(['/dashboard/reservas']);
       })
       .catch((error: any) => {
@@ -658,10 +660,10 @@ export class CreateReservationComponent implements OnInit {
         const errorMessage = error?.error?.error || '';
         
         if (errorMessage.includes('ya está reservado') || errorMessage.includes('horario')) {
-          alert('Este horario ya está ocupado. Por favor selecciona otro horario disponible.');
+          this.notificationService.error('Este horario ya está ocupado. Por favor selecciona otro horario disponible.');
           this.step = 'datetime'; // Regresar al paso de selección de horario
         } else {
-          alert('Error al crear la reserva. Por favor intenta de nuevo.');
+          this.notificationService.error('Error al crear la reserva. Por favor intenta de nuevo.');
         }
       });
   }

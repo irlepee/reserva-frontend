@@ -7,6 +7,7 @@ import { Entidad } from '../../../../shared/interfaces/entidad';
 import { Municipio } from '../../../../shared/interfaces/municipio';
 import { Localidad } from '../../../../shared/interfaces/localidad';
 import { SiteService } from '../../../../core/services/site-service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-create-sites',
@@ -15,7 +16,12 @@ import { SiteService } from '../../../../core/services/site-service';
   styleUrl: './create-sites.css',
 })
 export class CreateSites implements OnInit {
-  constructor(private ubicacionService: LocationsService, private siteService: SiteService, private router: Router) { }
+  constructor(
+    private ubicacionService: LocationsService,
+    private siteService: SiteService,
+    private notificationService: NotificationService,
+    private router: Router
+  ) { }
 
   siteName: string = '';
   description: string = '';
@@ -179,27 +185,27 @@ export class CreateSites implements OnInit {
   createSite() {
     this.siteName = this.siteName.trim();
     if (!this.siteName) {
-      alert('El nombre del sitio es obligatorio.');
+      this.notificationService.error('El nombre del sitio es obligatorio.');
       return;
     }
 
     if (this.uploadedImages.length === 0) {
-      alert('Debes subir al menos una imagen.');
+      this.notificationService.error('Debes subir al menos una imagen.');
       return;
     }
 
     if (!this.entidadId) {
-      alert('Debes seleccionar un Estado.');
+      this.notificationService.error('Debes seleccionar un Estado.');
       return;
     }
 
     if (!this.municipioId) {
-      alert('Debes seleccionar un Municipio.');
+      this.notificationService.error('Debes seleccionar un Municipio.');
       return;
     }
 
     if (!this.localidadId) {
-      alert('Debes seleccionar una Localidad.');
+      this.notificationService.error('Debes seleccionar una Localidad.');
       return;
     }
 
@@ -216,11 +222,11 @@ export class CreateSites implements OnInit {
 
     this.siteService.createSite(formData)
       .then(() => {
-        alert('Sitio creado exitosamente.');
+        this.notificationService.success('Sitio creado exitosamente.');
         this.router.navigate(['/dashboard/sites']);
       })
       .catch((error) => {
-        alert('Hubo un error al crear el sitio. Por favor, intenta nuevamente.');
+        this.notificationService.error('Hubo un error al crear el sitio. Por favor, intenta nuevamente.');
       });
   }
 } 

@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AuthService } from '../../core/services/authService';
+import { NotificationService } from '../../core/services/notification.service';
 import { HttpClientModule } from '@angular/common/http';
 import { LocationsService } from '../../core/services/locations-service';
 import { RouterModule } from '@angular/router';
@@ -27,6 +28,13 @@ export class Auth {
     this.close.emit();
   }
 
+  constructor(
+    private authService: AuthService,
+    private notificationService: NotificationService,
+    private ubicacionService: LocationsService,
+    private router: Router
+  ) { }
+
   // ---------------------Tabs---------------------
 
   activeTab: 'login' | 'register' = 'login';
@@ -40,12 +48,6 @@ export class Auth {
   identifier = "";
   password = "";
 
-  constructor(
-    private authenticator: AuthService,
-    private ubicacionService: LocationsService,
-    private router: Router
-  ) { }
-
   async onLogin(form: any) {
     if (form.invalid) {
       form.control.markAllAsTouched();
@@ -53,7 +55,7 @@ export class Auth {
     }
 
     try {
-      const result: any = await this.authenticator.login({
+      const result: any = await this.authService.login({
         identifier: this.identifier,
         password: this.password
       });
@@ -200,10 +202,10 @@ export class Auth {
         id_localidad: this.localidadId
       };
 
-      await this.authenticator.register(data);
+      await this.authService.register(data);
     } catch (error: any) {
       console.error('Error en registro:', error.error?.error || 'Ocurrió un error desconocido');
-      alert('Error en registro: ' + error.error?.error || 'Ocurrió un error desconocido');
+      this.notificationService.error('Error en registro: ' + (error.error?.error || 'Ocurrió un error desconocido'));
     }
   }
 

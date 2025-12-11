@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ResourcesService } from '../../../../core/services/resources-service';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-manage-resources',
@@ -14,7 +15,8 @@ export class ManageResources implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private resourcesService: ResourcesService
+    private resourcesService: ResourcesService,
+    private notificationService: NotificationService
   ) { }
 
   siteId?: number;
@@ -97,12 +99,12 @@ export class ManageResources implements OnInit {
 
   addResource() {
     if (!this.resourceName.trim() || !this.resourceType) {
-      alert('Por favor completa todos los campos');
+      this.notificationService.error('Por favor completa todos los campos');
       return;
     }
 
     if (!this.siteId) {
-      alert('Error: No se encontró el sitio');
+      this.notificationService.error('Error: No se encontró el sitio');
       return;
     }
 
@@ -116,7 +118,7 @@ export class ManageResources implements OnInit {
       // Editar recurso existente
       this.resourcesService.editResource(this.siteId, this.selectedResource.id, resourceData)
         .then((updatedResource: any) => {
-          alert('Recurso actualizado exitosamente');
+          this.notificationService.success('Recurso actualizado exitosamente');
           // Recargar recursos para actualizar la lista
           this.loadResources();
           // Limpiar formulario
@@ -124,13 +126,13 @@ export class ManageResources implements OnInit {
         })
         .catch((error: any) => {
           console.error('Error updating resource:', error);
-          alert('Error al actualizar el recurso: ' + (error?.error?.message || 'Error desconocido'));
+          this.notificationService.error('Error al actualizar el recurso: ' + (error?.error?.message || 'Error desconocido'));
         });
     } else {
       // Crear nuevo recurso
       this.resourcesService.createResource(this.siteId, resourceData)
         .then((newResource: any) => {
-          alert('Recurso creado exitosamente');
+          this.notificationService.success('Recurso creado exitosamente');
           // Recargar recursos para actualizar la lista
           this.loadResources();
           // Limpiar formulario
@@ -138,7 +140,7 @@ export class ManageResources implements OnInit {
         })
         .catch((error: any) => {
           console.error('Error creating resource:', error);
-          alert('Error al crear el recurso: ' + (error?.error?.message || 'Error desconocido'));
+          this.notificationService.error('Error al crear el recurso: ' + (error?.error?.message || 'Error desconocido'));
         });
     }
   }
@@ -181,13 +183,13 @@ export class ManageResources implements OnInit {
     }
 
     if (!this.siteId) {
-      alert('Error: No se encontró el sitio');
+      this.notificationService.error('Error: No se encontró el sitio');
       return;
     }
 
     this.resourcesService.deleteResource(this.siteId, resource.id)
       .then((response: any) => {
-        alert('Recurso eliminado exitosamente');
+        this.notificationService.success('Recurso eliminado exitosamente');
         // Recargar recursos para actualizar la lista
         this.loadResources();
         // Si era el recurso que estabas editando, limpiar formulario
@@ -197,7 +199,7 @@ export class ManageResources implements OnInit {
       })
       .catch((error: any) => {
         console.error('Error deleting resource:', error);
-        alert('Error al eliminar el recurso: ' + (error?.error?.message || 'Error desconocido'));
+        this.notificationService.error('Error al eliminar el recurso: ' + (error?.error?.message || 'Error desconocido'));
       });
   }
 

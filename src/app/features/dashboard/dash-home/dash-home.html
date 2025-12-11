@@ -26,49 +26,85 @@
             </div>
         </div>
 
-        <!-- Reservas para hoy -->
-        <div class="reservas-section">
-            <div class="reservas" *ngFor="let reserva of reservas">
-                <div>
-                    <p class="card-text mb-1"><strong>Recurso ID:</strong> {{ reserva.id_resource }}</p>
-                    <p class="card-text mb-1">
-                        <strong>Inicio:</strong> {{ reserva.start_date | date:'short' }}
-                    </p>
-                    <p class="card-text mb-1">
-                        <strong>Fin:</strong> {{ reserva.end_date | date:'short' }}
-                    </p>
-                    <small class="text-muted mt-2">Creado: {{ reserva.created_at | date:'mediumDate' }}</small>
+        <!-- Mis Reservas - Próximas -->
+        <div class="section reservas-section">
+            <div class="section-header">
+                <h3 class="section-title">Mis Próximas Reservas</h3>
+                <a href="#" class="view-all-link">Ver todas →</a>
+            </div>
+            <div class="reservas-list">
+                <div class="reserva-card" *ngIf="reservas && reservas.length > 0; else noReservas">
+                    <div class="reserva-card-header">
+                        <div class="reserva-status active">
+                            <i class="bi bi-calendar-event"></i>
+                        </div>
+                        <div class="reserva-card-info">
+                            <h5>Recurso {{ reservas[0]?.id_resource }}</h5>
+                            <p class="reserva-date-range">
+                                <i class="bi bi-clock"></i>
+                                {{ reservas[0]?.start_date | date:'shortTime' }} - {{ reservas[0]?.end_date | date:'shortTime' }}
+                            </p>
+                        </div>
+                        <span class="reserva-badge">Pronto</span>
+                    </div>
+                    <p class="reserva-created-info">Reservado el {{ reservas[0]?.created_at | date:'d MMM' }}</p>
                 </div>
+                <ng-template #noReservas>
+                    <div class="empty-state">
+                        <p>No tienes reservas próximas</p>
+                    </div>
+                </ng-template>
             </div>
         </div>
 
         <!-- Recomendaciones IA -->
         <div class="section recommendations-section">
-            <h3 class="section-title">Recomendaciones de Reservas (IA)</h3>
+            <div class="section-header">
+                <h3 class="section-title">Recomendaciones de IA</h3>
+                <span class="ai-badge">✨ Personalizado</span>
+            </div>
             <div class="recommendations-grid">
                 <div class="recommendation-card">
-                    <div class="recommendation-icon">📚</div>
-                    <div class="recommendation-content">
-                        <h5>Biblioteca TEC</h5>
-                        <p class="recommendation-detail">Sala de estudio 3B</p>
-                        <p class="recommendation-time">Mañana, 10:00 - 11:30</p>
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon">📚</div>
+                        <div class="recommendation-top">
+                            <h5>Biblioteca TEC</h5>
+                            <p class="recommendation-detail">Sala de estudio 3B</p>
+                        </div>
                     </div>
+                    <p class="recommendation-time">
+                        <i class="bi bi-clock-history"></i>
+                        Mañana, 10:00 - 11:30
+                    </p>
+                    <button class="btn-recommend">Reservar</button>
                 </div>
                 <div class="recommendation-card">
-                    <div class="recommendation-icon">🏀</div>
-                    <div class="recommendation-content">
-                        <h5>Centro Comunitario</h5>
-                        <p class="recommendation-detail">Cancha de basket</p>
-                        <p class="recommendation-time">Viernes, 18:00 - 19:00</p>
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon">🏀</div>
+                        <div class="recommendation-top">
+                            <h5>Centro Comunitario</h5>
+                            <p class="recommendation-detail">Cancha de basket</p>
+                        </div>
                     </div>
+                    <p class="recommendation-time">
+                        <i class="bi bi-clock-history"></i>
+                        Viernes, 18:00 - 19:00
+                    </p>
+                    <button class="btn-recommend">Reservar</button>
                 </div>
                 <div class="recommendation-card">
-                    <div class="recommendation-icon">🏥</div>
-                    <div class="recommendation-content">
-                        <h5>Facultad de Medicina</h5>
-                        <p class="recommendation-detail">Proyector Aula 5</p>
-                        <p class="recommendation-time">Sábado, 09:00 - 10:00</p>
+                    <div class="recommendation-header">
+                        <div class="recommendation-icon">🏥</div>
+                        <div class="recommendation-top">
+                            <h5>Facultad de Medicina</h5>
+                            <p class="recommendation-detail">Proyector Aula 5</p>
+                        </div>
                     </div>
+                    <p class="recommendation-time">
+                        <i class="bi bi-clock-history"></i>
+                        Sábado, 09:00 - 10:00
+                    </p>
+                    <button class="btn-recommend">Reservar</button>
                 </div>
             </div>
         </div>
@@ -85,7 +121,7 @@
                     <div class="event-info">
                         <h5>Feria del Libro</h5>
                         <p>Biblioteca TEC</p>
-                        <p class="event-time">10:00 - 18:00</p>
+                        <p class="event-time"><i class="bi bi-clock"></i> 10:00 - 18:00</p>
                     </div>
                 </div>
                 <div class="event-item">
@@ -96,7 +132,7 @@
                     <div class="event-info">
                         <h5>Torneo de Baloncesto</h5>
                         <p>Centro Comunitario</p>
-                        <p class="event-time">Desde las 9:00</p>
+                        <p class="event-time"><i class="bi bi-clock"></i> Desde las 9:00</p>
                     </div>
                 </div>
             </div>

@@ -62,11 +62,11 @@
       </div>
     </div>
 
-    <!-- Gráficas principales -->
-    <div class="charts-grid">
+    <!-- Gráficas principales - Full Width -->
+    <div class="charts-section">
       
       <!-- Reservas por día de la semana -->
-      <div class="chart-card">
+      <div class="chart-card full-width">
         <h3 class="chart-title">
           <i class="bi bi-bar-chart-fill"></i>
           Reservas por Día de la Semana
@@ -160,21 +160,25 @@
 
     <!-- Panel de Reservas -->
     <div class="reservas-section">
-      <h3 class="section-title">
-        <i class="bi bi-calendar-event"></i>
-        Reservas del Sitio
-      </h3>
-
-      <div class="filter-buttons">
-        <button class="filter-btn" [class.active]="filterStatus === 'all'" (click)="filterReservas('all')">
-          Todas ({{ reservas.length }})
-        </button>
-        <button class="filter-btn" [class.active]="filterStatus === 'Active'" (click)="filterReservas('Active')">
-          Activas ({{ getActiveReservasCount() }})
-        </button>
-        <button class="filter-btn" [class.active]="filterStatus === 'Cancelled'" (click)="filterReservas('Cancelled')">
-          Canceladas ({{ getCancelledReservasCount() }})
-        </button>
+      <div class="reservas-header">
+        <div>
+          <h3 class="section-title">
+            <i class="bi bi-calendar-event"></i>
+            Reservas del Sitio
+          </h3>
+          <p class="reservas-subtitle">{{ getTotalReservasForDate() }} reservas para {{ formatDate(selectedDate) }}</p>
+        </div>
+        
+        <div class="date-picker-container">
+          <label for="date-picker">Seleccionar fecha:</label>
+          <input 
+            type="date" 
+            id="date-picker" 
+            [(ngModel)]="selectedDate" 
+            (change)="onDateChange()"
+            class="date-picker"
+          >
+        </div>
       </div>
 
       <div *ngIf="loadingReservas" class="loading-state">
@@ -182,45 +186,78 @@
         <p>Cargando reservas...</p>
       </div>
 
-      <div *ngIf="!loadingReservas && filteredReservas.length === 0" class="no-reservas">
+      <div *ngIf="!loadingReservas && getTotalReservasForDate() === 0" class="no-reservas">
         <i class="bi bi-inbox"></i>
-        <p>No hay reservas</p>
+        <p>No hay reservas para esta fecha</p>
       </div>
 
-      <div *ngIf="!loadingReservas && filteredReservas.length > 0" class="reservas-list">
-        <div class="reserva-card" *ngFor="let reserva of filteredReservas; let i = index">
-          <div class="reserva-header">
-            <div class="reserva-title">
-              <h4>{{ reserva.resource_name }}</h4>
-              <span class="reserva-group" *ngIf="reserva.group_name">
-                <i class="bi bi-people"></i> {{ reserva.group_name }}
-              </span>
-              <span class="reserva-personal" *ngIf="!reserva.group_name">
-                <i class="bi bi-person"></i> Reserva Personal
-              </span>
+      <div *ngIf="!loadingReservas && getTotalReservasForDate() > 0" class="categories-list">
+        <ng-container *ngFor="let categoryName of resourcesByCategory | keyvalue">
+          <div class="category-group" 
+               [class.has-reservas]="getReservasForCategory(categoryName.key) > 0"
+               *ngIf="hasCategoryReservas(categoryName.key)">
+          
+            <div class="category-header" (click)="toggleCategory(categoryName.key)">
+              <div class="category-info">
+                <i class="bi" [ngClass]="expandedCategories[categoryName.key] ? 'bi-chevron-down' : 'bi-chevron-right'"></i>
+                <h4 class="category-name">{{ categoryName.key }}</h4>
+                <span class="category-count">{{ getReservasForCategory(categoryName.key) }}</span>
+              </div>
             </div>
-            <span class="status-badge" [class]="reserva.status.toLowerCase()">
-              {{ reserva.status === 'Active' ? 'Activa' : 'Cancelada' }}
-            </span>
-          </div>
 
-          <div class="reserva-details">
-            <div class="detail-item">
-              <i class="bi bi-calendar"></i>
-              <span>{{ formatDate(reserva.start_date) }}</span>
-            </div>
-            <div class="detail-item">
-              <i class="bi bi-clock"></i>
-              <span>{{ formatTime(reserva.start_date) }} - {{ formatTime(reserva.end_date) }}</span>
-            </div>
-          </div>
+          <div class="category-resources" *ngIf="expandedCategories[categoryName.key]">
+            
+            <ng-container *ngFor="let resource of categoryName.value">
+              <div class="resource-group" 
+                   [class.has-reservas]="(reservasByResource[resource.id] || []).length > 0"
+                   *ngIf="(reservasByResource[resource.id] || []).length > 0">
+              
+                <div class="resource-header" (click)="toggleResource(resource.id)">
+                  <div class="resource-info">
+                    <i class="bi" [ngClass]="expandedResources[resource.id] ? 'bi-chevron-down' : 'bi-chevron-right'"></i>
+                    <h5 class="resource-name">{{ resource.name }}</h5>
+                    <span class="resource-count">
+                      {{ (reservasByResource[resource.id] || []).length }}
+                    </span>
+                  </div>
+                </div>
 
-          <div class="reserva-actions" *ngIf="reserva.status === 'Active'">
-            <button class="btn-cancel" (click)="cancelReserva(reserva.id, i)">
-              <i class="bi bi-x-circle"></i> Cancelar
-            </button>
+                <div class="resource-reservas" *ngIf="expandedResources[resource.id]">
+                  <div class="reserva-card" *ngFor="let reserva of reservasByResource[resource.id]; let i = index">
+                    <div class="reserva-header">
+                      <div class="reserva-title">
+                        <h6>{{ reserva.resource_name }}</h6>
+                        <span class="reserva-group" *ngIf="reserva.group_name">
+                          <i class="bi bi-people"></i> {{ reserva.group_name }}
+                        </span>
+                        <span class="reserva-personal" *ngIf="!reserva.group_name">
+                          <i class="bi bi-person"></i> Reserva Personal
+                        </span>
+                      </div>
+                      <span class="status-badge" [class]="reserva.status.toLowerCase()">
+                        {{ reserva.status === 'Active' ? 'Activa' : 'Cancelada' }}
+                      </span>
+                    </div>
+
+                    <div class="reserva-details">
+                      <div class="detail-item">
+                        <i class="bi bi-clock"></i>
+                        <span>{{ formatTime(reserva.start_date) }} - {{ formatTime(reserva.end_date) }}</span>
+                      </div>
+                    </div>
+
+                    <div class="reserva-actions" *ngIf="reserva.status === 'Active'">
+                      <button class="btn-cancel" (click)="cancelReserva(reserva.id, resource.id)">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            </div>
           </div>
-        </div>
+        </ng-container>
       </div>
     </div>
   </div>

@@ -1,0 +1,19 @@
+<div class="notifications-container">
+  <div *ngFor="let notification of notifications$ | async" 
+       class="notification notification-{{ notification.type }}">
+    <div class="notification-content">
+      <span class="notification-icon">
+        <i [ngSwitch]="notification.type">
+          <span *ngSwitchCase="'success'" class="bi bi-check-circle-fill"></span>
+          <span *ngSwitchCase="'error'" class="bi bi-x-circle-fill"></span>
+          <span *ngSwitchCase="'warning'" class="bi bi-exclamation-circle-fill"></span>
+          <span *ngSwitchCase="'info'" class="bi bi-info-circle-fill"></span>
+        </i>
+      </span>
+      <span class="notification-message">{{ notification.message }}</span>
+    </div>
+    <button class="notification-close" (click)="closeNotification(notification.id)" type="button" aria-label="Cerrar notificación">
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+</div>

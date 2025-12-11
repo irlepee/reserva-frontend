@@ -7,6 +7,7 @@ import { Entidad } from '../../../../shared/interfaces/entidad';
 import { Municipio } from '../../../../shared/interfaces/municipio';
 import { Localidad } from '../../../../shared/interfaces/localidad';
 import { SiteService } from '../../../../core/services/site-service';
+import { NotificationService } from '../../../../core/services/notification.service';
 import { API_CONFIG } from '../../../../core/config/api.config';
 
 @Component({
@@ -19,6 +20,7 @@ export class EditSites implements OnInit {
   constructor(
     private ubicacionService: LocationsService,
     private siteService: SiteService,
+    private notificationService: NotificationService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -107,7 +109,7 @@ export class EditSites implements OnInit {
         });
       })
       .catch((error: any) => {
-        alert('Error al cargar el sitio.');
+        this.notificationService.error('Error al cargar el sitio.');
         this.router.navigate(['/dashboard/sites']);
       });
   }
@@ -267,7 +269,7 @@ export class EditSites implements OnInit {
     // Validar que quede al menos una imagen (existente o nueva)
     const totalImagnesRestantes = this.existingImages.length + (this.uploadedImages.length - 1);
     if (totalImagnesRestantes === 0) {
-      alert('Debes mantener al menos una imagen en el sitio.');
+      this.notificationService.warning('Debes mantener al menos una imagen en el sitio.');
       return;
     }
     
@@ -279,7 +281,7 @@ export class EditSites implements OnInit {
     // Validar que quede al menos una imagen (existente o nueva)
     const totalImagnesRestantes = this.uploadedImages.length + (this.existingImages.length - 1);
     if (totalImagnesRestantes === 0) {
-      alert('Debes mantener al menos una imagen en el sitio.');
+      this.notificationService.warning('Debes mantener al menos una imagen en el sitio.');
       return;
     }
     
@@ -293,22 +295,22 @@ export class EditSites implements OnInit {
   updateSite() {
     this.siteName = this.siteName.trim();
     if (!this.siteName) {
-      alert('El nombre del sitio es obligatorio.');
+      this.notificationService.error('El nombre del sitio es obligatorio.');
       return;
     }
 
     if (!this.entidadId) {
-      alert('Debes seleccionar un Estado.');
+      this.notificationService.error('Debes seleccionar un Estado.');
       return;
     }
 
     if (!this.municipioId) {
-      alert('Debes seleccionar un Municipio.');
+      this.notificationService.error('Debes seleccionar un Municipio.');
       return;
     }
 
     if (!this.localidadId) {
-      alert('Debes seleccionar una Localidad.');
+      this.notificationService.error('Debes seleccionar una Localidad.');
       return;
     }
 
@@ -329,11 +331,11 @@ export class EditSites implements OnInit {
 
     this.siteService.updateSite(this.siteId!, formData)
       .then(() => {
-        alert('Sitio actualizado exitosamente.');
+        this.notificationService.success('Sitio actualizado exitosamente.');
         this.router.navigate(['/dashboard/sites']);
       })
       .catch((error: any) => {
-        alert('Hubo un error al actualizar el sitio. Por favor, intenta nuevamente.');
+        this.notificationService.error('Hubo un error al actualizar el sitio. Por favor, intenta nuevamente.');
       });
   }
 
@@ -349,11 +351,11 @@ export class EditSites implements OnInit {
     this.isLoadingDelete = true;
     this.siteService.deleteSite(this.siteId!)
       .then(() => {
-        alert('Sitio eliminado exitosamente.');
+        this.notificationService.success('Sitio eliminado exitosamente.');
         this.router.navigate(['/dashboard/sites']);
       })
       .catch((error: any) => {
-        alert('Hubo un error al eliminar el sitio.');
+        this.notificationService.error('Hubo un error al eliminar el sitio.');
         this.isLoadingDelete = false;
       });
   }

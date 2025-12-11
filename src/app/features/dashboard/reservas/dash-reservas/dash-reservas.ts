@@ -3,6 +3,7 @@ import { ReservaService } from '../../../../core/services/reserva-service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-dash-reservas',
@@ -14,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 export class DashReservas {
   constructor(
     private reservaService: ReservaService,
+    private notificationService: NotificationService,
     private router: Router
   ) { }
 
@@ -66,12 +68,12 @@ export class DashReservas {
     if (confirm(mensaje)) {
       this.reservaService.cancelReservation(reservaId)
         .then((response: any) => {
-          alert('Reserva cancelada exitosamente');
+          this.notificationService.success('Reserva cancelada exitosamente');
           this.loadReservas();
         })
         .catch((error: any) => {
           console.error('Error al cancelar la reserva:', error);
-          alert('Error al cancelar la reserva. Por favor intenta de nuevo.');
+          this.notificationService.error('Error al cancelar la reserva. Por favor intenta de nuevo.');
         });
     }
   }

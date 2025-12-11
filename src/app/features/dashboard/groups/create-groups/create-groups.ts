@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GroupService } from '../../../../core/services/group-service';
 import { AuthService } from '../../../../core/services/authService';
+import { NotificationService } from '../../../../core/services/notification.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,7 +13,12 @@ import { Router } from '@angular/router';
   styleUrl: './create-groups.css',
 })
 export class CreateGroups {
-  constructor(private groupService: GroupService, private authService: AuthService, private router: Router) { }
+  constructor(
+    private groupService: GroupService,
+    private authService: AuthService,
+    private notificationService: NotificationService,
+    private router: Router
+  ) { }
 
   groupName: string = '';
   groupDescription: string = '';
@@ -42,7 +48,7 @@ export class CreateGroups {
 
   crearGrupo() {
     if (!this.groupName.trim()) {
-      alert('Por favor ingresa un nombre para el grupo');
+      this.notificationService.error('Por favor ingresa un nombre para el grupo');
       return;
     }
 
@@ -52,7 +58,7 @@ export class CreateGroups {
         // Extraer el ID del grupo creado
         const groupId = groupData?.id;
 
-        alert('Grupo creado con éxito');
+        this.notificationService.success('Grupo creado con éxito');
         this.groupName = '';
         this.groupDescription = '';
         this.selectedColor = 0;
@@ -67,26 +73,26 @@ export class CreateGroups {
             })
             .catch((error) => {
               console.error('Error al enviar invitaciones:', error);
-              alert('Error al enviar invitaciones');
+              this.notificationService.error('Error al enviar invitaciones');
             });
         }
         this.router.navigate(['/dashboard/groups']);
       })
       .catch((error) => {
         console.error('Error al crear el grupo:', error);
-        alert('Error al crear el grupo');
+        this.notificationService.error('Error al crear el grupo');
       });
   }
 
   agregarMiembro() {
     if (!this.identifier.trim()) {
-      alert('Por favor ingresa un correo o usuario');
+      this.notificationService.error('Por favor ingresa un correo o usuario');
       return;
     }
 
     // Validar que no intente agregarse a sí mismo
     if (this.currentUser && this.identifier === this.currentUser.username) {
-      alert('No puedes agregarte a ti mismo');
+      this.notificationService.error('No puedes agregarte a ti mismo');
       this.identifier = '';
       return;
     }
@@ -99,27 +105,27 @@ export class CreateGroups {
         
         // Validar que no sea el mismo usuario
         if (this.currentUser && userId === this.currentUser.id) {
-          alert('No puedes agregarte a ti mismo');
+          this.notificationService.error('No puedes agregarte a ti mismo');
           this.isLoadingInvite = false;
           return;
         }
 
         // Verificar si no está duplicado
         if (this.invitedMembers.some(m => m.id === userId)) {
-          alert('Este usuario ya está invitado');
+          this.notificationService.error('Este usuario ya está invitado');
         } else {
           this.invitedMembers.push({
             id: userId,
             identifier: this.identifier
           });
           this.identifier = '';
-          alert('Miembro agregado correctamente');
+          this.notificationService.success('Miembro agregado correctamente');
         }
         this.isLoadingInvite = false;
       })
       .catch((error) => {
         console.error('Error al verificar usuario:', error);
-        alert('El usuario no existe');
+        this.notificationService.error('El usuario no existe');
         this.isLoadingInvite = false;
       });
   }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GroupService } from '../../../../core/services/group-service';
 import { AuthService } from '../../../../core/services/authService';
+import { NotificationService } from '../../../../core/services/notification.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmModal } from '../../../../shared/components/confirm-modal/confirm-modal';
 
@@ -16,6 +17,7 @@ export class EditGroups {
   constructor(
     private groupService: GroupService,
     private authService: AuthService,
+    private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
@@ -105,13 +107,13 @@ export class EditGroups {
 
   agregarMiembro() {
     if (!this.identifier.trim()) {
-      alert('Por favor ingresa un correo o usuario');
+      this.notificationService.error('Por favor ingresa un correo o usuario');
       return;
     }
 
     // Validar que no intente agregarse a sí mismo
     if (this.currentUser && this.identifier === this.currentUser.username) {
-      alert('No puedes agregarte a ti mismo');
+      this.notificationService.error('No puedes agregarte a ti mismo');
       this.identifier = '';
       return;
     }
@@ -124,21 +126,21 @@ export class EditGroups {
 
         // Validar que no sea el mismo usuario
         if (this.currentUser && userId === this.currentUser.id) {
-          alert('No puedes agregarte a ti mismo');
+          this.notificationService.error('No puedes agregarte a ti mismo');
           this.isLoadingInvite = false;
           return;
         }
 
         // Verificar si no está duplicado en la lista de invitados
         if (this.invitedMembers.some(m => m.id === userId)) {
-          alert('Este usuario ya está en la lista de invitados');
+          this.notificationService.error('Este usuario ya está en la lista de invitados');
           this.isLoadingInvite = false;
           return;
         }
 
         // Verificar si el usuario ya está en el grupo
         if (this.members.some(m => m.user?.id === parseInt(userId))) {
-          alert('Este usuario ya es integrante del grupo');
+          this.notificationService.error('Este usuario ya es integrante del grupo');
           this.isLoadingInvite = false;
           return;
         }
@@ -148,12 +150,12 @@ export class EditGroups {
           identifier: this.identifier
         });
         this.identifier = '';
-        alert('Miembro agregado correctamente');
+        this.notificationService.success('Miembro agregado correctamente');
         this.isLoadingInvite = false;
       })
       .catch((error) => {
         console.error('Error al verificar usuario:', error);
-        alert('El usuario no existe');
+        this.notificationService.error('El usuario no existe');
         this.isLoadingInvite = false;
       });
   }
@@ -193,12 +195,12 @@ export class EditGroups {
         if (index > -1) {
           this.members.splice(index, 1);
         }
-        alert('Miembro eliminado del grupo correctamente');
+        this.notificationService.success('Miembro eliminado del grupo correctamente');
         this.closeConfirmModal();
       })
       .catch((error) => {
         console.error('Error al eliminar miembro:', error);
-        alert('Error al eliminar el miembro del grupo');
+        this.notificationService.error('Error al eliminar el miembro del grupo');
       })
       .finally(() => {
         this.isRemovingMember = false;
@@ -229,26 +231,26 @@ export class EditGroups {
 
     this.groupService.deleteGroup(this.groupId)
       .then(() => {
-        alert('Grupo eliminado correctamente');
+        this.notificationService.success('Grupo eliminado correctamente');
         this.router.navigate(['/dashboard/groups']);
       })
       .catch((error) => {
         console.error('Error al eliminar grupo:', error);
-        alert('Error al eliminar el grupo');
+        this.notificationService.error('Error al eliminar el grupo');
         this.isDeletingGroup = false;
       });
   }
 
   actualizarGrupo() {
     if (!this.groupName.trim()) {
-      alert('Por favor ingresa un nombre para el grupo');
+      this.notificationService.error('Por favor ingresa un nombre para el grupo');
       return;
     }
 
     this.groupService
       .updateGroup(this.groupId, this.groupName, this.groupDescription, this.selectedColor)
       .then(() => {
-        alert('Grupo actualizado con éxito');
+        this.notificationService.success('Grupo actualizado con éxito');
 
         // Enviar invitaciones si hay miembros a invitar
         if (this.invitedMembers.length > 0) {
@@ -267,7 +269,7 @@ export class EditGroups {
       })
       .catch((error) => {
         console.error('Error:', error);
-        alert('Error al actualizar el grupo o enviar invitaciones');
+        this.notificationService.error('Error al actualizar el grupo o enviar invitaciones');
       });
   }
 
