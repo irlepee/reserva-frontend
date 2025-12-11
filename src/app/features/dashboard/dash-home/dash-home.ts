@@ -98,4 +98,9 @@ export class DashHome {
     sessionStorage.setItem('recommendationData', JSON.stringify(recommendation));
     this.router.navigate(['/dashboard/reservas/create']);
   }
+
+  // Navegar a la sección de reservas
+  goToReservas() {
+    this.router.navigate(['/dashboard/reservas']);
+  }
 }

@@ -235,7 +235,7 @@
                         </span>
                       </div>
                       <span class="status-badge" [class]="reserva.status.toLowerCase()">
-                        {{ reserva.status === 'Active' ? 'Activa' : 'Cancelada' }}
+                        {{ reserva.status === 'In Progress' ? 'En Progreso' : reserva.status === 'Active' ? 'Activa' : 'Cancelada' }}
                       </span>
                     </div>
 
@@ -246,7 +246,7 @@
                       </div>
                     </div>
 
-                    <div class="reserva-actions" *ngIf="reserva.status === 'Active'">
+                    <div class="reserva-actions" *ngIf="reserva.status === 'In Progress'">
                       <button class="btn-cancel" (click)="cancelReserva(reserva.id, resource.id)">
                         <i class="bi bi-x-circle"></i> Cancelar
                       </button>

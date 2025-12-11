@@ -779,6 +779,8 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
+  flex: 1;
 }
 
 .reserva-title h6 {
@@ -817,6 +819,12 @@
   background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
   color: #1b5e20;
   border: 1px solid #81c784;
+}
+
+.status-badge.in\ progress {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  color: #0052a3;
+  border: 1px solid #64b5f6;
 }
 
 .status-badge.cancelled {

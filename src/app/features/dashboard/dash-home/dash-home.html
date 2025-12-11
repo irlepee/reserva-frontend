@@ -30,7 +30,7 @@
         <div class="section reservas-section">
             <div class="section-header">
                 <h3 class="section-title">Mis Próximas Reservas</h3>
-                <a href="#" class="view-all-link">Ver todas →</a>
+                <a (click)="goToReservas()" class="view-all-link">Ver todas →</a>
             </div>
             <div class="reservas-list">
                 <div class="reserva-card" *ngIf="reservas && reservas.length > 0; else noReservas">
