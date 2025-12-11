@@ -16,11 +16,9 @@ export interface Recommendation {
   providedIn: 'root'
 })
 export class RecommendationService {
-  private apiUrl = 'http://localhost:3000/reservas/recommend';
-
   constructor(private http: HttpClient) {}
 
   getRecommendations(): Observable<{ recommendations: Recommendation[] }> {
-    return this.http.get<{ recommendations: Recommendation[] }>(this.apiUrl);
+    return this.http.get<{ recommendations: Recommendation[] }>(`${API_CONFIG.apiUrl}/reservas/recommend`);
   }
 }
