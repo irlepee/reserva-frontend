@@ -7,6 +7,7 @@ import { ResourcesService } from '../../../../core/services/resources-service';
 import { ReservaService } from '../../../../core/services/reserva-service';
 import { GroupService } from '../../../../core/services/group-service';
 import { AuthService } from '../../../../core/services/authService';
+import { API_CONFIG } from '../../../../core/config/api.config';
 
 @Component({
   selector: 'app-create-reservation',
@@ -59,7 +60,7 @@ export class CreateReservationComponent implements OnInit {
   step: 'search' | 'resources' | 'datetime' | 'summary' = 'search';
 
   // URL de la API para imágenes
-  apiUrl = 'http://localhost:3000';
+  apiUrl = API_CONFIG.apiUrl;
 
   ngOnInit() {
     this.loadCategories();

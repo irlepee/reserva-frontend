@@ -7,6 +7,7 @@ import { Entidad } from '../../../../shared/interfaces/entidad';
 import { Municipio } from '../../../../shared/interfaces/municipio';
 import { Localidad } from '../../../../shared/interfaces/localidad';
 import { SiteService } from '../../../../core/services/site-service';
+import { API_CONFIG } from '../../../../core/config/api.config';
 
 @Component({
   selector: 'app-edit-sites',
@@ -22,6 +23,7 @@ export class EditSites implements OnInit {
     private route: ActivatedRoute
   ) { }
 
+  apiUrl = API_CONFIG.apiUrl;
   siteId?: number;
   siteName: string = '';
   description: string = '';
@@ -65,22 +67,44 @@ export class EditSites implements OnInit {
       .then((site: any) => {
         this.siteName = site.name;
         this.description = site.description || '';
-        this.entidadId = site.entidadId;
-        this.municipioId = site.municipioId;
-        this.localidadId = site.localidadId;
+        // Mapear los IDs del backend (id_entidad, id_municipio, id_localidad) a variables locales
+        this.entidadId = site.id_entidad;
+        this.municipioId = site.id_municipio;
+        this.localidadId = site.id_localidad;
         this.existingImages = site.images || [];
 
-        if (this.entidadId) {
-          this.ubicacionService.getEntidades().subscribe({
-            next: (entidades) => {
-              const selectedEntidad = entidades.find(e => e.id === this.entidadId);
-              if (selectedEntidad) {
-                this.entidad = selectedEntidad.name.toUpperCase();
-                this.cargarMunicipios(this.entidadId!);
-              }
+        // Cargar todas las ubicaciones y mostrar los nombres correspondientes
+        this.ubicacionService.getEntidades().subscribe({
+          next: (entidades) => {
+            this.entidades = entidades;
+            const selectedEntidad = entidades.find(e => e.id === this.entidadId);
+            if (selectedEntidad) {
+              this.entidad = selectedEntidad.name.toUpperCase();
+              
+              // Cargar municipios de esa entidad
+              this.ubicacionService.getMunicipios(this.entidadId!).subscribe({
+                next: (municipios) => {
+                  this.municipios = municipios;
+                  const selectedMunicipio = municipios.find(m => m.id === this.municipioId);
+                  if (selectedMunicipio) {
+                    this.municipio = selectedMunicipio.name;
+                    
+                    // Cargar localidades de ese municipio
+                    this.ubicacionService.getLocalidades(this.entidadId!, this.municipioId!).subscribe({
+                      next: (localidades) => {
+                        this.localidades = localidades;
+                        const selectedLocalidad = localidades.find(l => l.id === this.localidadId);
+                        if (selectedLocalidad) {
+                          this.localidad = selectedLocalidad.name;
+                        }
+                      }
+                    });
+                  }
+                }
+              });
             }
-          });
-        }
+          }
+        });
       })
       .catch((error: any) => {
         alert('Error al cargar el sitio.');
@@ -118,8 +142,22 @@ export class EditSites implements OnInit {
     this.filtradosMunicipio = [];
 
     this.ubicacionService.getMunicipios(entidadId).subscribe({
-      next: (data: Municipio[]) => this.municipios = data,
-      error: (err) => console.error(err)
+      next: (data: Municipio[]) => {
+        this.municipios = data;
+        
+        // Si ya tenemos un municipioId asignado, buscar y asignar su nombre
+        if (this.municipioId) {
+          const selectedMunicipio = data.find(m => m.id === this.municipioId);
+          if (selectedMunicipio) {
+            this.municipio = selectedMunicipio.name;
+            // Ahora cargar las localidades
+            this.cargarLocalidades(entidadId, this.municipioId);
+          }
+        }
+      },
+      error: (err) => {
+        console.error(err);
+      }
     });
   }
 
@@ -146,8 +184,20 @@ export class EditSites implements OnInit {
     this.filtradosLocalidad = [];
 
     this.ubicacionService.getLocalidades(entidadId, municipioId).subscribe({
-      next: (data: Localidad[]) => this.localidades = data,
-      error: (err) => console.error(err)
+      next: (data: Localidad[]) => {
+        this.localidades = data;
+        
+        // Si ya tenemos un localidadId asignado, buscar y asignar su nombre
+        if (this.localidadId) {
+          const selectedLocalidad = data.find(l => l.id === this.localidadId);
+          if (selectedLocalidad) {
+            this.localidad = selectedLocalidad.name;
+          }
+        }
+      },
+      error: (err) => {
+        console.error(err);
+      }
     });
   }
 
@@ -214,11 +264,25 @@ export class EditSites implements OnInit {
   }
 
   removeNewImage(index: number): void {
+    // Validar que quede al menos una imagen (existente o nueva)
+    const totalImagnesRestantes = this.existingImages.length + (this.uploadedImages.length - 1);
+    if (totalImagnesRestantes === 0) {
+      alert('Debes mantener al menos una imagen en el sitio.');
+      return;
+    }
+    
     this.uploadedImages = this.uploadedImages.filter((_, i) => i !== index);
     this.imagePreview = this.imagePreview.filter((_, i) => i !== index);
   }
 
   removeExistingImage(index: number): void {
+    // Validar que quede al menos una imagen (existente o nueva)
+    const totalImagnesRestantes = this.uploadedImages.length + (this.existingImages.length - 1);
+    if (totalImagnesRestantes === 0) {
+      alert('Debes mantener al menos una imagen en el sitio.');
+      return;
+    }
+    
     this.existingImages = this.existingImages.filter((_, i) => i !== index);
   }
 
@@ -251,18 +315,16 @@ export class EditSites implements OnInit {
     const formData = new FormData();
     formData.append('name', this.siteName);
     formData.append('description', this.description);
-    formData.append('entidadId', this.entidadId.toString());
-    formData.append('municipioId', this.municipioId.toString());
-    formData.append('localidadId', this.localidadId.toString());
+    formData.append('id_entidad', this.entidadId.toString());
+    formData.append('id_municipio', this.municipioId.toString());
+    formData.append('id_localidad', this.localidadId.toString());
     
-    // Enviar imágenes existentes
-    this.existingImages.forEach((image, index) => {
-      formData.append(`existingImages`, image);
-    });
+    // Enviar imágenes existentes como JSON string (no como archivo)
+    formData.append('existingImages', JSON.stringify(this.existingImages));
 
-    // Enviar nuevas imágenes
+    // Enviar nuevas imágenes (solo archivos nuevos)
     this.uploadedImages.forEach((file) => {
-      formData.append('newImages', file, file.name);
+      formData.append('images', file, file.name);
     });
 
     this.siteService.updateSite(this.siteId!, formData)

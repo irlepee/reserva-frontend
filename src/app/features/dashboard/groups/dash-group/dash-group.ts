@@ -177,4 +177,17 @@ export class DashGroup {
     this.selectedGroupForView = null;
   }
 
+  // Colores disponibles para grupos
+  colors = [
+    { id: 0, name: 'Azul', hex: '#0066cc' },
+    { id: 1, name: 'Verde', hex: '#28a745' },
+    { id: 2, name: 'Rojo', hex: '#dc3545' },
+    { id: 3, name: 'Amarillo', hex: '#ffc107' }
+  ];
+
+  getColorHex(colorId: number): string {
+    const color = this.colors.find(c => c.id === colorId);
+    return color?.hex || '#0066cc';
+  }
+
 }

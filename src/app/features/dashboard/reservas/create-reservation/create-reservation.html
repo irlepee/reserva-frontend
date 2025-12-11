@@ -49,30 +49,26 @@
     </div>
 
     <div class="site-details" *ngIf="selectedSite">
-      <!-- Galería de imágenes -->
-      <div class="site-gallery" *ngIf="getAllImageUrls(selectedSite.images).length > 0">
-        <div class="gallery-scroll">
-          <img 
-            *ngFor="let imgUrl of getAllImageUrls(selectedSite.images)" 
-            [src]="imgUrl" 
-            alt="{{ selectedSite.name }}"
-            class="gallery-image"
-          />
+      <!-- Banner con imagen principal -->
+      <div class="site-header-banner" *ngIf="getImageUrl(selectedSite.images)">
+        <img [src]="getImageUrl(selectedSite.images)" alt="{{ selectedSite.name }}" />
+        <div class="site-header-overlay">
+          <h2>{{ selectedSite.name }}</h2>
         </div>
       </div>
 
-      <!-- Información del sitio -->
-      <div class="site-info-card">
-        <h3>{{ selectedSite.name }}</h3>
-        <p class="site-description">{{ selectedSite.description || 'Sin descripción' }}</p>
-        
-        <div class="site-meta">
-          <span class="meta-item" *ngIf="selectedSite.location || selectedSite.municipio">
-            <i class="bi bi-geo-alt"></i> {{ selectedSite.location || selectedSite.municipio }}
-          </span>
-          <span class="meta-item">
-            <i class="bi bi-box"></i> {{ siteResources.length }} recursos disponibles
-          </span>
+      <!-- Información compacta del sitio -->
+      <div class="site-header-info">
+        <div class="info-content">
+          <p class="site-description">{{ selectedSite.description || 'Sin descripción' }}</p>
+          <div class="site-meta">
+            <span class="meta-badge" *ngIf="selectedSite.location || selectedSite.municipio">
+              <i class="bi bi-geo-alt"></i> {{ selectedSite.location || selectedSite.municipio }}
+            </span>
+            <span class="meta-badge">
+              <i class="bi bi-box"></i> {{ siteResources.length }} recursos
+            </span>
+          </div>
         </div>
       </div>
     </div>

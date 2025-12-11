@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LocationsService {
-  private api = 'http://localhost:3000';
+  private api = API_CONFIG.apiUrl;
   constructor(private http: HttpClient) {}
 
   getEntidades() {

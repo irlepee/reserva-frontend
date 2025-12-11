@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 export class SiteService {
   constructor(private http: HttpClient) { }
 
-  api = 'http://localhost:3000';
+  api = API_CONFIG.apiUrl;
   
   getSites(): Promise<any[]> {
     return this.http

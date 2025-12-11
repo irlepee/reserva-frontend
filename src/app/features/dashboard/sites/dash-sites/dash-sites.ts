@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SiteService } from '../../../../core/services/site-service';
 import { ResourcesService } from '../../../../core/services/resources-service';
+import { API_CONFIG } from '../../../../core/config/api.config';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -21,7 +22,7 @@ export class DashSites implements OnInit {
   sites: any[] = [];
   sitesFiltered: any[] = [];
   search: string = '';
-  apiUrl = 'http://localhost:3000';
+  apiUrl = API_CONFIG.apiUrl;
   resourcesCount: Map<number, number> = new Map();
 
   ngOnInit() {

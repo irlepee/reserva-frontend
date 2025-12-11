@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Reserva } from '../../shared/interfaces/reserva';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,7 @@ import { Reserva } from '../../shared/interfaces/reserva';
 export class ReservaService {
   constructor(private http: HttpClient) { }
 
-  api = 'http://localhost:3000';
+  api = API_CONFIG.apiUrl;
 
   getReservas(): Promise<Reserva[]> {
     return this.http

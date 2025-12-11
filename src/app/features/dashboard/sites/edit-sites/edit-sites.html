@@ -60,7 +60,7 @@
           <label>Imágenes Actuales</label>
           <div class="image-preview-grid">
             <div *ngFor="let image of existingImages; let i = index" class="image-preview-item">
-              <img [src]="'http://localhost:3000' + image" alt="preview">
+              <img [src]="apiUrl + image" alt="preview">
               <button type="button" class="remove-btn" (click)="removeExistingImage(i)">✕</button>
             </div>
           </div>
