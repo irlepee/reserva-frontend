@@ -4,7 +4,7 @@
             <i class="bi bi-person-circle"></i>
             <p class="user-name">{{ user?.name || 'Usuario' }}</p>
         </button>
-        <button class="notification-button"><i class="bi bi-bell-fill"></i></button>
+        <app-notifications></app-notifications>
         
         <div *ngIf="showUserMenu" class="user-menu-dropdown">
             <button class="dropdown-item logout-item" (click)="logout()">

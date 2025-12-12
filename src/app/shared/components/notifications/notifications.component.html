@@ -1,0 +1,86 @@
+<div class="notifications-bell-container">
+  <!-- Botón de campana -->
+  <button class="bell-button" (click)="toggleModal()" [class.has-unread]="unreadCount > 0">
+    <i class="bi bi-bell-fill"></i>
+    <span class="unread-badge" *ngIf="unreadCount > 0">
+      {{ unreadCount > 99 ? '99+' : unreadCount }}
+    </span>
+  </button>
+
+  <!-- Modal de notificaciones -->
+  <div class="notifications-modal" *ngIf="isOpen" [@fadeInOut]>
+    <div class="modal-header">
+      <h3>Notificaciones</h3>
+      <button class="close-button" (click)="closeModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-actions" *ngIf="notifications.length > 0">
+      <button class="action-button" (click)="markAllAsRead()" title="Marcar todas como leídas">
+        <i class="bi bi-check-all"></i> Marcar todas como leídas
+      </button>
+      <button class="action-button delete" (click)="deleteSelected()" 
+        [disabled]="selectedNotifications.size === 0" title="Eliminar seleccionadas">
+        <i class="bi bi-trash"></i> Eliminar seleccionadas
+      </button>
+    </div>
+
+    <!-- Lista de notificaciones -->
+    <div class="notifications-list">
+      <!-- Cargando -->
+      <div class="loading-state" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Cargando notificaciones...</p>
+      </div>
+
+      <!-- Sin notificaciones -->
+      <div class="empty-state" *ngIf="!isLoading && notifications.length === 0">
+        <i class="bi bi-inbox"></i>
+        <p>No tienes notificaciones</p>
+      </div>
+
+      <!-- Notificaciones -->
+      <div class="notification-item" *ngFor="let notif of notifications" 
+        [class.unread]="!notif.read" [class.selected]="selectedNotifications.has(notif.id)">
+        
+        <input type="checkbox" [checked]="selectedNotifications.has(notif.id)" 
+          (change)="toggleNotificationSelection(notif.id)" class="notification-checkbox">
+        
+        <div class="notification-icon" [style.backgroundColor]="getNotificationColor(notif.type)">
+          <i [ngClass]="'bi ' + getNotificationIcon(notif.type)"></i>
+        </div>
+
+        <div class="notification-content">
+          <div class="notification-title">
+            <h4>{{ notif.title }}</h4>
+            <span class="notification-date">{{ formatDate(notif.createdAt) }}</span>
+          </div>
+          <p class="notification-body">{{ notif.body }}</p>
+          <div class="notification-type-badge">
+            {{ (notif.type || '').split('_').join(' ') }}
+          </div>
+        </div>
+
+        <div class="notification-actions">
+          <button class="action-icon" (click)="markAsRead([notif.id])" 
+            *ngIf="!notif.read" title="Marcar como leída">
+            <i class="bi bi-check-lg"></i>
+          </button>
+          <button class="action-icon delete" (click)="deleteNotification(notif.id)" title="Eliminar">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <p class="notifications-count">
+        {{ notifications.length }} notificaciones • {{ unreadCount }} sin leer
+      </p>
+    </div>
+  </div>
+
+  <!-- Overlay (para cerrar al hacer click fuera) -->
+  <div class="modal-overlay" *ngIf="isOpen" (click)="closeModal()"></div>
+</div>
