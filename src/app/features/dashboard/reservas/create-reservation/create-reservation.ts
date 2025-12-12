@@ -529,9 +529,26 @@ export class CreateReservationComponent implements OnInit {
     
     // Asegurar que occupiedHours sea un array
     const occupied = Array.isArray(this.occupiedHours) ? this.occupiedHours : [];
+    
+    // Obtener horario del sitio
+    let siteOpeningHour = 0;
+    let siteClosingHour = 24;
+    
+    if (this.selectedSite && this.selectedSite.opening_hour) {
+      const openingParts = String(this.selectedSite.opening_hour).split(':');
+      siteOpeningHour = parseInt(openingParts[0], 10);
+    }
+    
+    if (this.selectedSite && this.selectedSite.closing_hour) {
+      const closingParts = String(this.selectedSite.closing_hour).split(':');
+      siteClosingHour = parseInt(closingParts[0], 10);
+    }
 
     for (let i = 0; i < 24; i++) {
       const hourStr = String(i).padStart(2, '0');
+      
+      // Verificar si está fuera del horario del sitio
+      const isOutsideBusinessHours = i < siteOpeningHour || i >= siteClosingHour;
       
       // Verificar si esta hora está ocupada
       const isOccupied = occupied.some(occ => {
@@ -546,7 +563,7 @@ export class CreateReservationComponent implements OnInit {
       slots.push({
         hour: hourStr,
         occupied: isOccupied,
-        past: isPast
+        past: isPast || isOutsideBusinessHours
       });
     }
 

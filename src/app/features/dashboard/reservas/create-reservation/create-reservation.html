@@ -75,6 +75,9 @@
             <span class="meta-badge">
               <i class="bi bi-box"></i> {{ siteResources.length }} recursos
             </span>
+            <span class="meta-badge" *ngIf="selectedSite.opening_hour && selectedSite.closing_hour">
+              <i class="bi bi-clock"></i> {{ selectedSite.opening_hour }} - {{ selectedSite.closing_hour }}
+            </span>
           </div>
         </div>
       </div>
