@@ -50,7 +50,9 @@
                                 {{ reservas[0]?.start_date | date:'shortTime' }} - {{ reservas[0]?.end_date | date:'shortTime' }}
                             </p>
                         </div>
-                        <span class="reserva-badge">Pronto</span>
+                        <span class="reserva-badge" [ngClass]="getReservaStatus(reservas[0]).toLowerCase().replace(' ', '-')">
+                            {{ getReservaStatus(reservas[0]) }}
+                        </span>
                     </div>
                     <p class="reserva-created-info">Reservado el {{ reservas[0]?.created_at | date:'d MMM' }}</p>
                 </div>

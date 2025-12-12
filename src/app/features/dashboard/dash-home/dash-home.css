@@ -5,6 +5,7 @@
     min-height: 100vh;
     max-height: 100vh;
     overflow-y: auto;
+    transition: padding 0.3s ease;
 }
 
 /* Header */
@@ -309,6 +310,34 @@ h2 {
     font-size: 0.75rem;
     font-weight: 700;
     white-space: nowrap;
+}
+
+/* Estados diferentes del badge */
+.reserva-badge.pronto {
+    background: #00cc66;
+}
+
+.reserva-badge.en-progreso {
+    background: #0066cc;
+    animation: pulse 2s infinite;
+}
+
+.reserva-badge.en-15-min {
+    background: #ffa500;
+    animation: pulse 1s infinite;
+}
+
+.reserva-badge.finalizada {
+    background: #999;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
 }
 
 .reserva-created-info {
@@ -658,38 +687,703 @@ h2 {
 
 @media (max-width: 768px) {
     .main-container {
-        padding: 1.5rem 1rem;
+        padding: 1.25rem 1rem;
+        max-height: 100vh;
+        overflow-y: auto;
     }
 
     h2 {
-        font-size: 2rem;
+        font-size: 1.6rem;
+        margin: 0 0 1rem 0;
     }
 
     .header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1.5rem;
-        margin-bottom: 2rem;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
     }
 
-    .search-input {
+    .header-actions {
         width: 100%;
+        justify-content: flex-end;
+    }
+
+    .create-button {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+        gap: 0.4rem;
+    }
+
+    .create-button i {
+        font-size: 0.9rem;
     }
 
     .content-grid {
         grid-template-columns: 1fr;
-        gap: 1.25rem;
+        gap: 1rem;
+        height: auto;
+    }
+
+    .top-sites-section,
+    .reservas-section,
+    .recommendations-section,
+    .events-section {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .top-sites-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
     .recommendations-grid {
         grid-template-columns: 1fr;
     }
 
+    .site-card {
+        padding: 1.5rem 1.25rem;
+        border-radius: 10px;
+    }
+
     .site-card h4 {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .site-badge {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
     }
 
     .section {
-        padding: 1.5rem;
+        padding: 1.25rem;
+        border-radius: 10px;
+    }
+
+    .section-title {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .section-header {
+        margin-bottom: 1rem;
+    }
+
+    .view-all-link {
+        font-size: 0.85rem;
+    }
+
+    .ai-badge {
+        font-size: 0.8rem;
+        padding: 0.35rem 0.7rem;
+    }
+
+    .reserva-card {
+        padding: 1rem;
+        border-radius: 8px;
+    }
+
+    .reserva-card-header {
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .reserva-status {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+
+    .reserva-card-info h5 {
+        font-size: 0.95rem;
+    }
+
+    .reserva-date-range {
+        font-size: 0.8rem;
+    }
+
+    .reserva-badge {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.65rem;
+    }
+
+    .recommendation-card {
+        padding: 1.25rem;
+        border-radius: 8px;
+    }
+
+    .recommendation-header {
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .recommendation-top h5 {
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .recommendation-detail {
+        font-size: 0.85rem;
+    }
+
+    .resource-type-badge {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.65rem;
+    }
+
+    .recommendation-time {
+        font-size: 0.85rem;
+        margin: 0.5rem 0;
+    }
+
+    .recommendation-reason {
+        font-size: 0.8rem;
+        margin: 0.5rem 0 1rem 0;
+    }
+
+    .btn-recommend {
+        font-size: 0.8rem;
+        padding: 0.6rem 1rem;
+    }
+
+    .event-item {
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .event-date {
+        width: 55px;
+        height: 55px;
+    }
+
+    .event-month {
+        font-size: 0.65rem;
+    }
+
+    .event-day {
+        font-size: 1.3rem;
+    }
+
+    .event-info h5 {
+        font-size: 0.9rem;
+    }
+
+    .event-info p {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-container {
+        padding: 0.95rem 0.75rem;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    .header {
+        margin-bottom: 1.25rem;
+        gap: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .create-button {
+        font-size: 0.75rem;
+        padding: 6px 10px;
+    }
+
+    .create-button i {
+        font-size: 0.8rem;
+    }
+
+    .content-grid {
+        gap: 0.75rem;
+    }
+
+    .section {
+        padding: 1rem;
+        border-radius: 8px;
+    }
+
+    .section-title {
+        font-size: 0.95rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .top-sites-grid {
+        gap: 0.75rem;
+    }
+
+    .site-card {
+        padding: 1.25rem 1rem;
+        border-radius: 8px;
+    }
+
+    .site-card h4 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .site-badge {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    .reserva-card {
+        padding: 0.9rem;
+        border-radius: 8px;
+    }
+
+    .reserva-card-header {
+        gap: 0.6rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .reserva-status {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+
+    .reserva-card-info h5 {
+        font-size: 0.9rem;
+    }
+
+    .reserva-date-range {
+        font-size: 0.75rem;
+    }
+
+    .reserva-badge {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .reserva-created-info {
+        font-size: 0.75rem;
+    }
+
+    .recommendations-grid {
+        gap: 0.75rem;
+    }
+
+    .recommendation-card {
+        padding: 0.9rem;
+        border-radius: 8px;
+    }
+
+    .recommendation-header {
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .recommendation-top h5 {
+        font-size: 0.9rem;
+    }
+
+    .recommendation-detail {
+        font-size: 0.8rem;
+    }
+
+    .resource-type-badge {
+        font-size: 0.6rem;
+        padding: 0.25rem 0.55rem;
+    }
+
+    .recommendation-time {
+        font-size: 0.8rem;
+        margin: 0.4rem 0;
+    }
+
+    .recommendation-reason {
+        font-size: 0.75rem;
+        margin: 0.4rem 0 0.75rem 0;
+    }
+
+    .btn-recommend {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.8rem;
+    }
+
+    .loading-state {
+        padding: 2rem 1rem;
+    }
+
+    .spinner {
+        width: 35px;
+        height: 35px;
+    }
+
+    .loading-state p {
+        font-size: 0.9rem;
+    }
+
+    .error-state {
+        padding: 1.25rem;
+        gap: 0.75rem;
+    }
+
+    .error-icon {
+        font-size: 2rem;
+    }
+
+    .error-message {
+        font-size: 0.9rem;
+    }
+
+    .btn-retry {
+        font-size: 0.75rem;
+        padding: 0.55rem 0.9rem;
+    }
+
+    .event-item {
+        gap: 0.75rem;
+        padding: 0.8rem;
+    }
+
+    .event-date {
+        width: 50px;
+        height: 50px;
+    }
+
+    .event-month {
+        font-size: 0.6rem;
+    }
+
+    .event-day {
+        font-size: 1.1rem;
+    }
+
+    .event-info h5 {
+        font-size: 0.85rem;
+    }
+
+    .event-info p {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-container {
+        padding: 0.75rem 0.6rem;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    .header {
+        margin-bottom: 1rem;
+        gap: 0.6rem;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .create-button {
+        font-size: 0.7rem;
+        padding: 5px 8px;
+    }
+
+    .content-grid {
+        gap: 0.6rem;
+    }
+
+    .section {
+        padding: 0.85rem;
+        border-radius: 6px;
+    }
+
+    .section-title {
+        font-size: 0.9rem;
+        margin-bottom: 0.7rem;
+    }
+
+    .section-header {
+        margin-bottom: 0.75rem;
+    }
+
+    .view-all-link {
+        font-size: 0.75rem;
+    }
+
+    .ai-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .top-sites-grid {
+        gap: 0.6rem;
+    }
+
+    .site-card {
+        padding: 1rem 0.85rem;
+        border-radius: 6px;
+    }
+
+    .site-card h4 {
+        font-size: 0.95rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .site-badge {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .reserva-card {
+        padding: 0.8rem;
+        border-radius: 6px;
+    }
+
+    .reserva-card-header {
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .reserva-status {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
+
+    .reserva-card-info h5 {
+        font-size: 0.85rem;
+    }
+
+    .reserva-date-range {
+        font-size: 0.7rem;
+    }
+
+    .reserva-badge {
+        font-size: 0.6rem;
+        padding: 0.2rem 0.4rem;
+    }
+
+    .reserva-created-info {
+        font-size: 0.7rem;
+    }
+
+    .recommendation-card {
+        padding: 0.8rem;
+        border-radius: 6px;
+    }
+
+    .recommendation-header {
+        gap: 0.5rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .recommendation-top h5 {
+        font-size: 0.8rem;
+    }
+
+    .recommendation-detail {
+        font-size: 0.75rem;
+    }
+
+    .resource-type-badge {
+        font-size: 0.55rem;
+        padding: 0.2rem 0.45rem;
+    }
+
+    .recommendation-time {
+        font-size: 0.75rem;
+        margin: 0.3rem 0;
+    }
+
+    .recommendation-reason {
+        font-size: 0.7rem;
+        margin: 0.3rem 0 0.6rem 0;
+    }
+
+    .btn-recommend {
+        font-size: 0.7rem;
+        padding: 0.45rem 0.7rem;
+    }
+
+    .event-item {
+        gap: 0.6rem;
+        padding: 0.7rem;
+    }
+
+    .event-date {
+        width: 45px;
+        height: 45px;
+    }
+
+    .event-month {
+        font-size: 0.55rem;
+    }
+
+    .event-day {
+        font-size: 1rem;
+    }
+
+    .event-info h5 {
+        font-size: 0.8rem;
+    }
+
+    .event-info p {
+        font-size: 0.65rem;
+    }
+}
+
+@media (max-width: 320px) {
+    .main-container {
+        padding: 0.6rem 0.5rem;
+    }
+
+    h2 {
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .header {
+        gap: 0.5rem;
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.6rem;
+    }
+
+    .create-button {
+        font-size: 0.65rem;
+        padding: 4px 6px;
+        gap: 0.3rem;
+    }
+
+    .create-button i {
+        font-size: 0.7rem;
+    }
+
+    .content-grid {
+        gap: 0.5rem;
+    }
+
+    .section {
+        padding: 0.7rem;
+        border-radius: 5px;
+    }
+
+    .section-title {
+        font-size: 0.85rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .top-sites-grid,
+    .recommendations-grid {
+        gap: 0.5rem;
+    }
+
+    .site-card {
+        padding: 0.8rem;
+        border-radius: 5px;
+    }
+
+    .site-card h4 {
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .site-badge {
+        font-size: 0.55rem;
+        padding: 0.2rem 0.35rem;
+    }
+
+    .reserva-card {
+        padding: 0.7rem;
+        border-radius: 5px;
+    }
+
+    .reserva-card-header {
+        gap: 0.4rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .reserva-status {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+
+    .reserva-card-info h5 {
+        font-size: 0.75rem;
+    }
+
+    .reserva-date-range {
+        font-size: 0.65rem;
+    }
+
+    .reserva-badge {
+        font-size: 0.55rem;
+        padding: 0.15rem 0.3rem;
+    }
+
+    .recommendation-card {
+        padding: 0.7rem;
+        border-radius: 5px;
+    }
+
+    .recommendation-header {
+        gap: 0.4rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .recommendation-top h5 {
+        font-size: 0.75rem;
+    }
+
+    .recommendation-detail {
+        font-size: 0.7rem;
+    }
+
+    .resource-type-badge {
+        font-size: 0.5rem;
+        padding: 0.15rem 0.35rem;
+    }
+
+    .recommendation-time {
+        font-size: 0.7rem;
+        margin: 0.2rem 0;
+    }
+
+    .recommendation-reason {
+        font-size: 0.65rem;
+        margin: 0.2rem 0 0.5rem 0;
+    }
+
+    .btn-recommend {
+        font-size: 0.65rem;
+        padding: 0.4rem 0.6rem;
+    }
+
+    .event-item {
+        gap: 0.4rem;
+        padding: 0.6rem;
+    }
+
+    .event-date {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+    }
+
+    .event-month {
+        font-size: 0.5rem;
+    }
+
+    .event-day {
+        font-size: 0.9rem;
+    }
+
+    .event-info h5 {
+        font-size: 0.7rem;
+    }
+
+    .event-info p {
+        font-size: 0.6rem;
     }
 }

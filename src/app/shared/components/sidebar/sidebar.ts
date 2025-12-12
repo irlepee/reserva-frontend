@@ -19,6 +19,7 @@ export class Sidebar implements OnInit {
 
   user: any = null;
   showUserMenu = false;
+  sidebarOpen = true; // Por defecto abierto en desktop, cerrado en móvil
 
   ngOnInit() {
     this.authService.fetchCurrentUser()
@@ -35,10 +36,25 @@ export class Sidebar implements OnInit {
       .catch(err => {
         this.user = null;
       });
+
+    // Detectar si es mobile y cerrar sidebar por defecto
+    if (window.innerWidth < 768) {
+      this.sidebarOpen = false;
+    }
   }
 
   toggleUserMenu() {
     this.showUserMenu = !this.showUserMenu;
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  closeSidebar() {
+    if (window.innerWidth < 768) {
+      this.sidebarOpen = false;
+    }
   }
 
   logout() {

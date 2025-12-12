@@ -128,4 +128,34 @@ export class DashHome {
     if (index === 1) return '🔥 En tendencia';
     return '✨ Popular';
   }
+
+  // Obtener estado de la reserva (Pronto, En progreso, Finalizada)
+  getReservaStatus(reserva: any): string {
+    if (!reserva || !reserva.start_date || !reserva.end_date) {
+      return 'Pronto';
+    }
+
+    const now = new Date();
+    const startTime = new Date(reserva.start_date);
+    const endTime = new Date(reserva.end_date);
+
+    // Si ya terminó
+    if (now > endTime) {
+      return 'Finalizada';
+    }
+
+    // Si está en progreso
+    if (now >= startTime && now < endTime) {
+      return 'En progreso';
+    }
+
+    // Si es próxima (falta menos de 15 minutos)
+    const minutesUntilStart = (startTime.getTime() - now.getTime()) / (1000 * 60);
+    if (minutesUntilStart <= 15 && minutesUntilStart > 0) {
+      return 'En 15 min';
+    }
+
+    // Si es próxima en general
+    return 'Pronto';
+  }
 }
