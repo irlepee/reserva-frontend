@@ -63,6 +63,10 @@ export class ManageSite implements OnInit {
   expandedCategories: { [key: string]: boolean } = {};
   expandedResources: { [key: number]: boolean } = {};
 
+  // Modal de cancelación
+  showCancelModal: boolean = false;
+  reservaToCancel: { id: number; resourceId: number } | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -272,21 +276,33 @@ export class ManageSite implements OnInit {
     this.expandedResources[resourceId] = !this.expandedResources[resourceId];
   }
 
-  cancelReserva(reservaId: number, resourceId: number) {
-    if (confirm('¿Estás seguro de que deseas cancelar esta reserva?')) {
-      this.reservaService.cancelReservation(reservaId)
-        .then(() => {
-          // Eliminar de allReservas
-          this.allReservas = this.allReservas.filter(r => r.id !== reservaId);
-          // Regrupar
-          this.filterAndGroupByResource();
-          this.notificationService.success('Reserva cancelada exitosamente.');
-        })
-        .catch(err => {
-          console.error('Error cancelando reserva:', err);
-          this.notificationService.error('Error al cancelar la reserva.');
-        });
-    }
+  openCancelModal(reservaId: number, resourceId: number) {
+    this.reservaToCancel = { id: reservaId, resourceId: resourceId };
+    this.showCancelModal = true;
+  }
+
+  closeCancelModal() {
+    this.showCancelModal = false;
+    this.reservaToCancel = null;
+  }
+
+  confirmCancelReserva() {
+    if (!this.reservaToCancel) return;
+
+    this.reservaService.cancelReservation(this.reservaToCancel.id)
+      .then(() => {
+        // Eliminar de allReservas
+        this.allReservas = this.allReservas.filter(r => r.id !== this.reservaToCancel!.id);
+        // Regrupar
+        this.filterAndGroupByResource();
+        this.notificationService.success('Reserva cancelada exitosamente.');
+        this.closeCancelModal();
+      })
+      .catch(err => {
+        console.error('Error cancelando reserva:', err);
+        this.notificationService.error('Error al cancelar la reserva.');
+        this.closeCancelModal();
+      });
   }
 
   formatDate(dateString: string): string {

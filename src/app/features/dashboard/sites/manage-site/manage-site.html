@@ -243,6 +243,7 @@
                       <span class="status-badge" [class]="reserva.status.toLowerCase()">
                         {{ reserva.status === 'In Progress' ? 'En Progreso' : reserva.status === 'Active' ? 'Activa' : 'Cancelada' }}
                       </span>
+                      <!-- Debug: {{ reserva.status }} -->
                     </div>
 
                     <div class="reserva-details">
@@ -252,8 +253,8 @@
                       </div>
                     </div>
 
-                    <div class="reserva-actions" *ngIf="reserva.status === 'In Progress'">
-                      <button class="btn-cancel" (click)="cancelReserva(reserva.id, resource.id)">
+                    <div class="reserva-actions" *ngIf="reserva.status === 'In Progress' || reserva.status === 'Active'">
+                      <button class="btn-cancel" (click)="openCancelModal(reserva.id, resource.id)">
                         <i class="bi bi-x-circle"></i> Cancelar
                       </button>
                     </div>
@@ -268,4 +269,24 @@
     </div>
   </div>
 
+</div>
+
+<!-- Modal de confirmación para cancelar reserva -->
+<div class="modal-overlay" *ngIf="showCancelModal" (click)="closeCancelModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Confirmar Cancelación</h3>
+      <button class="modal-close" (click)="closeCancelModal()">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>¿Estás seguro de que deseas cancelar esta reserva?</p>
+      <p class="modal-warning">Esta acción no se puede deshacer.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeCancelModal()">Cancelar</button>
+      <button class="btn-danger" (click)="confirmCancelReserva()">Confirmar Cancelación</button>
+    </div>
+  </div>
 </div>
