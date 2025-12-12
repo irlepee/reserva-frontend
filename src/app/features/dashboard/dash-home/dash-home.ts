@@ -104,6 +104,11 @@ export class DashHome {
     this.router.navigate(['/dashboard/reservas']);
   }
 
+  // Navegar a crear reserva (desde dash-home)
+  createReservation() {
+    this.router.navigate(['/dashboard/reservas/create']);
+  }
+
   // Navegar a crear reserva en un sitio específico
   goToReserveInSite(site: any) {
     this.router.navigate(['/dashboard/reservas/create'], {

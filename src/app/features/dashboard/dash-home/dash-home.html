@@ -1,6 +1,11 @@
 <div class="main-container">
     <div class="header">
         <h2>Hola, {{ user?.name || 'Irlepe' }}!</h2>
+        <div class="header-actions">
+            <button class="create-button" (click)="createReservation()" title="Crear nueva reserva">
+                <i class="bi bi-plus-circle"></i> Nueva reserva
+            </button>
+        </div>
     </div>
 
     <div class="content-grid">
