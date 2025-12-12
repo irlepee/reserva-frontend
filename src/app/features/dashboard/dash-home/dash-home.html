@@ -9,32 +9,10 @@
     </div>
 
     <div class="content-grid">
-        <!-- Sitios más visitados -->
-        <div class="section top-sites-section">
-            <h3 class="section-title">Sitios más reservados</h3>
-            <div class="top-sites-grid">
-                <ng-container *ngFor="let site of topSites?.sites; let i = index">
-                    <button 
-                        class="site-card" 
-                        [ngClass]="'site-card-' + getColorClass(i)"
-                        (click)="goToReserveInSite(site)"
-                        *ngIf="i < 2">
-                        <div class="site-card-content">
-                            <h4>{{ site.name }}</h4>
-                            <div class="site-badge">{{ getBadgeText(i) }}</div>
-                        </div>
-                    </button>
-                </ng-container>
-                <div class="empty-state" *ngIf="!topSites?.sites || topSites.sites.length === 0">
-                    <p>No hay datos de sitios reservados</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mis Reservas - Próximas -->
+        <!-- Mis Reservas -->
         <div class="section reservas-section">
             <div class="section-header">
-                <h3 class="section-title">Mis Próximas Reservas</h3>
+                <h3 class="section-title">Mis Reservas</h3>
                 <a (click)="goToReservas()" class="view-all-link">Ver todas →</a>
             </div>
             <div class="reservas-list">
@@ -68,7 +46,7 @@
         <div class="section recommendations-section">
             <div class="section-header">
                 <h3 class="section-title">Recomendaciones de IA</h3>
-                <span class="ai-badge">✨ Personalizado</span>
+                <span class="ai-badge">Personalizado</span>
             </div>
 
             <!-- Cargando -->
