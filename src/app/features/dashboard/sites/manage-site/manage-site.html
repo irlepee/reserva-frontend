@@ -192,6 +192,11 @@
         <p>No hay reservas para esta fecha</p>
       </div>
 
+      <div *ngIf="loadingCategories" class="loading-categories">
+        <i class="bi bi-hourglass-split"></i>
+        <p>Cargando categorías de recursos...</p>
+      </div>
+
       <div *ngIf="!loadingReservas && getTotalReservasForDate() > 0" class="categories-list">
         <ng-container *ngFor="let categoryName of resourcesByCategory | keyvalue">
           <div class="category-group" 

@@ -19,6 +19,7 @@ export class ManageSite implements OnInit {
   siteName: string = '';
   loading: boolean = true;
   loadingReservas: boolean = false;
+  loadingCategories: boolean = false;
 
   // Datos de estadísticas
   stats = {
@@ -76,11 +77,11 @@ export class ManageSite implements OnInit {
       this.siteId = +params['id'];
       this.loadSiteInfo();
       this.loadStats();
-      // Cargar categorías primero, luego recursos y reservas
-      this.loadCategories().then(() => {
-        this.loadResourcesAndGroupByCat();
-        this.loadReservas();
-      });
+      // Cargar recursos y reservas primero, categorías en background
+      this.loadResourcesAndGroupByCat();
+      this.loadReservas();
+      // Cargar categorías sin bloquear
+      this.loadCategoriesInBackground();
     });
   }
 
@@ -128,6 +129,28 @@ export class ManageSite implements OnInit {
       });
   }
 
+  loadCategoriesInBackground(): void {
+    this.loadingCategories = true;
+    this.resourcesService.getCategories()
+      .then((categories: any[]) => {
+        this.resourceCategories = categories;
+        
+        // Crear mapeo de ID a nombre
+        categories.forEach((category: any) => {
+          this.resourceCategoriesMap[category.id] = category.name;
+          this.expandedCategories[category.name] = true;
+        });
+        
+        this.loadingCategories = false;
+        // Reagrupar recursos ahora que tenemos las categorías
+        this.regroupResourcesByCategory();
+      })
+      .catch((error: any) => {
+        console.error('Error cargando categorías:', error);
+        this.loadingCategories = false;
+      });
+  }
+
   loadCategories(): Promise<void> {
     return this.resourcesService.getCategories()
       .then((categories: any[]) => {
@@ -142,6 +165,28 @@ export class ManageSite implements OnInit {
       .catch((error: any) => {
         console.error('Error cargando categorías:', error);
       });
+  }
+
+  regroupResourcesByCategory() {
+    // Reagrupar con las categorías que ya tenemos
+    const tempResourcesByCategory: { [key: string]: any[] } = {};
+    
+    Object.keys(this.resourcesByCategory).forEach(key => {
+      this.resourcesByCategory[key].forEach((resource: any) => {
+        const categoryName = this.resourceCategoriesMap[resource.resource_type] || 'Sin categoría';
+        
+        if (!tempResourcesByCategory[categoryName]) {
+          tempResourcesByCategory[categoryName] = [];
+        }
+        
+        tempResourcesByCategory[categoryName].push(resource);
+      });
+    });
+    
+    // Reemplazar si hay cambios
+    if (Object.keys(tempResourcesByCategory).length > 0) {
+      this.resourcesByCategory = tempResourcesByCategory;
+    }
   }
 
   loadResourcesAndGroupByCat() {

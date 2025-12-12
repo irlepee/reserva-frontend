@@ -103,4 +103,24 @@ export class DashHome {
   goToReservas() {
     this.router.navigate(['/dashboard/reservas']);
   }
+
+  // Navegar a crear reserva en un sitio específico
+  goToReserveInSite(site: any) {
+    this.router.navigate(['/dashboard/reservas/create'], {
+      queryParams: { siteId: site.id }
+    });
+  }
+
+  // Obtener clase de color para los cards
+  getColorClass(index: number): string {
+    const colors = ['blue', 'pink', 'green', 'purple'];
+    return colors[index % colors.length];
+  }
+
+  // Obtener texto del badge
+  getBadgeText(index: number): string {
+    if (index === 0) return '⭐ Más popular';
+    if (index === 1) return '🔥 En tendencia';
+    return '✨ Popular';
+  }
 }

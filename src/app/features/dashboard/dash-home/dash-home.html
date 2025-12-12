@@ -1,9 +1,6 @@
 <div class="main-container">
     <div class="header">
         <h2>Hola, {{ user?.name || 'Irlepe' }}!</h2>
-        <div class="search-container">
-            <input type="text" placeholder="Busca un lugar..." class="search-input">
-        </div>
     </div>
 
     <div class="content-grid">
@@ -11,18 +8,21 @@
         <div class="section top-sites-section">
             <h3 class="section-title">Sitios más reservados</h3>
             <div class="top-sites-grid">
-                <button class="site-card site-card-blue" *ngIf="topSites?.month">
-                    <div class="site-card-content">
-                        <h4>Biblioteca TEC</h4>
-                        <div class="site-badge">⭐ Más popular</div>
-                    </div>
-                </button>
-                <button class="site-card site-card-pink" *ngIf="topSites?.week">
-                    <div class="site-card-content">
-                        <h4>Torre académica UAS</h4>
-                        <div class="site-badge">🔥 En tendencia</div>
-                    </div>
-                </button>
+                <ng-container *ngFor="let site of topSites?.sites; let i = index">
+                    <button 
+                        class="site-card" 
+                        [ngClass]="'site-card-' + getColorClass(i)"
+                        (click)="goToReserveInSite(site)"
+                        *ngIf="i < 2">
+                        <div class="site-card-content">
+                            <h4>{{ site.name }}</h4>
+                            <div class="site-badge">{{ getBadgeText(i) }}</div>
+                        </div>
+                    </button>
+                </ng-container>
+                <div class="empty-state" *ngIf="!topSites?.sites || topSites.sites.length === 0">
+                    <p>No hay datos de sitios reservados</p>
+                </div>
             </div>
         </div>
 
