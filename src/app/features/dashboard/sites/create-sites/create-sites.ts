@@ -28,6 +28,8 @@ export class CreateSites implements OnInit {
   uploadedImages: File[] = [];
   imagePreview: string[] = [];
   isDragging: boolean = false;
+  openingHour: string = '09:00';
+  closingHour: string = '18:00';
 
   // Autocomplete data
   entidad: string = '';
@@ -215,7 +217,8 @@ export class CreateSites implements OnInit {
     formData.append('entidadId', this.entidadId.toString());
     formData.append('municipioId', this.municipioId.toString());
     formData.append('localidadId', this.localidadId.toString());
-    
+    formData.append('opening_hour', this.openingHour);
+    formData.append('closing_hour', this.closingHour);
     this.uploadedImages.forEach((file) => {
       formData.append('images', file, file.name);
     });

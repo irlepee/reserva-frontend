@@ -33,6 +33,8 @@ export class EditSites implements OnInit {
   imagePreview: string[] = [];
   existingImages: string[] = [];
   isDragging: boolean = false;
+  openingHour: string = '09:00';
+  closingHour: string = '18:00';
 
   // Autocomplete data
   entidad: string = '';
@@ -75,6 +77,11 @@ export class EditSites implements OnInit {
         this.localidadId = site.id_localidad;
         this.existingImages = site.images || [];
 
+        // Asignar y normalizar horas de apertura/cierre recibidas del backend
+        const normalizedOpen = this.normalizeHour(site.opening_hour);
+        const normalizedClose = this.normalizeHour(site.closing_hour);
+        if (normalizedOpen) this.openingHour = normalizedOpen;
+        if (normalizedClose) this.closingHour = normalizedClose;
         // Cargar todas las ubicaciones y mostrar los nombres correspondientes
         this.ubicacionService.getEntidades().subscribe({
           next: (entidades) => {
@@ -216,6 +223,24 @@ export class EditSites implements OnInit {
     this.filtradosLocalidad = [];
   }
 
+  // Normalizar valor de hora recibido (acepta '9', '09', '9:00', '09:30', '09:00') -> 'HH:00'
+  normalizeHour(value: any): string {
+    if (value === null || value === undefined) return '';
+    let s = String(value).trim();
+    if (!s) return '';
+    // Si viene con ':' tomamos la parte de la hora
+    if (s.includes(':')) {
+      const parts = s.split(':');
+      const hh = parts[0].padStart(2, '0');
+      return `${hh}:00`;
+    }
+    // Si es número sin minutos
+    const num = parseInt(s, 10);
+    if (isNaN(num)) return '';
+    const hh = String(num).padStart(2, '0');
+    return `${hh}:00`;
+  }
+
   // --------File Upload----------
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -320,7 +345,8 @@ export class EditSites implements OnInit {
     formData.append('id_entidad', this.entidadId.toString());
     formData.append('id_municipio', this.municipioId.toString());
     formData.append('id_localidad', this.localidadId.toString());
-    
+    formData.append('opening_hour', this.openingHour);
+    formData.append('closing_hour', this.closingHour);
     // Enviar imágenes existentes como JSON string (no como archivo)
     formData.append('existingImages', JSON.stringify(this.existingImages));
 
@@ -328,6 +354,21 @@ export class EditSites implements OnInit {
     this.uploadedImages.forEach((file) => {
       formData.append('images', file, file.name);
     });
+
+    // Debug: log payload about to be sent (files shown by name)
+    const debugPayload = {
+      siteId: this.siteId,
+      name: this.siteName,
+      description: this.description,
+      id_entidad: this.entidadId,
+      id_municipio: this.municipioId,
+      id_localidad: this.localidadId,
+      opening_hour: this.openingHour,
+      closing_hour: this.closingHour,
+      existingImages: this.existingImages,
+      newImages: this.uploadedImages.map(f => f.name)
+    };
+    console.log('[UPDATE SITE] Enviando FormData payload:', debugPayload);
 
     this.siteService.updateSite(this.siteId!, formData)
       .then(() => {

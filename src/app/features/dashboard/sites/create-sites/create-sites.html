@@ -80,6 +80,17 @@
       </div>
     </div>
 
+    <!-- Horario de apertura y cierre -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="openingHour">Hora de apertura</label>
+        <input type="time" id="openingHour" [(ngModel)]="openingHour" name="openingHour" class="form-input" min="00:00" max="23:00" step="3600">
+      </div>
+      <div class="form-group">
+        <label for="closingHour">Hora de cierre</label>
+        <input type="time" id="closingHour" [(ngModel)]="closingHour" name="closingHour" class="form-input" min="00:00" max="23:00" step="3600">
+      </div>
+    </div>
     <!-- Form Actions -->
     <div class="form-actions">
       <button type="button" class="btn-cancel" (click)="cancelCreate()">Cancelar</button>
